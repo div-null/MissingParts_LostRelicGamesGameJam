@@ -8,9 +8,14 @@ namespace Infrastructure
     {
         protected override void Configure(IContainerBuilder builder)
         {
-            builder.RegisterComponent(this).As<ICoroutineRunner>();
-            builder.Register<GameStateMachine>(Lifetime.Singleton);
+            RegisterStateMachine(builder);
             builder.RegisterEntryPoint<GameStartup>();
+        }
+
+        private void RegisterStateMachine(IContainerBuilder builder)
+        {
+            builder.Register<BootstrapState>(Lifetime.Singleton).AsImplementedInterfaces();
+            builder.Register<GameStateMachine>(Lifetime.Singleton);
         }
     }
 }
