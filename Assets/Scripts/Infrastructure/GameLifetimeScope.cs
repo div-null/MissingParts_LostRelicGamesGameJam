@@ -9,6 +9,7 @@ namespace Infrastructure
         protected override void Configure(IContainerBuilder builder)
         {
             RegisterStateMachine(builder);
+            builder.RegisterComponentInHierarchy<CoroutineRunner>().AsImplementedInterfaces();
             builder.RegisterEntryPoint<GameStartup>();
         }
 
