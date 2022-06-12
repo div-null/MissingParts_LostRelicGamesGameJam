@@ -144,5 +144,9 @@ public class CharacterPart : MonoBehaviour
             //TODO: джойнить дорожку из блоков
         }
     }
-    
+
+    public bool HasPartInDirection(DirectionType direction)
+    {
+        return GetPartFromDirection(direction) != null;
+    }
 }
