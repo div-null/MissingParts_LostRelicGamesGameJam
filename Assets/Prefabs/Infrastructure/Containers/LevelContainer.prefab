@@ -45,6 +45,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parentReference:
-    TypeName: Infrastructure.GameLifetimeScope
+    TypeName: 
   autoRun: 0
   autoInjectGameObjects: []

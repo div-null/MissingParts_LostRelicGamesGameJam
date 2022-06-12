@@ -69,7 +69,8 @@ public class Character : MonoBehaviour
             if (part == null) return true;
             if (visited.Contains(part)) return true;
             var destination = part.Position + direction.ToVector();
-            if (_field.Cells[destination.x, destination.y].CellType == CellType.Wall)
+            Cell cell = _field.Get(destination.x, destination.y);
+            if (cell != null && cell.CellType == CellType.Wall)
                 return false;
 
             return visitNode(part.Left) && visitNode(part.Right) && visitNode(part.Up) && visitNode(part.Down);

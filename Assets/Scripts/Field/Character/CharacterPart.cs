@@ -138,7 +138,7 @@ public class CharacterPart : MonoBehaviour
         if (GetPartFromDirection(direction) == null)
         {
             var checkPosition = Position + direction.ToVector();
-            var characterPart = _field.Cells[checkPosition.x, checkPosition.y].CharacterPart;
+            var characterPart = _field.Get(checkPosition.x, checkPosition.y)?.CharacterPart;
             if (characterPart != null)
                 Join(characterPart, IsActive);
             //TODO: джойнить дорожку из блоков

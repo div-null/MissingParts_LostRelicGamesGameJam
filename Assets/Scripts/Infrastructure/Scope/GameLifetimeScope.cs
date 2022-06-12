@@ -9,6 +9,8 @@ namespace Infrastructure.Scope
 {
     public class GameLifetimeScope : LifetimeScope, ICoroutineRunner
     {
+        public GameSettings GameSettings;
+        
         protected override void Awake()
         {
             var containers = FindObjectsOfType<GameLifetimeScope>();
@@ -30,12 +32,13 @@ namespace Infrastructure.Scope
                     return;
                 }
             }
-
+        
             base.Awake();
         }
 
         protected override void Configure(IContainerBuilder builder)
         {
+            builder.RegisterInstance<GameSettings>(GameSettings);
             RegisterStateMachine(builder);
             builder.RegisterComponentInHierarchy<CoroutineRunner>().AsImplementedInterfaces();
             builder.Register<SceneLoader>(Lifetime.Singleton);
@@ -44,9 +47,9 @@ namespace Infrastructure.Scope
 
         private void RegisterStateMachine(IContainerBuilder builder)
         {
-            builder.Register<BootstrapState>(Lifetime.Singleton).AsImplementedInterfaces();
-            builder.Register<GameplayState>(Lifetime.Singleton).AsImplementedInterfaces();
-            builder.Register<GameStateMachine>(Lifetime.Singleton);
+            builder.Register<BootstrapState>(Lifetime.Scoped).AsImplementedInterfaces();
+            builder.Register<GameplayState>(Lifetime.Scoped).AsImplementedInterfaces();
+            builder.Register<GameStateMachine>(Lifetime.Scoped);
             builder.RegisterBuildCallback(container =>
             {
                 var states = container.Resolve<IEnumerable<IExitableState>>();
