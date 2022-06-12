@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/IvanScene.unity
     guid: 9a7cabe20559bcc4e97a1970efe1e28a
+  - enabled: 1
+    path: Assets/Scenes/Game.unity
+    guid: a0f039bf53a559645a70f43ab3eeccb6
   m_configObjects: {}

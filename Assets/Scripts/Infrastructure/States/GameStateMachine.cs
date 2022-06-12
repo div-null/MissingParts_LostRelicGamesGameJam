@@ -6,10 +6,10 @@ namespace Infrastructure.States
 {
     public class GameStateMachine
     {
-        private readonly Dictionary<Type, IExitableState> _states;
+        private Dictionary<Type, IExitableState> _states;
         private IExitableState _activeState;
 
-        public GameStateMachine(IEnumerable<IExitableState> states)
+        public void AddStates(IEnumerable<IExitableState> states)
         {
             _states = states.ToDictionary(state => state.GetType(), state => state);
         }

@@ -17,7 +17,14 @@ namespace Infrastructure.Scope
         private void RegisterStateMachine(IContainerBuilder builder)
         {
             builder.Register<BootstrapState>(Lifetime.Singleton).AsImplementedInterfaces();
+            builder.Register<GameplayState>(Lifetime.Singleton).AsImplementedInterfaces();
             builder.Register<GameStateMachine>(Lifetime.Singleton);
+            builder.RegisterBuildCallback(container =>
+            {
+                var states = container.Resolve<IEnumerable<IExitableState>>();
+                var stateMachine = container.Resolve<GameStateMachine>();
+                stateMachine.AddStates(states);
+            });
         }
     }
 }
