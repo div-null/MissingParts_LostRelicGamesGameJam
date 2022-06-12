@@ -1,3 +1,4 @@
+using Infrastructure.States;
 using VContainer;
 using VContainer.Unity;
 
@@ -7,7 +8,7 @@ namespace Infrastructure
     {
         protected override void Configure(IContainerBuilder builder)
         {
-            builder.Register<>(Lifetime.Singleton);
+            builder.Register<GameStateMachine>(Lifetime.Singleton);
             builder.RegisterEntryPoint<GameStartup>();
         }
     }
