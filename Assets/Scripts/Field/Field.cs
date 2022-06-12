@@ -19,11 +19,11 @@ public class Field : MonoBehaviour
         CharacterParts = parts;
     }
 
-    public Cell Get(int x, int y)
+    public Cell Get(Vector2Int coordinates)
     {
-        if (x < 0 || y < 0 || x > Cells.GetLength(0) - 1 || y > Cells.GetLength(1) - 1)
+        if (coordinates.x < 0 || coordinates.y < 0 || coordinates.x > Cells.GetLength(0) - 1 || coordinates.y > Cells.GetLength(1) - 1)
             return null;
-        return Cells[x, y];
+        return Cells[coordinates.x, coordinates.y];
     }
 
     void LoadField()
