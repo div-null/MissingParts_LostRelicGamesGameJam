@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Assets.Scripts.Field.Cell;
 using UnityEngine;
 using UnityEngine.Assertions;
+using VContainer;
 
 public class CharacterPart : MonoBehaviour
 {
@@ -14,6 +15,13 @@ public class CharacterPart : MonoBehaviour
     public Vector2Int Position;
     public bool IsActive;
     public bool IsMoving;
+    private Field _field;
+
+    [Inject]
+    public void Initialize(Field field)
+    {
+        _field = field;
+    }
 
     public void TurnOn()
     {
@@ -28,7 +36,7 @@ public class CharacterPart : MonoBehaviour
     public bool IsLeaf() =>
         Right == null || Left == null || Up == null || Down == null;
 
-    public void Join(CharacterPart part)
+    public void Join(CharacterPart part, bool setActive = true)
     {
         Vector2Int joinPosition = part.Position - Position;
         Assert.IsTrue(joinPosition.magnitude == 1);
@@ -37,25 +45,25 @@ public class CharacterPart : MonoBehaviour
         {
             Left = part;
             part.Right = this;
-            part.IsActive = true;
+            part.IsActive = setActive;
         }
         else if (joinPosition == Vector2Int.right)
         {
             Right = part;
             part.Left = this;
-            part.IsActive = true;
+            part.IsActive = setActive;
         }
         else if (joinPosition == Vector2Int.up)
         {
             Up = part;
             part.Down = this;
-            part.IsActive = true;
+            part.IsActive = setActive;
         }
         else if (joinPosition == Vector2Int.down)
         {
             Down = part;
             part.Up = this;
-            part.IsActive = true;
+            part.IsActive = setActive;
         }
         else
         {
@@ -110,19 +118,31 @@ public class CharacterPart : MonoBehaviour
         };
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-    }
 
     public void SetPosition(Vector2Int destination)
     {
         Position = destination;
         Debug.Log($"New position {Position}");
     }
+
+    public void TryJoinAllDirections()
+    {
+        TryJoin(DirectionType.Down);
+        TryJoin(DirectionType.Up);
+        TryJoin(DirectionType.Left);
+        TryJoin(DirectionType.Right);
+    }
+    
+    public void TryJoin(DirectionType direction)
+    {
+        if (GetPartFromDirection(direction) == null)
+        {
+            var checkPosition = Position + direction.ToVector();
+            var characterPart = _field.Cells[checkPosition.x, checkPosition.y].CharacterPart;
+            if (characterPart != null)
+                Join(characterPart, IsActive);
+            //TODO: джойнить дорожку из блоков
+        }
+    }
+    
 }

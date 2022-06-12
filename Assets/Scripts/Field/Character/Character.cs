@@ -2,12 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using Assets.Scripts.Field.Cell;
 using UnityEngine;
+using VContainer;
 
 public class Character : MonoBehaviour
 {
     private CharacterPart _mainPart;
     private ColorType _characterColor;
     private Field _field;
+
+    [Inject]
+    public void Initialize(Field field)
+    {
+        _field = field;
+    }
+
+    public void AddParts(IEnumerable<CharacterPart> parts)
+    {
+        // Взяли первый элемент
+        _mainPart = parts.GetEnumerator().Current;
+    }
 
     public void Disengage()
     {
@@ -88,13 +101,13 @@ public class Character : MonoBehaviour
 
         visitNode(_mainPart);
     }
-    
+
     public void TryAttachCells(CharacterPart part)
     {
-        tryAttachAtDirection(part, DirectionType.Down);
-        tryAttachAtDirection(part, DirectionType.Up);
-        tryAttachAtDirection(part, DirectionType.Right);
-        tryAttachAtDirection(part, DirectionType.Left);
+        part.TryJoin(DirectionType.Down);
+        part.TryJoin(DirectionType.Up);
+        part.TryJoin(DirectionType.Left);
+        part.TryJoin(DirectionType.Right);
     }
 
 
@@ -118,18 +131,5 @@ public class Character : MonoBehaviour
         }
 
         visitNode(_mainPart);
-    }
-
-    void tryAttachAtDirection(CharacterPart part, DirectionType direction)
-    {
-        if (part.GetPartFromDirection(direction) == null)
-        {
-            var checkPosition = part.Position + direction.ToVector();
-            var characterPart = _field.Cells[checkPosition.x, checkPosition.y].CharacterPart;
-            if (characterPart != null)
-                part.Join(characterPart);
-            
-            //TODO: джойнить дорожку из блоков
-        }
     }
 }
