@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using UnityEditor;
 using UnityEngine;
@@ -15,11 +14,10 @@ namespace Infrastructure
             StartCoroutine(LoadScene(InitialScene.name));
         }
 
-        private IEnumerator LoadScene(string nextScene, Action onLoaded = null)
+        private IEnumerator LoadScene(string nextScene)
         {
             if (SceneManager.GetActiveScene().name == nextScene)
             {
-                onLoaded?.Invoke();
                 yield break;
             }
 
@@ -27,8 +25,6 @@ namespace Infrastructure
 
             while (!waitNextScene.isDone)
                 yield return null;
-
-            onLoaded?.Invoke();
         }
     }
 }
