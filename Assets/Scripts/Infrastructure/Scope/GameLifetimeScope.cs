@@ -2,7 +2,7 @@ using Infrastructure.States;
 using VContainer;
 using VContainer.Unity;
 
-namespace Infrastructure
+namespace Infrastructure.Scope
 {
     public class GameLifetimeScope : LifetimeScope, ICoroutineRunner
     {
