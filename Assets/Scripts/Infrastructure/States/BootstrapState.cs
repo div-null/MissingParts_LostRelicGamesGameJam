@@ -4,12 +4,13 @@ namespace Infrastructure.States
 {
     public class BootstrapState : IState
     {
-        private ICoroutineRunner _runner;
+        private SceneLoader _loader;
 
-        public BootstrapState(ICoroutineRunner runner)
+        public BootstrapState(SceneLoader loader)
         {
-            _runner = runner;
+            _loader = loader;
         }
+        
         public void Exit()
         {
             Debug.Log("Exited Boostrap state");

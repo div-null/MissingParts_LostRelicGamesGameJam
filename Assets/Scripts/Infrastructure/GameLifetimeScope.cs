@@ -10,6 +10,7 @@ namespace Infrastructure
         {
             RegisterStateMachine(builder);
             builder.RegisterComponentInHierarchy<CoroutineRunner>().AsImplementedInterfaces();
+            builder.Register<SceneLoader>(Lifetime.Singleton);
             builder.RegisterEntryPoint<GameStartup>();
         }
 
