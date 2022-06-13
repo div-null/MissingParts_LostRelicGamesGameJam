@@ -1,0 +1,47 @@
+{
+  "field": {
+    "width": 2,
+    "height": 2,
+    "end_point_color": "red"
+  },
+  "cells": [
+    {
+      "row": [
+        {
+          "type": "empty"
+        },
+        {
+          "type": "empty"
+        }
+      ]
+    },
+    {
+      "row": [
+        {
+          "type": "empty"
+        },
+        {
+          "type": "empty"
+        }
+      ]
+    }
+  ],
+  "character_parts": [
+    {
+      "X": 0,
+      "Y": 0,
+      "Rotation": 0,
+      "Ability": "default",
+      "Color": "red",
+      "IsActive": true,
+      "Sprite": 1
+    }
+  ],
+  "misc": [
+    {
+      "x": 0,
+      "y": 0,
+      "sprite": 0
+    }
+  ]
+}

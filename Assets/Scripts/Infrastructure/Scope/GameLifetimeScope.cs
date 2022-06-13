@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Infrastructure.States;
 using UnityEngine.SceneManagement;
+using LevelEditor;
 using VContainer;
 using VContainer.Unity;
 
@@ -9,10 +10,10 @@ namespace Infrastructure.Scope
     public class GameLifetimeScope : LifetimeScope, ICoroutineRunner
     {
         public GameSettings GameSettings;
-        
+
         protected override void Awake()
         {
-            var containers = FindObjectsOfType<GameLifetimeScope>();
+   var containers = FindObjectsOfType<GameLifetimeScope>();
             if (SceneManager.GetActiveScene().name == "Initial")
             {
                 DontDestroyOnLoad(this);
@@ -31,7 +32,7 @@ namespace Infrastructure.Scope
                     return;
                 }
             }
-        
+
             base.Awake();
         }
 
@@ -41,6 +42,7 @@ namespace Infrastructure.Scope
             RegisterStateMachine(builder);
             builder.RegisterComponentInHierarchy<CoroutineRunner>().AsImplementedInterfaces();
             builder.Register<SceneLoader>(Lifetime.Singleton);
+            builder.Register<LevelLoader>(Lifetime.Singleton);
             builder.RegisterEntryPoint<GameStartup>();
         }
 

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using LevelEditor;
+using UnityEngine;
 
 namespace Infrastructure.States
 {
@@ -7,12 +8,13 @@ namespace Infrastructure.States
         private SceneLoader _loader;
         private GameStateMachine _stateMachine;
 
-        public BootstrapState(GameStateMachine stateMachine, SceneLoader loader)
+        public BootstrapState(GameStateMachine stateMachine, SceneLoader loader, LevelLoader levelLoader)
         {
             _stateMachine = stateMachine;
+            _levelLoader = levelLoader;
             _loader = loader;
         }
-        
+
         public void Exit()
         {
             Debug.Log("Exited Boostrap state");
