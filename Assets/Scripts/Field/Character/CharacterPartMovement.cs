@@ -5,6 +5,11 @@ using UnityEngine;
 public class CharacterPartMovement: MonoBehaviour
 {
     private Field _field;
+
+    public void Initialize(Field field)
+    {
+        _field = field;
+    }
     
     public bool CanMove(CharacterPart characterPart, DirectionType direction)
     {

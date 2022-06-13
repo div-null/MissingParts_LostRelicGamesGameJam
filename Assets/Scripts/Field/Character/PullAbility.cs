@@ -7,20 +7,13 @@ public class PullAbility : Ability
 {
     private const int _range = 5;
     private DirectionType _lookDirection;
-    private Field _field;
 
-    // Start is called before the first frame update
-    void Start()
+    public void Initialize(CharacterPart character, Field field, DirectionType direction)
     {
-        
+        base.Initialize(character, field);
+        _lookDirection = direction;
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
+    
     public override void Apply()
     {
         _lookDirection = _characterPart.Rotation.ToDirection();
@@ -33,7 +26,7 @@ public class PullAbility : Ability
             TryToDetach();
         }
     }
-    
+
     private bool TryToAttach()
     {
         CharacterPart foundedCharacterPart = null;
@@ -95,10 +88,10 @@ public class PullAbility : Ability
             //3. Потом происходит attach того, что на стороне персонажа и того, что на стороне притягиваемой фигуры
         }
     }
-    
+
     private void TryToDetach()
     {
-        CharacterPart detachablePart  = _characterPart.GetPartFromDirection(_lookDirection);
+        CharacterPart detachablePart = _characterPart.GetPartFromDirection(_lookDirection);
         Vector2Int oppositeDirection = -_lookDirection.ToVector();
         //detachablePart.CharacterPartMovement.CanMove(oppositeDirection, _lookDirection);
     }

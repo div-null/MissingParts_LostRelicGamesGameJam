@@ -1,11 +1,19 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterPartAttachment: MonoBehaviour
+public class CharacterPartAttachment : MonoBehaviour
 {
+    private CharacterPart _characterPart;
+    private Field _field;
+
+    public void Initialize(CharacterPart characterPart, Field field)
+    {
+        _characterPart = characterPart;
+        _field = field;
+    }
+
     public void AttachParts()
     {
-        CharacterPart characterPart = this.GetComponent<CharacterPart>();
         HashSet<CharacterPart> visited = new HashSet<CharacterPart>();
 
         void visitNode(CharacterPart part)
@@ -22,13 +30,13 @@ public class CharacterPartAttachment: MonoBehaviour
                 return;
             }
 
-            TryAttachCells(part);
+            tryJoinAllDirections(part);
         }
 
-        visitNode(characterPart);
+        visitNode(_characterPart);
     }
 
-    public void TryAttachCells(CharacterPart part)
+    private void tryJoinAllDirections(CharacterPart part)
     {
         part.TryJoin(DirectionType.Down);
         part.TryJoin(DirectionType.Up);

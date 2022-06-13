@@ -7,19 +7,6 @@ using UnityEngine;
 public class RotateAbility : Ability
 {
     private List<Vector2Int> newPositions;
-    private Field _field;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     public override void Apply()
     {
