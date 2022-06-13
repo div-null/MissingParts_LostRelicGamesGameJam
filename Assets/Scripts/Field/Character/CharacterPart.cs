@@ -14,6 +14,8 @@ public class CharacterPart : MonoBehaviour
     public CharacterPart Down;
 
     public Vector2Int Position;
+    public int Rotation;
+    
     public bool IsActive;
     public bool IsMoving;
     private Field _field;
@@ -157,5 +159,10 @@ public class CharacterPart : MonoBehaviour
     public bool HasPartInDirection(float degrees)
     {
         return GetPartFromDirection(degrees) != null;
+    }
+
+    public void SetRotation()
+    {
+        Rotation = (Rotation + 270) % 360;
     }
 }

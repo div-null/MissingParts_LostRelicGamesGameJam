@@ -60,6 +60,7 @@ public class RotateAbility : Ability
             foreach(var part in partsWithNewPositions)
             {
                 part.Key.SetPosition(part.Value);
+                part.Key.SetRotation();
             }
             
             return true;

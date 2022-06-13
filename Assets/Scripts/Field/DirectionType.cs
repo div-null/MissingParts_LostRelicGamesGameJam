@@ -42,6 +42,17 @@ public static class DirectionExtensions{
         }
     }
     
+    public static DirectionType ToDirection(this int degrees)
+    {
+        return degrees switch
+        {
+            0 => DirectionType.Up,
+            90=> DirectionType.Left,
+            180 => DirectionType.Down,
+            270 => DirectionType.Right
+        };
+    }
+    
     public static DirectionType ToDirection(this Vector2 direction)
     {
         if (direction == Vector2.left)

@@ -15,17 +15,16 @@ public class CharacterPartMovement: MonoBehaviour
             if (part == null) return true;
             if (visited.Contains(part)) return true;
             visited.Add(part);
+            
             var destination = part.Position + direction.ToVector();
-            Cell cell = _field.Get(destination);
-            if (cell != null && cell.IsWall())
-                return false;
+            if (HasWallInCell(destination)) return false;
 
             return visitNode(part.Left) && visitNode(part.Right) && visitNode(part.Up) && visitNode(part.Down);
         }
 
         return visitNode(characterPart);
     }
-    
+
     public bool CanMove(CharacterPart characterPart, Vector2Int deltaPosition)
     {
         HashSet<CharacterPart> visited = new HashSet<CharacterPart>();
@@ -35,10 +34,9 @@ public class CharacterPartMovement: MonoBehaviour
             if (part == null) return true;
             if (visited.Contains(part)) return true;
             visited.Add(part);
+            
             var destination = part.Position + deltaPosition;
-            Cell cell = _field.Get(destination);
-            if (cell != null && cell.IsWall())
-                return false;
+            if (HasWallInCell(destination)) return false;
 
             return visitNode(part.Left) && visitNode(part.Right) && visitNode(part.Up) && visitNode(part.Down);
         }
@@ -99,5 +97,15 @@ public class CharacterPartMovement: MonoBehaviour
 
             visitNode(characterPart);
         }
+    }
+    
+    private bool HasWallInCell(Vector2Int destination)
+    {
+        Cell cell = _field.Get(destination);
+        
+        if (cell != null && cell.IsWall())
+            return true;
+        
+        return false;
     }
 }
