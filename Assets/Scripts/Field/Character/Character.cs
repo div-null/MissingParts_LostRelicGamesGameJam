@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Assets.Scripts.Field.Cell;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using VContainer;
 
 public class Character : MonoBehaviour
@@ -33,12 +34,12 @@ public class Character : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+       
     }
 
-    public void Move(DirectionType direction)
+    public void Move(Vector2 vectorDirection)
     {
-        _mainPart.CharacterPartMovement.Move(direction);
+        _mainPart.CharacterPartMovement.Move(vectorDirection.ToDirection());
         _mainPart.CharacterPartAttachment.AttachParts();
     }
 
