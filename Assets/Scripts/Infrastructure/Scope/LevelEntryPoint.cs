@@ -7,23 +7,24 @@ namespace Infrastructure.Scope
     public class LevelEntryPoint : IStartable
     {
         private LevelFactory _factory;
-        private int _level;
+        private int _currentLevel;
         private LevelLoader _levelLoader;
 
         public LevelEntryPoint(LevelFactory factory, LevelLoader levelLoader)
         {
             _levelLoader = levelLoader;
             _factory = factory;
-            _level = 1;
+            _currentLevel = 1;
         }
 
         public void Start()
         {
+            LoadNextLevel();
         }
 
         public void LoadNextLevel()
         {
-            GameLevel level = _level switch
+            GameLevel level = _currentLevel switch
             {
                 1 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl1),
                 2 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl2),
@@ -31,6 +32,7 @@ namespace Infrastructure.Scope
             };
             Field field = _factory.CreateField(level);
             Character character = _factory.CreateCharacter(level, field);
+            _currentLevel++;
         }
     }
 }
