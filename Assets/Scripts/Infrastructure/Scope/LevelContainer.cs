@@ -18,15 +18,15 @@ namespace Infrastructure.Scope
             builder.Register(container =>
             {
                 var levelEntryPoint = container.Resolve<LevelFactory>();
-                return levelEntryPoint.Create(5, 5);
+                return levelEntryPoint.Create(8, 8);
             }, Lifetime.Scoped);
 
-            // builder.Register(container =>
-            // {
-            //     var characterFactory = container.Resolve<CharacterFactory>();
-            //     return characterFactory.Create();
-            // }, Lifetime.Scoped);
-            
+            builder.Register(container =>
+            {
+                var characterFactory = container.Resolve<CharacterFactory>();
+                return characterFactory.Create();
+            }, Lifetime.Scoped);
+
             // builder.RegisterEntryPointExceptionHandler(exception =>
             // {
             //     Debug.Log(exception);
@@ -38,11 +38,14 @@ namespace Infrastructure.Scope
     public class LevelEntryPoint : IStartable
     {
         private Field _field;
+        private Character _character;
 
-        public LevelEntryPoint(Field field)
+        public LevelEntryPoint(Field field, Character character)
         {
+            _character = character;
             _field = field;
         }
+
         public void Start()
         {
         }

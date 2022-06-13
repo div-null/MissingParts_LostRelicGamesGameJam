@@ -19,9 +19,9 @@ namespace Infrastructure.States
         public void Enter()
         {
             Debug.Log("Entered Gameplay state");
-            // LifetimeScope scope = LifetimeScope.Find<GameLifetimeScope>();
-            var levelInstaller = new LevelInstaller();
-            using (LifetimeScope.Enqueue(levelInstaller))
+            LifetimeScope scope = LifetimeScope.Find<GameLifetimeScope>();
+            // var levelInstaller = new LevelInstaller();
+            using (LifetimeScope.EnqueueParent(scope))
             {
                 _loader.Load("Game", onLoaded);
             }
