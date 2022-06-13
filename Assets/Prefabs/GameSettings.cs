@@ -8,6 +8,7 @@ public class GameSettings : ScriptableObject
     public Cell WallCellPrefab;
     public Cell EmptyCellPrefab;
     public Cell HoleCellPrefab;
+    public Cell FinishCellPrefab;
     public CharacterPart CharacterPartPrefab;
     public Field FieldPrefab;
     public Character CharacterPrefab;
