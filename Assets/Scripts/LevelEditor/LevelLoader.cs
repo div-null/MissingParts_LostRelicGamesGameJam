@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Runtime.Serialization;
+using Assets.Scripts.Field.Cell;
 using UnityEngine;
 
 namespace LevelEditor
@@ -132,7 +133,7 @@ namespace LevelEditor
                 if (Enum.TryParse<CellType>(type, true, out var cellType))
                     return new CellContainer(cellType);
 
-                throw new SerializationException("Wrong cell type");
+                throw new SerializationException($"Wrong cell type = \"{type}\"");
             }
         }
 

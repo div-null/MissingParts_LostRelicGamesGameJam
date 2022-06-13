@@ -8,11 +8,15 @@ public class Field : MonoBehaviour
     private Cell[,] Cells;
     private List<CharacterPart> CharacterParts;
 
-    public void Setup(Cell[,] cells, List<CharacterPart> parts)
+    public void SetCells(Cell[,] cells)
     {
         Cells = cells;
+    }
+
+    public void Setup(List<CharacterPart> parts)
+    {
         CharacterParts = parts;
-        
+
         foreach (var part in CharacterParts)
             part.CharacterPartAttachment.AttachParts();
     }

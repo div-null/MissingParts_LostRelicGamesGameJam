@@ -7,7 +7,6 @@ using Unity.VisualScripting;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
-using CellType = LevelEditor.CellType;
 
 namespace Game
 {
@@ -15,9 +14,11 @@ namespace Game
     {
         private IObjectResolver _resolver;
         private GameSettings _gameSettings;
+        private PlayerInputs _inputs;
 
-        public LevelFactory(IObjectResolver resolver, GameSettings gameSettings)
+        public LevelFactory(IObjectResolver resolver, GameSettings gameSettings, PlayerInputs inputs)
         {
+            _inputs = inputs;
             _gameSettings = gameSettings;
             _resolver = resolver;
         }
@@ -29,6 +30,7 @@ namespace Game
 
             Field field = _resolver.Instantiate(_gameSettings.FieldPrefab);
 
+            field.SetCells(cells);
             for (int j = 0; j < level.MapHeight; j++)
             {
                 for (int i = 0; i < level.MapWidth; i++)
@@ -41,28 +43,27 @@ namespace Game
             var inactiveParts = level.PlayerParts.Where(part => !part.IsActive);
             foreach (var playerPart in inactiveParts)
             {
-                CharacterPart newCharacterPart = _resolver.Instantiate(_gameSettings.CharacterPartPrefab,
-                    new Vector3(playerPart.X, playerPart.Y, -2),
-                    Quaternion.identity,
-                    field.transform);
+                CharacterPart newCharacterPart = CreateCharacterPart(field, playerPart);
                 newCharacterPart.Initialize(new Vector2Int(playerPart.X, playerPart.Y), false, field, playerPart.Rotation, playerPart.Color);
                 characterParts.Add(newCharacterPart);
             }
+            field.Setup(characterParts);
 
-            field.Setup(cells, characterParts);
             return field;
         }
 
-        private Cell CreateCell(int i, int j, Transform parent, CellContainer cellContainer)
+        private Cell CreateCell(int x, int y, Transform parent, CellContainer cellContainer)
         {
-            return cellContainer.Type switch
+            Cell cell = cellContainer.Type switch
             {
-                CellType.Wall => _resolver.Instantiate(_gameSettings.WallCellPrefab, new Vector3(i, j, -1), Quaternion.identity, parent),
-                CellType.Empty => _resolver.Instantiate(_gameSettings.EmptyCellPrefab, new Vector3(i, j, -1), Quaternion.identity, parent),
-                CellType.Pit => _resolver.Instantiate(_gameSettings.HoleCellPrefab, new Vector3(i, j, -1), Quaternion.identity, parent),
-                CellType.Finish => _resolver.Instantiate(_gameSettings.FinishCellPrefab, new Vector3(i, j, -1), Quaternion.identity, parent),
+                CellType.Wall => _resolver.Instantiate(_gameSettings.WallCellPrefab, new Vector3(x, y, -1), Quaternion.identity, parent),
+                CellType.Empty => _resolver.Instantiate(_gameSettings.EmptyCellPrefab, new Vector3(x, y, -1), Quaternion.identity, parent),
+                CellType.Pit => _resolver.Instantiate(_gameSettings.HoleCellPrefab, new Vector3(x, y, -1), Quaternion.identity, parent),
+                CellType.Finish => _resolver.Instantiate(_gameSettings.FinishCellPrefab, new Vector3(x, y, -1), Quaternion.identity, parent),
                 _ => throw new ArgumentOutOfRangeException(nameof(cellContainer.Type), "Unknown cell type")
             };
+            cell.Initialize(new Vector2Int(x, y), cellContainer.Type);
+            return cell;
         }
 
         public Character CreateCharacter(GameLevel level, Field field)
@@ -73,22 +74,34 @@ namespace Game
             var playerParts = level.PlayerParts.Where(part => part.IsActive);
             foreach (var part in playerParts)
             {
-                CharacterPart characterPart = _resolver.Instantiate(_gameSettings.CharacterPartPrefab,
-                    new Vector3(part.X, part.Y, -2), Quaternion.identity);
+                CharacterPart characterPart = CreateCharacterPart(field, part);
 
-                setupAbilities(part, field, characterPart);
-
-                CharacterPartMovement characterMovement = setupCharacterMovement(field, characterPart);
-                CharacterPartAttachment characterAttachment = setupCharacterAttachment(field, characterPart);
-
+                var inputListener = characterPart.GetOrAddComponent<InputListener>();
+                inputListener.Initialize(_inputs, characterParts);
                 characterPart.Initialize(new Vector2Int(part.X, part.Y), true, field, part.Rotation, part.Color);
 
-                characterAttachment.AttachParts();
+                characterPart.CharacterPartAttachment.AttachParts();
                 parts.Add(characterPart);
             }
 
             characterParts.AddParts(parts);
             return characterParts;
+        }
+
+        private CharacterPart CreateCharacterPart(Field field, PlayerPart part)
+        {
+            CharacterPart characterPart = _resolver.Instantiate(_gameSettings.CharacterPartPrefab,
+                new Vector3(part.X, part.Y, -2), Quaternion.identity);
+            
+            field.Get(part.X, part.Y).AssignCharacterPart(characterPart);
+            setupAbilities(part, field, characterPart);
+
+            var characterMovement = setupCharacterMovement(field, characterPart);
+            var characterAttachment = setupCharacterAttachment(field, characterPart);
+            
+            characterPart.CharacterPartMovement = characterMovement;
+            characterPart.CharacterPartAttachment = characterAttachment;
+            return characterPart;
         }
 
         private static CharacterPartAttachment setupCharacterAttachment(Field field, CharacterPart characterPart)

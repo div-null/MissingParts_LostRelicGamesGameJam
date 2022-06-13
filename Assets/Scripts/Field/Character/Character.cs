@@ -10,10 +10,12 @@ public class Character : MonoBehaviour
     private CharacterPart _mainPart;
     private ColorType _characterColor;
 
-    public void AddParts(IEnumerable<CharacterPart> parts)
+    public void AddParts(List<CharacterPart> parts)
     {
         // Взяли первый элемент
         _mainPart = parts.GetEnumerator().Current;
+        _mainPart = parts.First();
+    }
     }
 
     public void Move(Vector2 vectorDirection)

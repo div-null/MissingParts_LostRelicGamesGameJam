@@ -1,4 +1,5 @@
 using System;
+using Assets.Scripts.Field.Cell;
 
 namespace LevelEditor
 {
