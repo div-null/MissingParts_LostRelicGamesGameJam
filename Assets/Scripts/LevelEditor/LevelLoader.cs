@@ -104,7 +104,7 @@ namespace LevelEditor
 
             public GameLevel ToLevel()
             {
-                CellColor.TryParse<CellColor>(end_point_color, true, out var finishColor);
+                Enum.TryParse<ColorType>(end_point_color, true, out var finishColor);
                 return new GameLevel()
                 {
                     MapHeight = height,
