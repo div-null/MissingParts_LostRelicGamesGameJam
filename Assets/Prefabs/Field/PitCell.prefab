@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 9070970298340645815}
   - component: {fileID: 9070970298340645812}
   m_Layer: 0
-  m_Name: HoleCell
+  m_Name: PitCell
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -98,5 +98,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Position: {x: 0, y: 0}
-  CellType: 3
+  CellType: 2
   CharacterPart: {fileID: 0}

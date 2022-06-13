@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7184153879075629624}
   - component: {fileID: 7184153879075629607}
   m_Layer: 0
-  m_Name: EmptyCell
+  m_Name: FloorCell
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
