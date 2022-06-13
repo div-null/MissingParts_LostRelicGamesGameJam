@@ -1,0 +1,29 @@
+cell {
+}
+
+.cell {
+    justify-content: space-around;
+    align-items: auto;
+    width: 10px;
+    height: 10px;
+}
+
+.cell-floor {
+    background-color: rgba(255, 255, 255, 255);
+}
+
+.cell-wall {
+    background-color: rgba(123, 123, 123, 255);
+}
+
+.cell-finish {
+    background-color: rgba(27, 255, 0, 255);
+}
+
+.cell-pit {
+    justify-content: space-around;
+    align-items: auto;
+    width: 10px;
+    height: 10px;
+    background-color: rgba(143, 0, 255, 255);
+}
