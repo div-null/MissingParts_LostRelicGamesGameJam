@@ -80,37 +80,7 @@ public class CharacterPart : MonoBehaviour
         
         part.SetActive(setActive);
     }
-
-    public CharacterPart GetPartFromDirection(DirectionType direction)
-    {
-        return direction switch
-        {
-            DirectionType.Right => Right,
-            DirectionType.Left => Left,
-            DirectionType.Up => Up,
-            DirectionType.Down => Down
-        };
-    }
     
-    public CharacterPart GetPartFromDirection(float degrees)
-    {
-        int direction = (int)(degrees % 90);
-        return direction switch
-        {
-            0 => Up,
-            1 => Left,
-            2 => Down,
-            3 => Right
-        };
-    }
-
-    public void SetPosition(Vector2Int destination)
-    {
-        Position = destination;
-        Debug.Log($"New position {Position}");
-        //TODO: set transform
-    }
-
     public void TryJoinAllDirections()
     {
         TryJoin(DirectionType.Down);
@@ -149,6 +119,36 @@ public class CharacterPart : MonoBehaviour
         }
 
         visitNode(characterPart);
+    }
+
+    public CharacterPart GetPartFromDirection(DirectionType direction)
+    {
+        return direction switch
+        {
+            DirectionType.Right => Right,
+            DirectionType.Left => Left,
+            DirectionType.Up => Up,
+            DirectionType.Down => Down
+        };
+    }
+    
+    public CharacterPart GetPartFromDirection(float degrees)
+    {
+        int direction = (int)(degrees % 90);
+        return direction switch
+        {
+            0 => Up,
+            1 => Left,
+            2 => Down,
+            3 => Right
+        };
+    }
+
+    public void SetPosition(Vector2Int destination)
+    {
+        Position = destination;
+        Debug.Log($"New position {Position}");
+        //TODO: set transform
     }
 
     public bool HasPartInDirection(DirectionType direction)
