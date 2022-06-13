@@ -32,8 +32,6 @@ namespace Infrastructure.States
 
         private void onLoaded()
         {
-            GameLevel gameLevel = _levelLoader.LoadLevel(LevelLoader.Level.Lvl1);
-            Debug.Log(gameLevel);
         }
 
         public void Exit()

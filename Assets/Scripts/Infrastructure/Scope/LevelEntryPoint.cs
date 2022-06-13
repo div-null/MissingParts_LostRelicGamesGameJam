@@ -1,5 +1,6 @@
 ﻿using Game;
 using LevelEditor;
+using UnityEngine;
 using VContainer.Unity;
 
 namespace Infrastructure.Scope
@@ -24,6 +25,7 @@ namespace Infrastructure.Scope
 
         public void LoadNextLevel()
         {
+            Debug.Log($"Loading Level {_currentLevel}");
             GameLevel level = _currentLevel switch
             {
                 1 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl1),
