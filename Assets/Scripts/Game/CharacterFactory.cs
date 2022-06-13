@@ -18,7 +18,7 @@ namespace Game
             _field = field;
         }
 
-        public global::Character Create()
+        public Character Create()
         {
             var positions = new[]
             {
