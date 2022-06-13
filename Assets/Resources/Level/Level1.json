@@ -1,9 +1,7 @@
 {
-  "field": {
-    "width": 2,
-    "height": 2,
-    "end_point_color": "red"
-  },
+  "width": 2,
+  "height": 2,
+  "end_point_color": "red",
   "cells": [
     {
       "row": [
