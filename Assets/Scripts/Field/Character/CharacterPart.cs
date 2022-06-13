@@ -17,9 +17,10 @@ public class CharacterPart : MonoBehaviour
     public bool IsMoving;
     private Field _field;
 
-    [Inject]
-    public void Initialize(Field field)
+    public void Initialize(Vector2Int position, bool isActive, Field field)
     {
+        Position = position;
+        IsActive = isActive;
         _field = field;
     }
 
@@ -132,7 +133,7 @@ public class CharacterPart : MonoBehaviour
         TryJoin(DirectionType.Left);
         TryJoin(DirectionType.Right);
     }
-    
+
     public void TryJoin(DirectionType direction)
     {
         if (GetPartFromDirection(direction) == null)
@@ -144,5 +145,4 @@ public class CharacterPart : MonoBehaviour
             //TODO: джойнить дорожку из блоков
         }
     }
-    
 }

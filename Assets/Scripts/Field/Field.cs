@@ -17,6 +17,9 @@ public class Field : MonoBehaviour
     {
         Cells = cells;
         CharacterParts = parts;
+        
+        foreach (var part in CharacterParts)
+            part.TryJoinAllDirections();
     }
 
     public Cell Get(int x, int y)

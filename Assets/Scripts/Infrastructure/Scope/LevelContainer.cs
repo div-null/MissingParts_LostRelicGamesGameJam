@@ -80,7 +80,7 @@ namespace Infrastructure.Scope
                 for (int i = 0; i < w; i++)
                 {
                     Cell newCell;
-                    if (i == 0 || i == w || j == 0 || j == h)
+                    if (i == 0 || i == w - 1 || j == 0 || j == h - 1)
                         newCell = _resolver.Instantiate(_wallCellPrefab, new Vector3(i, j, -1), Quaternion.identity, field.transform);
                     else
                         newCell = _resolver.Instantiate(_emptyCellPrefab, new Vector3(i, j, -1), Quaternion.identity, field.transform);
@@ -89,8 +89,9 @@ namespace Infrastructure.Scope
 
                     if (i == 3 && j == 2)
                     {
-                        // CharacterPart newCharacterPart = _resolver.Instantiate(_characterPartPrefab, new Vector3(i, j, -2), Quaternion.identity, field.transform);
-                        // characterParts.Add(newCharacterPart);
+                        CharacterPart newCharacterPart = _resolver.Instantiate(_characterPartPrefab, new Vector3(i, j, -2), Quaternion.identity, field.transform);
+                        newCharacterPart.Initialize(new Vector2Int(i, j), false, field);
+                        characterParts.Add(newCharacterPart);
                     }
                 }
             }
@@ -122,19 +123,18 @@ namespace Infrastructure.Scope
             };
 
             List<CharacterPart> parts = new List<CharacterPart>();
+            Character character = _resolver.Instantiate(_settings.CharacterPrefab);
 
             for (int i = 0; i < 2; i++)
             {
-                CharacterPart part = _resolver.Instantiate(_settings.CharacterPartPrefab);
+                CharacterPart part = _resolver.Instantiate(_settings.CharacterPartPrefab,
+                    new Vector3(positions[i].x, positions[i].y, -2), Quaternion.identity);
 
-                part.IsActive = true;
-                part.Position = positions[i];
-
+                part.Initialize(positions[i], true, _field);
                 part.TryJoinAllDirections();
                 parts.Add(part);
             }
 
-            Character character = _resolver.Instantiate(_settings.CharacterPrefab);
             character.AddParts(parts);
             return character;
         }
