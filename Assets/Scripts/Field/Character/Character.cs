@@ -23,8 +23,10 @@ public class Character : MonoBehaviour
         _mainPart = parts.GetEnumerator().Current;
     }
 
-    public void Disengage()
+    public void Move(Vector2 vectorDirection)
     {
+        _mainPart.CharacterPartMovement.Move(vectorDirection.ToDirection());
+        _mainPart.CharacterPartAttachment.AttachParts();
     }
 
     //FindMax
@@ -35,12 +37,6 @@ public class Character : MonoBehaviour
     void Start()
     {
        
-    }
-
-    public void Move(Vector2 vectorDirection)
-    {
-        _mainPart.CharacterPartMovement.Move(vectorDirection.ToDirection());
-        _mainPart.CharacterPartAttachment.AttachParts();
     }
 
     // Update is called once per frame

@@ -23,6 +23,11 @@ namespace Assets.Scripts.Field.Cell
         {
             return CellType == CellType.Wall;
         }
+        
+        public bool IsPit()
+        {
+            return CellType == CellType.Pit;
+        }
 
         public bool HasCharacterPart()
         {

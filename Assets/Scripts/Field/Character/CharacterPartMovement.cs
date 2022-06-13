@@ -54,6 +54,7 @@ public class CharacterPartMovement: MonoBehaviour
         {
             if (part == null) return;
             if (visited.Contains(part)) return;
+            visited.Add(part);
             var destination = part.Position + direction.ToVector();
             part.SetPosition(destination);
 
@@ -86,6 +87,7 @@ public class CharacterPartMovement: MonoBehaviour
             {
                 if (part == null) return;
                 if (visited.Contains(part)) return;
+                visited.Add(part);
                 var destination = part.Position + direction.ToVector();
                 part.SetPosition(destination);
 
@@ -99,11 +101,21 @@ public class CharacterPartMovement: MonoBehaviour
         }
     }
     
-    private bool HasWallInCell(Vector2Int destination)
+    private bool HasWallInCell(Vector2Int position)
     {
-        Cell cell = _field.Get(destination);
+        Cell cell = _field.Get(position);
         
         if (cell != null && cell.IsWall())
+            return true;
+        
+        return false;
+    }
+    
+    private bool HasPitInCell(Vector2Int position)
+    {
+        Cell cell = _field.Get(position);
+        
+        if (cell != null && cell.IsPit())
             return true;
         
         return false;

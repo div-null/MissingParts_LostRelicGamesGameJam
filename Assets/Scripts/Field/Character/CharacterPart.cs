@@ -17,7 +17,6 @@ public class CharacterPart : MonoBehaviour
     public int Rotation;
     
     public bool IsActive;
-    public bool IsMoving;
     private Field _field;
     
     public CharacterPartMovement CharacterPartMovement;
@@ -39,6 +38,7 @@ public class CharacterPart : MonoBehaviour
     public void SetActive(bool isActive)
     {
         //change active to this character part
+        IsActive = isActive;
     }
 
     public bool IsLeaf() =>
@@ -163,6 +163,7 @@ public class CharacterPart : MonoBehaviour
 
     public void SetRotation()
     {
+        //change sprite rotation
         Rotation = (Rotation + 270) % 360;
     }
 }
