@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Infrastructure.States;
-using UnityEngine;
 using UnityEngine.SceneManagement;
 using VContainer;
 using VContainer.Unity;
