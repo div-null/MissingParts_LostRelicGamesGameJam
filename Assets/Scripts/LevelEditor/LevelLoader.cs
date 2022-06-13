@@ -14,6 +14,7 @@ namespace LevelEditor
             Lvl3,
             Lvl4
         }
+
         // Assets/Resources/Level/Level1.json
         public const string Level1 = "Level/Level1";
         public const string Level2 = "Level/Level2";
@@ -92,9 +93,12 @@ namespace LevelEditor
             CellContainer[][] fromRaw(Wrapper<CellJSON>[] raw)
             {
                 return raw
-                    .Select(row => row.row
-                        .Select(cell => cell.ToCell())
-                        .ToArray())
+                    .Select(row =>
+                    {
+                        return row?.row
+                            .Select(cell => cell.ToCell())
+                            .ToArray() ?? Array.Empty<CellContainer>();
+                    })
                     .ToArray();
             }
 
@@ -125,7 +129,7 @@ namespace LevelEditor
 
             public CellContainer ToCell()
             {
-                if (Enum.TryParse<CellType>(type, out var cellType))
+                if (Enum.TryParse<CellType>(type, true, out var cellType))
                     return new CellContainer(cellType);
 
                 throw new SerializationException("Wrong cell type");
