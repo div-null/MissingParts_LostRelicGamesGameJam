@@ -1,4 +1,5 @@
 using Infrastructure.States;
+using LevelEditor;
 using VContainer;
 using VContainer.Unity;
 
@@ -11,6 +12,7 @@ namespace Infrastructure.Scope
             RegisterStateMachine(builder);
             builder.RegisterComponentInHierarchy<CoroutineRunner>().AsImplementedInterfaces();
             builder.Register<SceneLoader>(Lifetime.Singleton);
+            builder.Register<LevelLoader>(Lifetime.Singleton);
             builder.RegisterEntryPoint<GameStartup>();
         }
 
