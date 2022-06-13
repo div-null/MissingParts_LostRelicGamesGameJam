@@ -7,10 +7,13 @@ using UnityEngine;
 public abstract class Ability: MonoBehaviour
 {
     protected CharacterPart _characterPart;
+    protected Field _field;
+    
     public abstract void Apply();
 
-    public void Start()
+    public virtual void Initialize(CharacterPart character, Field field)
     {
-        _characterPart = this.GetComponent<CharacterPart>();
+        _field = field;
+        _characterPart = character;
     }
 }

@@ -10,7 +10,7 @@ namespace LevelEditor
         public CellContainer[][] Cells;
         public int MapHeight = 2;
         public int MapWidth = 2;
-        public CellColor FinishColor;
+        public ColorType FinishColor;
         public PlayerPart[] PlayerParts;
         public Misc[] Misc;
     }

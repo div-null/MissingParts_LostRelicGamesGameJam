@@ -5,11 +5,6 @@ using UnityEngine;
 
 public class Field : MonoBehaviour
 {
-    public static Field Instance;
-    public GameObject WallCellPrefab;
-    public GameObject EmptyCellPrefab;
-    public GameObject HoleCellPrefab;
-    public GameObject CharacterPartPrefab;
     private Cell[,] Cells;
     private List<CharacterPart> CharacterParts;
 
@@ -19,7 +14,7 @@ public class Field : MonoBehaviour
         CharacterParts = parts;
         
         foreach (var part in CharacterParts)
-            part.TryJoinAllDirections();
+            part.CharacterPartAttachment.AttachParts();
     }
 
     public Cell Get(Vector2Int coordinates)

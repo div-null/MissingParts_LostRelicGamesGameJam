@@ -9,13 +9,6 @@ public class Character : MonoBehaviour
 {
     private CharacterPart _mainPart;
     private ColorType _characterColor;
-    private Field _field;
-
-    [Inject]
-    public void Initialize(Field field)
-    {
-        _field = field;
-    }
 
     public void AddParts(IEnumerable<CharacterPart> parts)
     {
@@ -32,18 +25,7 @@ public class Character : MonoBehaviour
     //FindMax
     //ChangeMainPart
     //Get cell from field for logic
-
-    // Start is called before the first frame update
-    void Start()
-    {
-       
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-    }
-
+   
     public int PlayerSize()
     {
         HashSet<CharacterPart> visited = new HashSet<CharacterPart>();

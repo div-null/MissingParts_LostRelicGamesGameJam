@@ -12,7 +12,7 @@ namespace LevelEditor
         public int Y;
         public bool IsActive;
         public int Rotation;
-        public CellColor Color;
+        public ColorType Color;
         public PlayerPartType Ability;
         public int Sprite;
     }

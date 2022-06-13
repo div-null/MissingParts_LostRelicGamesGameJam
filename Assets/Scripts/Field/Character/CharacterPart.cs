@@ -13,25 +13,22 @@ public class CharacterPart : MonoBehaviour
     public CharacterPart Up;
     public CharacterPart Down;
 
+    public ColorType Color;
     public Vector2Int Position;
     public int Rotation;
-    
+
     public bool IsActive;
     private Field _field;
-    
+
     public CharacterPartMovement CharacterPartMovement;
     public CharacterPartAttachment CharacterPartAttachment;
 
-    public void Start()
-    {
-        CharacterPartMovement = this.GetComponent<CharacterPartMovement>();
-        CharacterPartAttachment = this.GetComponent<CharacterPartAttachment>();
-    }
-
-    public void Initialize(Vector2Int position, bool isActive, Field field)
+    public void Initialize(Vector2Int position, bool isActive, Field field, int rotation, ColorType color)
     {
         Position = position;
+        Rotation = rotation;
         IsActive = isActive;
+        Color = color;
         _field = field;
     }
 
@@ -44,6 +41,18 @@ public class CharacterPart : MonoBehaviour
     public bool IsLeaf() =>
         Right == null || Left == null || Up == null || Down == null;
 
+    
+    public void TryJoin(DirectionType direction)
+    {
+        if (GetPartFromDirection(direction) == null)
+        {
+            var checkPosition = Position + direction.ToVector();
+            var characterPart = _field.Get(checkPosition)?.CharacterPart;
+            if (characterPart != null)
+                Join(characterPart, IsActive);
+        }
+    }
+    
     public void Join(CharacterPart part, bool setActive = true)
     {
         Vector2Int joinPosition = part.Position - Position;
@@ -67,7 +76,7 @@ public class CharacterPart : MonoBehaviour
             {
                 Up = part;
                 part.Down = this;
-                
+
                 break;
             }
             default:
@@ -77,27 +86,8 @@ public class CharacterPart : MonoBehaviour
                 break;
             }
         }
-        
-        part.SetActive(setActive);
-    }
-    
-    public void TryJoinAllDirections()
-    {
-        TryJoin(DirectionType.Down);
-        TryJoin(DirectionType.Up);
-        TryJoin(DirectionType.Left);
-        TryJoin(DirectionType.Right);
-    }
 
-    public void TryJoin(DirectionType direction)
-    {
-        if (GetPartFromDirection(direction) == null)
-        {
-            var checkPosition = Position + direction.ToVector();
-            var characterPart = _field.Get(checkPosition)?.CharacterPart;
-            if (characterPart != null)
-                Join(characterPart, IsActive);
-        }
+        part.SetActive(setActive);
     }
 
     public void SetActiveToAllParts(CharacterPart characterPart, bool isActive)
@@ -111,7 +101,7 @@ public class CharacterPart : MonoBehaviour
             if (visited.Contains(part)) return;
             visited.Add(part);
             part.SetActive(isActive);
-            
+
             visitNode(part.Down);
             visitNode(part.Up);
             visitNode(part.Right);
@@ -154,11 +144,6 @@ public class CharacterPart : MonoBehaviour
     public bool HasPartInDirection(DirectionType direction)
     {
         return GetPartFromDirection(direction) != null;
-    }
-    
-    public bool HasPartInDirection(float degrees)
-    {
-        return GetPartFromDirection(degrees) != null;
     }
 
     public void SetRotation()
