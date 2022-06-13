@@ -1,6 +1,6 @@
 using System;
 
-namespace Level
+namespace LevelEditor
 {
     /// <summary>
     /// Задает тип клетки на уровне
@@ -9,7 +9,7 @@ namespace Level
     public enum CellType
     {
         Wall = 0,
-        Floor,
+        Empty,
         Pit,
         Finish
     }

@@ -1,18 +1,19 @@
 using System;
-using UnityEngine;
 
-namespace Level
+namespace LevelEditor
 {
     /// <summary>
     /// Определяет часть игрока на поле
     /// </summary>
     [Serializable]
-    public class PlayerPart : ScriptableObject
+    public class PlayerPart
     {
         public int X;
         public int Y;
         public bool IsActive;
+        public int Rotation;
         public CellColor Color;
-        public PlayerPartType Type;
+        public PlayerPartType Ability;
+        public int Sprite;
     }
 }

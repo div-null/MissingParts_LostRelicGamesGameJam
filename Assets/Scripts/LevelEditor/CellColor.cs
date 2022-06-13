@@ -1,6 +1,6 @@
 using System;
 
-namespace Level
+namespace LevelEditor
 {
     /// <summary>
     /// Задает цвет
