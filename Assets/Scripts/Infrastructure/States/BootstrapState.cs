@@ -8,10 +8,9 @@ namespace Infrastructure.States
         private SceneLoader _loader;
         private GameStateMachine _stateMachine;
 
-        public BootstrapState(GameStateMachine stateMachine, SceneLoader loader, LevelLoader levelLoader)
+        public BootstrapState(GameStateMachine stateMachine, SceneLoader loader)
         {
             _stateMachine = stateMachine;
-            _levelLoader = levelLoader;
             _loader = loader;
         }
 
