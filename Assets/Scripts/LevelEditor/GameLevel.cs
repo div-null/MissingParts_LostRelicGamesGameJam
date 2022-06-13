@@ -13,24 +13,6 @@ namespace LevelEditor
         public CellColor FinishColor;
         public PlayerPart[] PlayerParts;
         public Misc[] Misc;
-        public GameLevel()
-        {
-            PlayerParts = Array.Empty<PlayerPart>();
-            Reset();
-        }
-        
-        private void Reset()
-        {
-            Cells = new CellContainer[MapHeight][];
-            for (int j = 0; j < MapHeight; j++)
-            {
-                Cells[j] = new CellContainer[MapWidth];
-                for (int i = 0; i < MapWidth; i++)
-                {
-                    Cells[j][i] = new CellContainer(CellType.Empty);
-                }
-            }
-        }
     }
 
     [Serializable]
