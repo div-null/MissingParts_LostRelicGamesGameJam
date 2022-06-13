@@ -18,6 +18,30 @@ namespace Assets.Scripts.Field.Cell
             CellType = cellType;
             CharacterPart = characterPart;
         }
-         
+
+        public bool IsWall()
+        {
+            return CellType == CellType.Wall;
+        }
+
+        public bool HasCharacterPart()
+        {
+            return CharacterPart != null;
+        }
+        
+        public bool HasActiveCharacterPart()
+        {
+            return CharacterPart.IsActive;
+        }
+
+        public void RemoveCharacterPart()
+        {
+            CharacterPart = null;
+        }
+
+        public void AssignCharacterPart(CharacterPart characterPart)
+        {
+            CharacterPart = characterPart;
+        }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Assets.Scripts.Field.Cell;
@@ -16,6 +17,15 @@ public class CharacterPart : MonoBehaviour
     public bool IsActive;
     public bool IsMoving;
     private Field _field;
+    
+    public CharacterPartMovement CharacterPartMovement;
+    public CharacterPartAttachment CharacterPartAttachment;
+
+    public void Start()
+    {
+        CharacterPartMovement = this.GetComponent<CharacterPartMovement>();
+        CharacterPartAttachment = this.GetComponent<CharacterPartAttachment>();
+    }
 
     public void Initialize(Vector2Int position, bool isActive, Field field)
     {
@@ -24,14 +34,9 @@ public class CharacterPart : MonoBehaviour
         _field = field;
     }
 
-    public void TurnOn()
+    public void SetActive(bool isActive)
     {
-        //turn on this character part and all parts from graph
-    }
-
-    public void TurnOff()
-    {
-        //turn off this character part and all parts from graph
+        //change active to this character part
     }
 
     public bool IsLeaf() =>
@@ -42,71 +47,37 @@ public class CharacterPart : MonoBehaviour
         Vector2Int joinPosition = part.Position - Position;
         Assert.IsTrue(joinPosition.magnitude == 1);
 
-        if (joinPosition == Vector2Int.left)
+        switch (joinPosition.ToDirection())
         {
-            Left = part;
-            part.Right = this;
-            part.IsActive = setActive;
+            case DirectionType.Left:
+            {
+                Left = part;
+                part.Right = this;
+                break;
+            }
+            case DirectionType.Right:
+            {
+                Right = part;
+                part.Left = this;
+                break;
+            }
+            case DirectionType.Up:
+            {
+                Up = part;
+                part.Down = this;
+                
+                break;
+            }
+            default:
+            {
+                Down = part;
+                part.Up = this;
+                break;
+            }
         }
-        else if (joinPosition == Vector2Int.right)
-        {
-            Right = part;
-            part.Left = this;
-            part.IsActive = setActive;
-        }
-        else if (joinPosition == Vector2Int.up)
-        {
-            Up = part;
-            part.Down = this;
-            part.IsActive = setActive;
-        }
-        else if (joinPosition == Vector2Int.down)
-        {
-            Down = part;
-            part.Up = this;
-            part.IsActive = setActive;
-        }
-        else
-        {
-            Debug.LogError("Can't join parts");
-        }
+        
+        part.SetActive(setActive);
     }
-
-    // public bool CanMove(DirectionType direction)
-    // {
-    //     CharacterPart partFromSide;
-    //     partFromSide = GetPartFromDirection(direction);
-    //
-    //     if (partFromSide == null)
-    //     {
-    //         Vector2Int directionVector = GetVectorFromDirection(direction);
-    //         Cell foundCell = Field.Instance.GetCell(Position + directionVector);
-    //         if (foundCell.CellType == CellType.Wall)
-    //             return false;
-    //         else
-    //             return true;
-    //     }
-    //     else
-    //     {
-    //         return partFromSide.CanMove(direction);
-    //     }
-    // }
-
-    // public void Move(DirectionType direction)
-    // {
-    //     CharacterPart partFromSide;
-    //     partFromSide = GetPartFromDirection(direction);
-    //
-    //     if (partFromSide == null)
-    //     {
-    //         Vector2Int directionVector = direction.ToVector();
-    //         Cell foundCell = Field.GetCell(Position + directionVector);
-    //         CharacterPart foundCharacterPart = foundCell.CharacterPart;
-    //         if (foundCharacterPart != null)
-    //             //attach foundCharacterPart to this part
-    //             //Left/Right = ...
-    //     }
-    // }
 
     public CharacterPart GetPartFromDirection(DirectionType direction)
     {
@@ -118,12 +89,24 @@ public class CharacterPart : MonoBehaviour
             DirectionType.Down => Down
         };
     }
-
+    
+    public CharacterPart GetPartFromDirection(float degrees)
+    {
+        int direction = (int)(degrees % 90);
+        return direction switch
+        {
+            0 => Up,
+            1 => Left,
+            2 => Down,
+            3 => Right
+        };
+    }
 
     public void SetPosition(Vector2Int destination)
     {
         Position = destination;
         Debug.Log($"New position {Position}");
+        //TODO: set transform
     }
 
     public void TryJoinAllDirections()
@@ -142,12 +125,37 @@ public class CharacterPart : MonoBehaviour
             var characterPart = _field.Get(checkPosition)?.CharacterPart;
             if (characterPart != null)
                 Join(characterPart, IsActive);
-            //TODO: джойнить дорожку из блоков
         }
+    }
+
+    public void SetActiveToAllParts(CharacterPart characterPart, bool isActive)
+    {
+        //Обойти все части characterPart'а и изменить им Active
+        HashSet<CharacterPart> visited = new HashSet<CharacterPart>();
+
+        void visitNode(CharacterPart part)
+        {
+            if (part == null) return;
+            if (visited.Contains(part)) return;
+            visited.Add(part);
+            part.SetActive(isActive);
+            
+            visitNode(part.Down);
+            visitNode(part.Up);
+            visitNode(part.Right);
+            visitNode(part.Left);
+        }
+
+        visitNode(characterPart);
     }
 
     public bool HasPartInDirection(DirectionType direction)
     {
         return GetPartFromDirection(direction) != null;
+    }
+    
+    public bool HasPartInDirection(float degrees)
+    {
+        return GetPartFromDirection(degrees) != null;
     }
 }

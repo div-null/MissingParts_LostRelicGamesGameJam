@@ -2,9 +2,9 @@
 {
     public enum CellType
     {
-        Empty = 0,
+        Floor = 0,
         Wall = 1,
-        Finish,
-        Hole
+        Pit,
+        Finish
     }
 }
