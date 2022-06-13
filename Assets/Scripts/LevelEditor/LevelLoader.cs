@@ -14,11 +14,11 @@ namespace LevelEditor
             Lvl3,
             Lvl4
         }
-
-        public const string Level1 = ";";
-        public const string Level2 = ";";
-        public const string Level3 = ";";
-        public const string Level4 = ";";
+        // Assets/Resources/Level/Level1.json
+        public const string Level1 = "Level/Level1";
+        public const string Level2 = "Level/Level2";
+        public const string Level3 = "Level/Level3";
+        public const string Level4 = "Level/Level4";
 
         public GameLevel LoadLevel(Level level)
         {
@@ -82,7 +82,7 @@ namespace LevelEditor
                 cells = level.Cells
                     .Select(row => new Wrapper<CellJSON>()
                     {
-                        Row = row
+                        row = row
                             .Select(cell => new CellJSON(cell))
                             .ToArray()
                     })
@@ -92,7 +92,7 @@ namespace LevelEditor
             CellContainer[][] fromRaw(Wrapper<CellJSON>[] raw)
             {
                 return raw
-                    .Select(row => row.Row
+                    .Select(row => row.row
                         .Select(cell => cell.ToCell())
                         .ToArray())
                     .ToArray();
@@ -135,7 +135,7 @@ namespace LevelEditor
         [Serializable]
         private class Wrapper<T>
         {
-            public T[] Row;
+            public T[] row;
         }
     }
 }
