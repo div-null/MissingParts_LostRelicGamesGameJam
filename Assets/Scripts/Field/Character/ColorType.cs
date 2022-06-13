@@ -1,4 +1,7 @@
-﻿public enum ColorType
+﻿using System;
+
+[Serializable]
+public enum ColorType
 {
     Blue = 0,
     Red = 1,

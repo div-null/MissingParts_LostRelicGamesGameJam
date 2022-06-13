@@ -13,6 +13,7 @@ public class CharacterPart : MonoBehaviour
     public CharacterPart Up;
     public CharacterPart Down;
 
+    public ColorType Color;
     public Vector2Int Position;
     public int Rotation;
 
@@ -23,17 +24,12 @@ public class CharacterPart : MonoBehaviour
     public CharacterPartMovement CharacterPartMovement;
     public CharacterPartAttachment CharacterPartAttachment;
 
-    public void Start()
-    {
-        CharacterPartMovement = this.GetComponent<CharacterPartMovement>();
-        CharacterPartAttachment = this.GetComponent<CharacterPartAttachment>();
-    }
-
-    public void Initialize(Vector2Int position, bool isActive, Field field, int rotation)
+    public void Initialize(Vector2Int position, bool isActive, Field field, int rotation, ColorType color)
     {
         Position = position;
         Rotation = rotation;
         IsActive = isActive;
+        Color = color;
         _field = field;
     }
 

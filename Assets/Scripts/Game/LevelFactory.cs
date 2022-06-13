@@ -45,7 +45,7 @@ namespace Game
                     new Vector3(playerPart.X, playerPart.Y, -2),
                     Quaternion.identity,
                     field.transform);
-                newCharacterPart.Initialize(new Vector2Int(playerPart.X, playerPart.Y), false, field, playerPart.Rotation);
+                newCharacterPart.Initialize(new Vector2Int(playerPart.X, playerPart.Y), false, field, playerPart.Rotation, playerPart.Color);
                 characterParts.Add(newCharacterPart);
             }
 
@@ -81,7 +81,7 @@ namespace Game
                 CharacterPartMovement characterMovement = setupCharacterMovement(field, characterPart);
                 CharacterPartAttachment characterAttachment = setupCharacterAttachment(field, characterPart);
 
-                characterPart.Initialize(new Vector2Int(part.X, part.Y), true, field, part.Rotation);
+                characterPart.Initialize(new Vector2Int(part.X, part.Y), true, field, part.Rotation, part.Color);
 
                 characterAttachment.AttachParts();
                 parts.Add(characterPart);
