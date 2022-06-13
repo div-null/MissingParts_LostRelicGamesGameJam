@@ -136,7 +136,11 @@ public class CharacterPart : MonoBehaviour
 
     public void SetPosition(Vector2Int destination)
     {
+        _field.Get(Position).RemoveCharacterPart();
+        _field.Get(destination).AssignCharacterPart(this);
+        
         Position = destination;
+        this.transform.position = _field.Get(destination).gameObject.transform.position;
         Debug.Log($"New position {Position}");
         //TODO: set transform
     }

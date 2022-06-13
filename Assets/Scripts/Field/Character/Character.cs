@@ -1,6 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Assets.Scripts.Field.Cell;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using VContainer;
@@ -9,13 +12,18 @@ public class Character : MonoBehaviour
 {
     private CharacterPart _mainPart;
     private ColorType _characterColor;
+    
 
     public void AddParts(List<CharacterPart> parts)
     {
         // Взяли первый элемент
-        _mainPart = parts.GetEnumerator().Current;
         _mainPart = parts.First();
     }
+    
+    public void DestroyCharacter()
+    {
+        _mainPart = null;
+        //may be something else with events
     }
 
     public void Move(Vector2 vectorDirection)

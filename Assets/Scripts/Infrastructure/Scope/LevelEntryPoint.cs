@@ -11,6 +11,10 @@ namespace Infrastructure.Scope
         private int _currentLevel;
         private LevelLoader _levelLoader;
 
+        private Field _field;
+        private Character _character;
+        
+
         public LevelEntryPoint(LevelFactory factory, LevelLoader levelLoader)
         {
             _levelLoader = levelLoader;
@@ -23,7 +27,7 @@ namespace Infrastructure.Scope
             LoadNextLevel();
         }
 
-        public void LoadNextLevel()
+        public void LoadLevel()
         {
             Debug.Log($"Loading Level {_currentLevel}");
             GameLevel level = _currentLevel switch
@@ -32,9 +36,23 @@ namespace Infrastructure.Scope
                 2 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl2),
                 3 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl3),
             };
-            Field field = _factory.CreateField(level);
-            Character character = _factory.CreateCharacter(level, field);
+            _field = _factory.CreateField(level);
+            _character = _factory.CreateCharacter(level, _field);
+            //TODO: event to reload level died and click on reload button
+            //TODO: event to pass load next level after winning on current level
+        }
+        
+        public void LoadNextLevel()
+        {
+            LoadLevel();
             _currentLevel++;
+        }
+
+        public void ReloadLevel()
+        {
+            _field.DestroyField();
+            _character.DestroyCharacter();
+            LoadLevel();
         }
     }
 }

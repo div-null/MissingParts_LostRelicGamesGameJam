@@ -21,16 +21,32 @@ public class Field : MonoBehaviour
             part.CharacterPartAttachment.AttachParts();
     }
 
-    public Cell Get(Vector2Int coordinates)
+    public void DestroyField()
     {
-        if (coordinates.x < 0 || coordinates.y < 0 || coordinates.x > Cells.GetLength(0) - 1 || coordinates.y > Cells.GetLength(1) - 1)
-            return null;
-        return Cells[coordinates.x, coordinates.y];
+        for (int j = 0; j < Cells.GetLength(1); j++)
+        {
+            for (int i = 0; i < Cells.GetLength(0); i++)
+            {
+                Destroy(Cells[i, j]);
+            }
+        }
+
+        foreach (var part in CharacterParts)
+        {
+            Destroy(part);
+        }
     }
 
-    void LoadField()
+    public Cell Get(Vector2Int coordinates)
     {
-        //TODO: read field + initialize field and character
+        return Get(coordinates.x, coordinates.y);
+    }
+
+    public Cell Get(int x, int y)
+    {
+        if (x < 0 || y < 0 || x > Cells.GetLength(0) - 1 || y > Cells.GetLength(1) - 1)
+            return null;
+        return Cells[x, y];
     }
 
     //TODO: Join all CharacterParts to each other at start like how it implement in Character.cs in TryAttachCells

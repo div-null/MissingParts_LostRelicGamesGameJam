@@ -12,11 +12,10 @@ namespace Assets.Scripts.Field.Cell
         public CellType CellType;
         public CharacterPart CharacterPart;
 
-        public void Initialize(Vector2Int position, CellType cellType, CharacterPart characterPart)
+        public void Initialize(Vector2Int position, CellType cellType)
         {
             Position = position;
             CellType = cellType;
-            CharacterPart = characterPart;
         }
 
         public bool IsWall()

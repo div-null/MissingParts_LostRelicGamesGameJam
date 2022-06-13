@@ -10,7 +10,12 @@ namespace Infrastructure.Scope
         protected override void Configure(IContainerBuilder builder)
         {
             builder.Register<LevelFactory>(Lifetime.Scoped);
+            builder.Register<PlayerInputs>(Lifetime.Scoped);
             builder.RegisterEntryPoint<LevelEntryPoint>();
+            builder.RegisterBuildCallback(resolver=>
+            {
+                resolver.Resolve<PlayerInputs>().Enable();
+            });
         }
     }
 }

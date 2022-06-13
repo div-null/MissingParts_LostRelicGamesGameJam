@@ -21,16 +21,14 @@ public class CharacterPartAttachment : MonoBehaviour
             if (part == null) return;
             if (visited.Contains(part)) return;
             visited.Add(part);
-            if (!part.IsLeaf())
-            {
-                visitNode(part.Left);
-                visitNode(part.Right);
-                visitNode(part.Up);
-                visitNode(part.Down);
-                return;
-            }
+            
+            visitNode(part.Left);
+            visitNode(part.Right);
+            visitNode(part.Up);
+            visitNode(part.Down);
 
-            tryJoinAllDirections(part);
+            if (!part.IsLeaf())
+                tryJoinAllDirections(part);
         }
 
         visitNode(_characterPart);
@@ -54,8 +52,8 @@ public class CharacterPartAttachment : MonoBehaviour
             if (visited.Contains(part)) return;
             visited.Add(part);
 
-            if (HasPitInCell(part.Position))
-                _characterPart.PutAway();
+            //if (HasPitInCell(part.Position))
+            //    _characterPart.PutAway();
 
             visitNode(part.Left);
             visitNode(part.Right);
