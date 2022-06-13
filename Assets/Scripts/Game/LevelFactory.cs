@@ -38,7 +38,8 @@ namespace Game
                 }
             }
 
-            foreach (var playerPart in level.PlayerParts)
+            var inactiveParts = level.PlayerParts.Where(part => !part.IsActive);
+            foreach (var playerPart in inactiveParts)
             {
                 CharacterPart newCharacterPart = _resolver.Instantiate(_gameSettings.CharacterPartPrefab,
                     new Vector3(playerPart.X, playerPart.Y, -2),
