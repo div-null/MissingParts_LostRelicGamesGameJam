@@ -66,13 +66,13 @@
           "type": "wall"
         },
         {
-          "type": "empty"
-        },
-        {
-          "type": "empty"
-        },
-        {
           "type": "finish"
+        },
+        {
+          "type": "empty"
+        },
+        {
+          "type": "empty"
         },
         {
           "type": "wall"

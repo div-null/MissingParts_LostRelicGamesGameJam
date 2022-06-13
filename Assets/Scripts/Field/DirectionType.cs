@@ -65,7 +65,7 @@ public static class DirectionExtensions{
             return DirectionType.Down;
         else
         {
-            Debug.LogError("Wrong direction");
+            Debug.LogWarning($"Wrong direction: {direction}");
             return DirectionType.Down;
         }
     }

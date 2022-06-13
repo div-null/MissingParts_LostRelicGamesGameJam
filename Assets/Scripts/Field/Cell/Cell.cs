@@ -27,6 +27,11 @@ namespace Assets.Scripts.Field.Cell
         {
             return CellType == CellType.Pit;
         }
+        
+        public bool IsFinish()
+        {
+            return CellType == CellType.Finish;
+        }
 
         public bool HasCharacterPart()
         {

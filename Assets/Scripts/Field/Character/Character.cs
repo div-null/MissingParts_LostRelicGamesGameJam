@@ -12,7 +12,8 @@ public class Character : MonoBehaviour
 {
     private CharacterPart _mainPart;
     private ColorType _characterColor;
-    
+
+    public event Action Moved;
 
     public void AddParts(List<CharacterPart> parts)
     {
@@ -30,6 +31,7 @@ public class Character : MonoBehaviour
     {
         _mainPart.CharacterPartMovement.Move(vectorDirection.ToDirection());
         _mainPart.CharacterPartAttachment.AttachParts();
+        Moved?.Invoke();
     }
 
     //FindMax

@@ -38,6 +38,8 @@ namespace Infrastructure.Scope
             };
             _field = _factory.CreateField(level);
             _character = _factory.CreateCharacter(level, _field);
+            _character.Moved += _field.CheckForFinish;
+
             //TODO: event to reload level died and click on reload button
             //TODO: event to pass load next level after winning on current level
         }

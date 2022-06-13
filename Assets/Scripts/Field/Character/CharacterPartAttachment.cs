@@ -27,7 +27,7 @@ public class CharacterPartAttachment : MonoBehaviour
             visitNode(part.Up);
             visitNode(part.Down);
 
-            if (!part.IsLeaf())
+            if (part.IsLeaf())
                 tryJoinAllDirections(part);
         }
 
