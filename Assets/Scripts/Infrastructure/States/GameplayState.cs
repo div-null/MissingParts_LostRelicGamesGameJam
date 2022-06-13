@@ -1,4 +1,5 @@
 ﻿using Infrastructure.Scope;
+using LevelEditor;
 using UnityEngine;
 using VContainer.Unity;
 
@@ -9,9 +10,11 @@ namespace Infrastructure.States
         private SceneLoader _loader;
         private GameSettings _settings;
         private LifetimeScope _gameScope;
+        private LevelLoader _levelLoader;
 
-        public GameplayState(SceneLoader loader, GameSettings settings)
+        public GameplayState(SceneLoader loader, GameSettings settings, LevelLoader levelLoader)
         {
+            _levelLoader = levelLoader;
             _settings = settings;
             _loader = loader;
         }
@@ -29,6 +32,8 @@ namespace Infrastructure.States
 
         private void onLoaded()
         {
+            GameLevel gameLevel = _levelLoader.LoadLevel(LevelLoader.Level.Lvl1);
+            Debug.Log(gameLevel);
         }
 
         public void Exit()

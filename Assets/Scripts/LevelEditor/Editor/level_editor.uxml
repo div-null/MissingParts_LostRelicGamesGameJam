@@ -1,0 +1,9 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:Template name="cell_editor" src="project://database/Assets/Scripts/Level/Editor/cell_editor.uxml?fileID=9197481963319205126&amp;guid=587f6c3e7afd00a4c8d0d539acfa1b3b&amp;type=3#cell_editor" />
+    <Style src="project://database/Assets/Scripts/Level/Editor/level_editor.uss?fileID=7433441132597879392&amp;guid=4ca8a403fc464c04e8ae65211c9b6d88&amp;type=3#level_editor" />
+    <ui:TextField picking-mode="Ignore" label="Map width" binding-path="MapWidth" name="mapWidth" />
+    <ui:TextField picking-mode="Ignore" label="Map Height" binding-path="MapHeight" name="mapHeight" />
+    <ui:VisualElement name="mapEditor">
+        <ui:Instance template="cell_editor" name="cell_editor" style="align-items: flex-start; justify-content: flex-start; flex-wrap: nowrap; width: 10px; height: 10px;" />
+    </ui:VisualElement>
+</ui:UXML>
