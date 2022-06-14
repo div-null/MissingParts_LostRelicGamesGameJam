@@ -5,16 +5,16 @@
   "cells": [
     [
       {
-        "type": "wall"
+        "type": "pit"
       },
       {
-        "type": "wall"
+        "type": "pit"
       },
       {
-        "type": "wall"
+        "type": "pit"
       },
       {
-        "type": "wall"
+        "type": "pit"
       },
       {
         "type": "wall"

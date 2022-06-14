@@ -21,7 +21,7 @@ public class InputListener : MonoBehaviour
 
     private void Select_performed(InputAction.CallbackContext obj)
     {
-        TryToApplyAbility(Mouse.current.position);
+        TryToApplyAbility(Mouse.current.position.ReadValue());
     }
 
     private void Move_performed(InputAction.CallbackContext obj)
@@ -38,16 +38,26 @@ public class InputListener : MonoBehaviour
         
     }
 
-    private void TryToApplyAbility(Vector2Control mousePosition)
+    private void TryToApplyAbility(Vector2 mousePosition)
     {
-        RaycastHit hit;
-        Ray ray = Camera.main.ScreenPointToRay(mousePosition.ReadValue());
-        
-        if (Physics.Raycast(ray, out hit)) {
+        Vector2 mousePositionInWorld = Camera.main.ScreenToWorldPoint(mousePosition);
+        RaycastHit2D hit = Physics2D.Raycast(mousePositionInWorld, Vector2.zero);
+        if (hit.transform != null) {
             Transform objectHit = hit.transform;
+            Debug.Log($"hitted something: {objectHit}");
             Ability ability;
             if (objectHit.TryGetComponent<Ability>(out ability))
                 ability.Apply();
         }
+    }
+
+    public void LockInputs()
+    {
+        _playerInputs.Disable();
+    }
+
+    public void UnlockInputs()
+    {
+        _playerInputs.Enable();
     }
 }

@@ -107,7 +107,7 @@ public class PullAbility : Ability
     {
         CharacterPart detachablePart = _characterPart.GetPartFromDirection(_lookDirection);
         Vector2Int oppositeDirection = -_lookDirection.ToVector();
-        List<CharacterPart> pulledParts = GetPulledCharacterParts(detachablePart);
+        List<CharacterPart> pulledParts = GetPulledCharacterParts(detachablePart, _lookDirection);
         if (CanPulledPartsMove(pulledParts))
         {
             MovePulledParts(pulledParts);

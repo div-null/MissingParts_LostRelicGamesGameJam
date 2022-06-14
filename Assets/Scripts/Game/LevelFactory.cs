@@ -141,10 +141,14 @@ namespace Game
         {
             return partRotation switch
             {
-                0 | 360 => DirectionType.Up,
-                90 | -270 => DirectionType.Right,
-                180 | -180 => DirectionType.Down,
-                -90 | 270 => DirectionType.Left,
+                0 => DirectionType.Up,
+                360 => DirectionType.Up,
+                90 => DirectionType.Left,
+                -270 => DirectionType.Left,
+                180 => DirectionType.Down,
+                -180 => DirectionType.Down,
+                -90 => DirectionType.Right,
+                270 => DirectionType.Right,
                 _ => throw new ArgumentOutOfRangeException(nameof(partRotation), partRotation, "Wrong rotation angle")
             };
         }
