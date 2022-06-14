@@ -6,9 +6,9 @@ namespace LevelEditor
     /// Определяет тип клетки игрока
     /// </summary>
     [Serializable]
-    public enum PlayerPartType
+    public enum AbilityType
     {
-        Common = 0,
+        Default = 0,
         Rotation,
         Hook
     }

@@ -11,7 +11,7 @@ namespace LevelEditor
         public int MapHeight = 2;
         public int MapWidth = 2;
         public ColorType FinishColor;
-        public PlayerPart[] PlayerParts;
+        public CharacterPartData[] PlayerParts;
         public Misc[] Misc;
     }
 
