@@ -6,14 +6,14 @@ namespace LevelEditor
     /// Определяет часть игрока на поле
     /// </summary>
     [Serializable]
-    public class PlayerPart
+    public class CharacterPartData
     {
         public int X;
         public int Y;
         public bool IsActive;
         public int Rotation;
         public ColorType Color;
-        public PlayerPartType Ability;
+        public AbilityType Ability;
         public int Sprite;
     }
 }

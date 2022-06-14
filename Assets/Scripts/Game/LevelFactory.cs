@@ -47,6 +47,7 @@ namespace Game
                 newCharacterPart.Initialize(new Vector2Int(playerPart.X, playerPart.Y), false, field, playerPart.Rotation, playerPart.Color);
                 characterParts.Add(newCharacterPart);
             }
+
             field.Setup(characterParts);
 
             return field;
@@ -69,36 +70,40 @@ namespace Game
         public Character CreateCharacter(GameLevel level, Field field)
         {
             List<CharacterPart> parts = new List<CharacterPart>();
-            Character characterParts = _resolver.Instantiate(_gameSettings.CharacterPrefab);
-
+            Character character = _resolver.Instantiate(_gameSettings.CharacterPrefab);
+            character.Initialize(field);
+            var inputListener = character.GetOrAddComponent<InputListener>();
+            inputListener.Initialize(_inputs, character);
             var playerParts = level.PlayerParts.Where(part => part.IsActive);
             foreach (var part in playerParts)
             {
                 CharacterPart characterPart = CreateCharacterPart(field, part);
-
-                var inputListener = characterPart.GetOrAddComponent<InputListener>();
-                inputListener.Initialize(_inputs, characterParts);
                 characterPart.Initialize(new Vector2Int(part.X, part.Y), true, field, part.Rotation, part.Color);
 
                 characterPart.CharacterPartAttachment.AttachParts();
                 parts.Add(characterPart);
             }
 
-            characterParts.AddParts(parts);
-            return characterParts;
+            character.AddParts(parts);
+            return character;
         }
 
-        private CharacterPart CreateCharacterPart(Field field, PlayerPart part)
+        private CharacterPart CreateCharacterPart(Field field, CharacterPartData partData)
         {
             CharacterPart characterPart = _resolver.Instantiate(_gameSettings.CharacterPartPrefab,
-                new Vector3(part.X, part.Y, -2), Quaternion.identity);
+                new Vector3(partData.X, partData.Y, -2), Quaternion.identity);
+
+            var partView = characterPart.GetComponent<CharacterPartView>();
+
+            partView.Initialize(partData);
+            characterPart.CharacterPartView = partView;
             
-            field.Get(part.X, part.Y).AssignCharacterPart(characterPart);
-            setupAbilities(part, field, characterPart);
+            field.Get(partData.X, partData.Y).AssignCharacterPart(characterPart);
+            setupAbilities(partData, field, characterPart);
 
             var characterMovement = setupCharacterMovement(field, characterPart);
             var characterAttachment = setupCharacterAttachment(field, characterPart);
-            
+
             characterPart.CharacterPartMovement = characterMovement;
             characterPart.CharacterPartAttachment = characterAttachment;
             return characterPart;
@@ -118,14 +123,14 @@ namespace Game
             return characterMovement;
         }
 
-        private static void setupAbilities(PlayerPart part, Field field, CharacterPart characterPart)
+        private static void setupAbilities(CharacterPartData partData, Field field, CharacterPart characterPart)
         {
-            if (part.Ability == PlayerPartType.Hook)
+            if (partData.Ability == AbilityType.Hook)
             {
                 var pullAbility = characterPart.GetOrAddComponent<PullAbility>();
-                pullAbility.Initialize(characterPart, field, directionFromAngle(part.Rotation));
+                pullAbility.Initialize(characterPart, field, directionFromAngle(partData.Rotation));
             }
-            else if (part.Ability == PlayerPartType.Rotation)
+            else if (partData.Ability == AbilityType.Rotation)
             {
                 var rotateAbility = characterPart.GetOrAddComponent<RotateAbility>();
                 rotateAbility.Initialize(characterPart, field);

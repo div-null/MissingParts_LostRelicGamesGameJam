@@ -98,7 +98,7 @@ namespace LevelEditor
             public int height = 2;
             public int width = 2;
             public string end_point_color;
-            public PlayerPart[] character_parts;
+            public CharacterPartData[] character_parts;
             public Misc[] misc;
 
             public SerializedLevel(GameLevel level)

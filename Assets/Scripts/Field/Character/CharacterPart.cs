@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using Assets.Scripts.Field.Cell;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.Serialization;
 
+[RequireComponent(typeof(CharacterPartView))]
 public class CharacterPart : MonoBehaviour
 {
     public CharacterPart Right;
@@ -22,11 +24,13 @@ public class CharacterPart : MonoBehaviour
     public CharacterPartMovement CharacterPartMovement;
     public CharacterPartAttachment CharacterPartAttachment;
 
+    public CharacterPartView CharacterPartView;
+    
     public void Initialize(Vector2Int position, bool isActive, Field field, int rotation, ColorType color)
     {
         Position = position;
-        Rotation = rotation;
-        IsActive = isActive;
+        SetRotation(rotation);
+        SetActive(isActive);
         Color = color;
         _field = field;
     }
@@ -35,6 +39,7 @@ public class CharacterPart : MonoBehaviour
     {
         //change active to this character part
         IsActive = isActive;
+        CharacterPartView.SetActive(isActive);
     }
 
     public bool IsLeaf() =>
@@ -152,20 +157,26 @@ public class CharacterPart : MonoBehaviour
         _field.Get(destination).AssignCharacterPart(this);
         
         Position = destination;
-        this.transform.position = _field.Get(destination).gameObject.transform.position;
-        Debug.Log($"New position {Position}");
         //TODO: set transform
+        this.transform.position = _field.Get(destination).gameObject.transform.position - Vector3.forward;
+    }
+    
+    public void SetRotation()
+    {
+        //change sprite rotation
+        SetRotation((Rotation + 270) % 360);
+    }
+    
+    public void SetRotation(int degrees)
+    {
+        //change sprite rotation
+        Rotation = degrees;
+        
     }
 
     public bool HasPartInDirection(DirectionType direction)
     {
         return GetPartFromDirection(direction) != null;
-    }
-
-    public void SetRotation()
-    {
-        //change sprite rotation
-        Rotation = (Rotation + 270) % 360;
     }
 
     public bool HasRightShape(HashSet<CharacterPart> visitedParts)
