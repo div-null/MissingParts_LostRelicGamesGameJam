@@ -138,7 +138,7 @@ public class CharacterPart : MonoBehaviour
 
     public void SetPosition(Vector2Int destination)
     {
-        _field.Get(Position).RemoveCharacterPart();
+        _field.Get(Position).RemoveCharacterPart(this);
         _field.Get(destination).AssignCharacterPart(this);
 
         Position = destination;

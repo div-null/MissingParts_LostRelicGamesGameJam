@@ -119,7 +119,7 @@ namespace Game
         private static CharacterPartMovement setupCharacterMovement(Field field, CharacterPart characterPart)
         {
             var characterMovement = characterPart.GetOrAddComponent<CharacterPartMovement>();
-            characterMovement.Initialize(field);
+            characterMovement.Initialize(field, characterPart);
             return characterMovement;
         }
 

@@ -43,9 +43,10 @@ namespace Assets.Scripts.Field.Cell
             return CharacterPart.IsActive;
         }
 
-        public void RemoveCharacterPart()
+        public void RemoveCharacterPart(CharacterPart characterPart)
         {
-            CharacterPart = null;
+            if (CharacterPart == characterPart)
+                CharacterPart = null;
         }
 
         public void AssignCharacterPart(CharacterPart characterPart)

@@ -7,9 +7,10 @@ public class CharacterPartMovement: MonoBehaviour
     private CharacterPart _characterPart;
     private Field _field;
 
-    public void Initialize(Field field)
+    public void Initialize(Field field, CharacterPart characterPart)
     {
         _field = field;
+        _characterPart = characterPart;
     }
     
     public bool CanMove(CharacterPart characterPart, DirectionType direction)
