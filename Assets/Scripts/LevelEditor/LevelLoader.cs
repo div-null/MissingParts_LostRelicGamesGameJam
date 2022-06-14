@@ -32,7 +32,7 @@ namespace LevelEditor
         {
             _settings = new JsonSerializerSettings()
             {
-                ContractResolver = new CamelCasePropertyNamesContractResolver(), 
+                ContractResolver = new CamelCasePropertyNamesContractResolver(),
                 Converters = new List<JsonConverter>()
                 {
                     new StringEnumConverter()
@@ -42,7 +42,7 @@ namespace LevelEditor
                 }
             };
         }
-        
+
         public GameLevel LoadLevel(Level level)
         {
             string levelPath = level switch
@@ -63,7 +63,7 @@ namespace LevelEditor
             var serializedLevel = JsonConvert.SerializeObject(level, Formatting.Indented, _settings);
             return serializedLevel;
         }
-        
+
         public GameLevel DeserializeLevel(string json)
         {
             var gameLevel = JsonConvert.DeserializeObject<GameLevel>(json, _settings);

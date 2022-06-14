@@ -97,7 +97,7 @@ namespace Game
 
             partView.Initialize(partData);
             characterPart.CharacterPartView = partView;
-            
+
             field.Get(partData.X, partData.Y).AssignCharacterPart(characterPart);
             setupAbilities(partData, field, characterPart);
 
