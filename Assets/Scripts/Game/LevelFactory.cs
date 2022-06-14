@@ -30,12 +30,15 @@ namespace Game
 
             Field field = _resolver.Instantiate(_gameSettings.FieldPrefab);
 
+            Vector2 centeringOffset = new Vector2(
+                level.MapWidth % 2 == 0 ? level.MapWidth / 2 : level.MapWidth / 2 - 0.5f, 
+                level.MapHeight % 2 == 0 ? level.MapHeight / 2 : level.MapHeight / 2 - 0.5f);
             field.SetCells(cells);
             for (int j = 0; j < level.MapHeight; j++)
             {
                 for (int i = 0; i < level.MapWidth; i++)
                 {
-                    Cell newCell = CreateCell(i, j, field.transform, level.Cells[j][i]);
+                    Cell newCell = CreateCell(i, j, centeringOffset, field.transform, level.Cells[j][i]);
                     cells[i, j] = newCell;
                 }
             }
@@ -80,14 +83,15 @@ namespace Game
         }
 
 
-        private Cell CreateCell(int x, int y, Transform parent, CellContainer cellContainer)
+        private Cell CreateCell(int x, int y, Vector2 centeringOffset, Transform parent, CellContainer cellContainer)
         {
+            Vector3 cellPosition = new Vector3(x - centeringOffset.x, y - centeringOffset.y, -1);
             Cell cell = cellContainer.Type switch
             {
-                CellType.Wall => _resolver.Instantiate(_gameSettings.WallCellPrefab, new Vector3(x, y, -1), Quaternion.identity, parent),
-                CellType.Empty => _resolver.Instantiate(_gameSettings.EmptyCellPrefab, new Vector3(x, y, -1), Quaternion.identity, parent),
-                CellType.Pit => _resolver.Instantiate(_gameSettings.HoleCellPrefab, new Vector3(x, y, -1), Quaternion.identity, parent),
-                CellType.Finish => _resolver.Instantiate(_gameSettings.FinishCellPrefab, new Vector3(x, y, -1), Quaternion.identity, parent),
+                CellType.Wall => _resolver.Instantiate(_gameSettings.WallCellPrefab, cellPosition, Quaternion.identity, parent),
+                CellType.Empty => _resolver.Instantiate(_gameSettings.EmptyCellPrefab, cellPosition, Quaternion.identity, parent),
+                CellType.Pit => _resolver.Instantiate(_gameSettings.HoleCellPrefab, cellPosition, Quaternion.identity, parent),
+                CellType.Finish => _resolver.Instantiate(_gameSettings.FinishCellPrefab, cellPosition, Quaternion.identity, parent),
                 _ => throw new ArgumentOutOfRangeException(nameof(cellContainer.Type), "Unknown cell type")
             };
             cell.Initialize(new Vector2Int(x, y), cellContainer.Type);
@@ -118,8 +122,9 @@ namespace Game
 
         private CharacterPart CreateCharacterPart(Field field, CharacterPartData partData)
         {
+            Vector3 partPosition = field.Get(partData.X, partData.Y).gameObject.transform.position - Vector3.forward;
             CharacterPart characterPart = _resolver.Instantiate(_gameSettings.CharacterPartPrefab,
-                new Vector3(partData.X, partData.Y, -2), Quaternion.identity);
+                partPosition, Quaternion.identity);
 
             var partView = characterPart.GetComponent<CharacterPartView>();
 
