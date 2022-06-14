@@ -35,7 +35,7 @@ namespace Game
             {
                 for (int i = 0; i < level.MapWidth; i++)
                 {
-                    Cell newCell = CreateCell(i, j, field.transform, level.Cells[i][j]);
+                    Cell newCell = CreateCell(i, j, field.transform, level.Cells[j][i]);
                     cells[i, j] = newCell;
                 }
             }
