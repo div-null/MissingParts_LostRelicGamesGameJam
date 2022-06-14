@@ -9,7 +9,7 @@ namespace LevelEditor
     public enum PlayerPartType
     {
         Common = 0,
-        Rotation,
-        Hook
+        Rotation = 1,
+        Hook = 2
     }
 }

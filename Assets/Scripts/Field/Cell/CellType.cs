@@ -1,5 +1,8 @@
-﻿namespace Assets.Scripts.Field.Cell
+﻿using System;
+
+namespace Assets.Scripts.Field.Cell
 {
+    [Serializable]
     public enum CellType
     {
         Empty = 0,

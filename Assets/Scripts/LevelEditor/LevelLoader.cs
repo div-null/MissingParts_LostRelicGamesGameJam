@@ -1,13 +1,19 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using Assets.Scripts.Field.Cell;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
 using UnityEngine;
 
 namespace LevelEditor
 {
     public class LevelLoader
     {
+        private JsonSerializerSettings _settings;
+
         public enum Level
         {
             Lvl1,
@@ -22,6 +28,21 @@ namespace LevelEditor
         public const string Level3 = "Level/Level3";
         public const string Level4 = "Level/Level4";
 
+        public LevelLoader()
+        {
+            _settings = new JsonSerializerSettings()
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver(), 
+                Converters = new List<JsonConverter>()
+                {
+                    new StringEnumConverter()
+                    {
+                        NamingStrategy = new CamelCaseNamingStrategy()
+                    }
+                }
+            };
+        }
+        
         public GameLevel LoadLevel(Level level)
         {
             string levelPath = level switch
@@ -39,11 +60,17 @@ namespace LevelEditor
 
         public string SerializeLevel(GameLevel level)
         {
-            var serializedLevel = new SerializedLevel(level);
-            return JsonUtility.ToJson(serializedLevel);
+            var serializedLevel = JsonConvert.SerializeObject(level, Formatting.Indented, _settings);
+            return serializedLevel;
+        }
+        
+        public GameLevel DeserializeLevel(string json)
+        {
+            var gameLevel = JsonConvert.DeserializeObject<GameLevel>(json, _settings);
+            return gameLevel;
         }
 
-        public GameLevel DeserializeLevel(string json)
+        private GameLevel DeserializeLevelOld(string json)
         {
             var gameLevel = JsonUtility.FromJson<SerializedLevel>(json);
             return gameLevel.ToLevel();
