@@ -48,10 +48,37 @@ namespace Game
                 characterParts.Add(newCharacterPart);
             }
 
-            field.Setup(characterParts);
+            foreach (var part in characterParts)
+            {
+                part.CharacterPartAttachment.AttachParts();
+                cells[part.Position.x, part.Position.y].AssignCharacterPart(part);
+            }
+
+
+            List<Cell> finishCells = FindFinishCells(cells);
+            field.Setup(finishCells);
 
             return field;
         }
+
+        private List<Cell> FindFinishCells(Cell[,] cells)
+        {
+            var finishCells = new List<Cell>();
+
+            for (int j = 0; j < cells.GetLength(1); j++)
+            {
+                for (int i = 0; i < cells.GetLength(0); i++)
+                {
+                    if (cells[i, j].CellType == CellType.Finish)
+                    {
+                        finishCells.Add(cells[i, j]);
+                    }
+                }
+            }
+
+            return finishCells;
+        }
+
 
         private Cell CreateCell(int x, int y, Transform parent, CellContainer cellContainer)
         {
@@ -81,6 +108,7 @@ namespace Game
                 characterPart.Initialize(new Vector2Int(part.X, part.Y), true, field, part.Rotation, part.Color);
 
                 characterPart.CharacterPartAttachment.AttachParts();
+                field.Get(part.X, part.Y).AssignCharacterPart(characterPart);
                 parts.Add(characterPart);
             }
 

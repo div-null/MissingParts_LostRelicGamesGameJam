@@ -39,11 +39,17 @@ namespace Infrastructure.Scope
             _field = _factory.CreateField(level);
             _character = _factory.CreateCharacter(level, _field);
             _character.Moved += _field.CheckForFinish;
-
+            _field.Finished += LevelFinished;
             //TODO: event to reload level died and click on reload button
             //TODO: event to pass load next level after winning on current level
         }
-        
+
+        private void LevelFinished()
+        {
+            DestroyLevel();
+            LoadNextLevel();
+        }
+
         public void LoadNextLevel()
         {
             LoadLevel();
@@ -52,9 +58,15 @@ namespace Infrastructure.Scope
 
         public void ReloadLevel()
         {
+            LoadLevel();
+        }
+
+        public void DestroyLevel()
+        {
+            _character.Moved -= _field.CheckForFinish;
+            _field.Finished -= LevelFinished;
             _field.DestroyField();
             _character.DestroyCharacter();
-            LoadLevel();
         }
     }
 }

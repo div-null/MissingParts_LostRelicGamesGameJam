@@ -2,14 +2,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Assets.Scripts.Field.Cell;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Field : MonoBehaviour
 {
     private Cell[,] _cells;
-    private List<CharacterPart> _characterParts;
     private List<Cell> _finishCells;
-
     public event Action Finished;
 
     public void SetCells(Cell[,] cells)
@@ -17,30 +16,9 @@ public class Field : MonoBehaviour
         _cells = cells;
     }
 
-    public void Setup(List<CharacterPart> parts)
+    public void Setup(List<Cell> finishCells)
     {
-        _characterParts = parts;
-
-        foreach (var part in _characterParts)
-            part.CharacterPartAttachment.AttachParts();
-
-        FindFinishCells();
-    }
-
-    private void FindFinishCells()
-    {
-        _finishCells = new List<Cell>();
-        
-        for (int j = 0; j < _cells.GetLength(1); j++)
-        {
-            for (int i = 0; i < _cells.GetLength(0); i++)
-            {
-                if (_cells[i, j].CellType == CellType.Finish)
-                {
-                    _finishCells.Add(_cells[i, j]);
-                }
-            }
-        }
+        _finishCells = finishCells;
     }
 
     public void CheckForFinish()
@@ -51,7 +29,7 @@ public class Field : MonoBehaviour
             Debug.Log("Level complete!");
         }
     }
-    
+
     public bool IsFinished()
     {
         HashSet<CharacterPart> visitedParts = new HashSet<CharacterPart>();
@@ -73,14 +51,13 @@ public class Field : MonoBehaviour
         {
             for (int i = 0; i < _cells.GetLength(0); i++)
             {
-                Destroy(_cells[i, j]);
+                if (_cells[i, j].CharacterPart != null)
+                    Destroy(_cells[i, j].CharacterPart.gameObject);
+                Destroy(_cells[i, j].gameObject);
             }
         }
-
-        foreach (var part in _characterParts)
-        {
-            Destroy(part);
-        }
+        
+        Destroy(this.gameObject);
     }
 
     public Cell Get(Vector2Int coordinates)

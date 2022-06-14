@@ -1,13 +1,7 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Assets.Scripts.Field.Cell;
-using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using VContainer;
 
 public class Character : MonoBehaviour
 {
@@ -33,6 +27,7 @@ public class Character : MonoBehaviour
     public void DestroyCharacter()
     {
         _mainPart = null;
+        Destroy(this.gameObject);
         //may be something else with events
     }
 
