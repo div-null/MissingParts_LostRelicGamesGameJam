@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class CharacterPartMovement: MonoBehaviour
 {
+    private CharacterPart _characterPart;
     private Field _field;
 
     public void Initialize(Field field)
@@ -48,10 +49,10 @@ public class CharacterPartMovement: MonoBehaviour
 
         return visitNode(characterPart);
     }
-
-    public void Move(CharacterPart characterPart,  DirectionType direction)
+    
+    public bool Move(DirectionType direction)
     {
-        if (!CanMove(characterPart, direction)) return;
+        if (!CanMove(_characterPart, direction)) return false;
 
         HashSet<CharacterPart> visited = new HashSet<CharacterPart>();
 
@@ -69,43 +70,10 @@ public class CharacterPartMovement: MonoBehaviour
             visitNode(part.Down);
         }
 
-        visitNode(characterPart);
+        visitNode(_characterPart);
+        return true;
     }
-    
-    public void Move(DirectionType direction)
-    {
-        CharacterPart characterPart = this.GetComponent<CharacterPart>();
-        Move(characterPart, direction);
-    }
-    
-    public void Move(DirectionType direction, int numberOfSteps)
-    {
-        CharacterPart characterPart = this.GetComponent<CharacterPart>();
 
-        for (int i = 0; i < numberOfSteps; i++)
-        {
-            if (!CanMove(characterPart, direction)) return;
-
-            HashSet<CharacterPart> visited = new HashSet<CharacterPart>();
-
-            void visitNode(CharacterPart part)
-            {
-                if (part == null) return;
-                if (visited.Contains(part)) return;
-                visited.Add(part);
-                var destination = part.Position + direction.ToVector();
-                part.SetPosition(destination);
-
-                visitNode(part.Left);
-                visitNode(part.Right);
-                visitNode(part.Up);
-                visitNode(part.Down);
-            }
-
-            visitNode(characterPart);
-        }
-    }
-    
     private bool HasWallInCell(Vector2Int position)
     {
         Cell cell = _field.Get(position);
@@ -124,5 +92,21 @@ public class CharacterPartMovement: MonoBehaviour
             return true;
         
         return false;
+    }
+
+    public bool CanThisMove(DirectionType direction)
+    {
+        Vector2Int directionVector = direction.ToVector();
+        Cell cell = _field.Get(_characterPart.Position + directionVector);
+        if (cell.IsWall())
+            return false;
+        else
+            return true;
+    }
+
+    public void MoveThis(DirectionType direction)
+    {
+        var destination = _characterPart.Position + direction.ToVector();
+        _characterPart.SetPosition(destination);
     }
 }

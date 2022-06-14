@@ -29,18 +29,10 @@ public class CharacterPartAttachment : MonoBehaviour
             visitNode(part.Down);
 
             if (part.IsLeaf())
-                tryJoinAllDirections(part);
+                part.TryJoinAllDirections();
         }
 
         visitNode(_characterPart);
-    }
-
-    private void tryJoinAllDirections(CharacterPart part)
-    {
-        part.TryJoin(DirectionType.Down);
-        part.TryJoin(DirectionType.Up);
-        part.TryJoin(DirectionType.Left);
-        part.TryJoin(DirectionType.Right);
     }
     
     public void CheckForPits()

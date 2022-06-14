@@ -25,7 +25,7 @@ public class CharacterPart : MonoBehaviour
     public CharacterPartAttachment CharacterPartAttachment;
 
     public CharacterPartView CharacterPartView;
-    
+
     public void Initialize(Vector2Int position, bool isActive, Field field, int rotation, ColorType color)
     {
         Position = position;
@@ -45,7 +45,7 @@ public class CharacterPart : MonoBehaviour
     public bool IsLeaf() =>
         Right == null || Left == null || Up == null || Down == null;
 
-    
+
     public void TryJoin(DirectionType direction)
     {
         if (GetPartFromDirection(direction) == null)
@@ -56,7 +56,19 @@ public class CharacterPart : MonoBehaviour
             {
                 Join(characterPart, IsActive);
             }
+            else
+            {
+                RemoveLinkInDirection(direction);
+            }
         }
+    }
+
+    public void TryJoinAllDirections()
+    {
+        TryJoin(DirectionType.Down);
+        TryJoin(DirectionType.Up);
+        TryJoin(DirectionType.Left);
+        TryJoin(DirectionType.Right);
     }
     
     public void Join(CharacterPart part, bool setActive = true)
@@ -64,34 +76,7 @@ public class CharacterPart : MonoBehaviour
         Vector2Int joinPosition = part.Position - Position;
         Assert.IsTrue(joinPosition.magnitude == 1);
 
-        switch (joinPosition.ToDirection())
-        {
-            case DirectionType.Left:
-            {
-                Left = part;
-                part.Right = this;
-                break;
-            }
-            case DirectionType.Right:
-            {
-                Right = part;
-                part.Left = this;
-                break;
-            }
-            case DirectionType.Up:
-            {
-                Up = part;
-                part.Down = this;
-
-                break;
-            }
-            default:
-            {
-                Down = part;
-                part.Up = this;
-                break;
-            }
-        }
+        SetLinkInDirection(part, joinPosition.ToDirection());
 
         SetActiveToAllParts(setActive);
     }
@@ -127,10 +112,10 @@ public class CharacterPart : MonoBehaviour
             DirectionType.Down => Down
         };
     }
-    
+
     public CharacterPart GetPartFromDirection(float degrees)
     {
-        int direction = (int)(degrees % 90);
+        int direction = (int) (degrees % 90);
         return direction switch
         {
             0 => Up,
@@ -155,23 +140,23 @@ public class CharacterPart : MonoBehaviour
     {
         _field.Get(Position).RemoveCharacterPart();
         _field.Get(destination).AssignCharacterPart(this);
-        
+
         Position = destination;
         //TODO: set transform
         this.transform.position = _field.Get(destination).gameObject.transform.position - Vector3.forward;
     }
-    
+
     public void SetRotation()
     {
         //change sprite rotation
         SetRotation((Rotation + 270) % 360);
     }
-    
+
     public void SetRotation(int degrees)
     {
         //change sprite rotation
         Rotation = degrees;
-        
+
     }
 
     public bool HasPartInDirection(DirectionType direction)
@@ -186,42 +171,85 @@ public class CharacterPart : MonoBehaviour
             if (part == null) return true;
             if (visitedParts.Contains(part)) return true;
             visitedParts.Add(part);
-            
+
             Cell cell = _field.Get(part.Position);
             if (cell != null && !cell.IsFinish())
             {
                 return false;
             }
-            
+
             return visitNode(part.Down) && visitNode(part.Up) && visitNode(part.Right) && visitNode(part.Left);
         }
 
         return visitNode(this);
     }
 
-    public void RemoveLinkWith(CharacterPart characterPart)
+    public void RemoveLinkInDirection(DirectionType direction)
     {
-        Vector2Int directionVector = characterPart.Position - Position;
-        switch (directionVector.ToDirection())
+        switch (direction)
         {
             case DirectionType.Up:
             {
+                if (Up != null)
+                    Up.Down = null;
+                
                 Up = null;
                 break;
             }
             case DirectionType.Right:
             {
+                if (Right != null)
+                    Right.Left = null;
+                
                 Right = null;
                 break;
-            }  
+            }
             case DirectionType.Down:
             {
+                if (Down != null)
+                    Down.Up = null;
+                
                 Down = null;
                 break;
             }
             default:
             {
+                if (Left != null)
+                    Left.Right = null;
+                
                 Left = null;
+                break;
+            }
+        }
+    }
+    
+    private void SetLinkInDirection(CharacterPart part, DirectionType direction)
+    {
+        switch (direction)
+        {
+            case DirectionType.Left:
+            {
+                Left = part;
+                part.Right = this;
+                break;
+            }
+            case DirectionType.Right:
+            {
+                Right = part;
+                part.Left = this;
+                break;
+            }
+            case DirectionType.Up:
+            {
+                Up = part;
+                part.Down = this;
+
+                break;
+            }
+            default:
+            {
+                Down = part;
+                part.Up = this;
                 break;
             }
         }
@@ -236,28 +264,9 @@ public class CharacterPart : MonoBehaviour
 
     public void RemoveLinks()
     {
-        if (Right != null)
-        {
-            Right.Left = null;
-            Right = null;
-        }
-        
-        if (Left != null)
-        {
-            Left.Right = null;
-            Left = null;
-        }
-
-        if (Up != null)
-        {
-            Up.Down = null;
-            Up = null;
-        }
-
-        if (Down != null)
-        {
-            Down.Up = null;
-            Down = null;
-        }
+        RemoveLinkInDirection(DirectionType.Up);
+        RemoveLinkInDirection(DirectionType.Right);
+        RemoveLinkInDirection(DirectionType.Down);
+        RemoveLinkInDirection(DirectionType.Left);
     }
 }
