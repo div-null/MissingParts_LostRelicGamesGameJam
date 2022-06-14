@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using Assets.Scripts.Field.Cell;
 using UnityEngine;
 using UnityEngine.Assertions;
-using VContainer;
 
 public class CharacterPart : MonoBehaviour
 {
@@ -49,7 +48,9 @@ public class CharacterPart : MonoBehaviour
             var checkPosition = Position + direction.ToVector();
             var characterPart = _field.Get(checkPosition)?.CharacterPart;
             if (characterPart != null)
+            {
                 Join(characterPart, IsActive);
+            }
         }
     }
     
@@ -87,10 +88,10 @@ public class CharacterPart : MonoBehaviour
             }
         }
 
-        part.SetActive(setActive);
+        SetActiveToAllParts(setActive);
     }
 
-    public void SetActiveToAllParts(CharacterPart characterPart, bool isActive)
+    public void SetActiveToAllParts(bool isActive)
     {
         //Обойти все части characterPart'а и изменить им Active
         HashSet<CharacterPart> visited = new HashSet<CharacterPart>();
@@ -108,7 +109,7 @@ public class CharacterPart : MonoBehaviour
             visitNode(part.Left);
         }
 
-        visitNode(characterPart);
+        visitNode(this);
     }
 
     public CharacterPart GetPartFromDirection(DirectionType direction)
@@ -132,6 +133,17 @@ public class CharacterPart : MonoBehaviour
             2 => Down,
             3 => Right
         };
+    }
+
+    public CharacterPart[] GetPartsFromDirections()
+    {
+        List<CharacterPart> characterParts = new List<CharacterPart>();
+        if (Up != null) characterParts.Add(Up);
+        if (Right != null) characterParts.Add(Right);
+        if (Down != null) characterParts.Add(Down);
+        if (Left != null) characterParts.Add(Left);
+
+        return characterParts.ToArray();
     }
 
     public void SetPosition(Vector2Int destination)
@@ -174,5 +186,67 @@ public class CharacterPart : MonoBehaviour
         }
 
         return visitNode(this);
+    }
+
+    public void RemoveLinkWith(CharacterPart characterPart)
+    {
+        Vector2Int directionVector = characterPart.Position - Position;
+        switch (directionVector.ToDirection())
+        {
+            case DirectionType.Up:
+            {
+                Up = null;
+                break;
+            }
+            case DirectionType.Right:
+            {
+                Right = null;
+                break;
+            }  
+            case DirectionType.Down:
+            {
+                Down = null;
+                break;
+            }
+            default:
+            {
+                Left = null;
+                break;
+            }
+        }
+    }
+
+    public void Delete()
+    {
+        Destroy(this.gameObject);
+        Debug.Log("destroying part");
+        //Delete after entering the pit
+    }
+
+    public void RemoveLinks()
+    {
+        if (Right != null)
+        {
+            Right.Left = null;
+            Right = null;
+        }
+        
+        if (Left != null)
+        {
+            Left.Right = null;
+            Left = null;
+        }
+
+        if (Up != null)
+        {
+            Up.Down = null;
+            Up = null;
+        }
+
+        if (Down != null)
+        {
+            Down.Up = null;
+            Down = null;
+        }
     }
 }
