@@ -13,10 +13,14 @@ namespace Infrastructure.Scope
 
         private Field _field;
         private Character _character;
-        
+        private Ceiling _ceiling;
+        private ICoroutineRunner _coroutineRunner;
 
-        public LevelEntryPoint(LevelFactory factory, LevelLoader levelLoader)
+
+        public LevelEntryPoint(LevelFactory factory, LevelLoader levelLoader, Ceiling ceiling, ICoroutineRunner coroutineRunner)
         {
+            _coroutineRunner = coroutineRunner;
+            _ceiling = ceiling;
             _levelLoader = levelLoader;
             _factory = factory;
             _currentLevel = 0;
@@ -25,6 +29,7 @@ namespace Infrastructure.Scope
         public void Start()
         {
             LoadNextLevel();
+            _ceiling.FadeOut();
         }
 
         public void LoadLevel()
@@ -47,8 +52,16 @@ namespace Infrastructure.Scope
 
         private void LevelFinished()
         {
+            _ceiling.FadeIn();
+            _ceiling.OnFadeIn += OnNextLevelTransition;
+        }
+
+        private void OnNextLevelTransition()
+        {
+            _ceiling.OnFadeIn -= OnNextLevelTransition;
             DestroyLevel();
             LoadNextLevel();
+            _ceiling.FadeOut();
         }
 
         public void LoadNextLevel()
@@ -59,8 +72,16 @@ namespace Infrastructure.Scope
 
         public void ReloadLevel()
         {
+            _ceiling.FadeIn();
+            _ceiling.OnFadeIn += OnReloadLevelTransition;
+        }
+
+        private void OnReloadLevelTransition()
+        {
+            _ceiling.OnFadeIn -= OnReloadLevelTransition;
             DestroyLevel();
             LoadLevel();
+            _ceiling.FadeOut();
         }
 
         public void DestroyLevel()

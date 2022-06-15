@@ -12,6 +12,8 @@ namespace Infrastructure.Scope
             builder.Register<LevelFactory>(Lifetime.Scoped);
             builder.Register<PlayerInputs>(Lifetime.Scoped);
             builder.RegisterEntryPoint<LevelEntryPoint>();
+            builder.RegisterComponentInHierarchy<GameUI>();
+            builder.RegisterComponentInHierarchy<Ceiling>();
             builder.RegisterBuildCallback(resolver=>
             {
                 resolver.Resolve<PlayerInputs>().Enable();
