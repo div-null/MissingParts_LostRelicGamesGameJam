@@ -22,12 +22,12 @@ namespace Assets.Scripts.Field.Cell
         {
             return CellType == CellType.Wall;
         }
-        
+
         public bool IsPit()
         {
             return CellType == CellType.Pit;
         }
-        
+
         public bool IsFinish()
         {
             return CellType == CellType.Finish;
@@ -37,10 +37,10 @@ namespace Assets.Scripts.Field.Cell
         {
             return CharacterPart != null;
         }
-        
+
         public bool HasActiveCharacterPart()
         {
-            return CharacterPart.IsActive;
+            return HasCharacterPart() && CharacterPart.IsActive;
         }
 
         public void RemoveCharacterPart(CharacterPart characterPart)

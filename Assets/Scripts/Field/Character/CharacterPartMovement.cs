@@ -78,8 +78,11 @@ public class CharacterPartMovement: MonoBehaviour
     private bool HasWallInCell(Vector2Int position)
     {
         Cell cell = _field.Get(position);
+
+        if (cell == null)
+            return true;
         
-        if (cell != null && cell.IsWall())
+        if (cell.IsWall())
             return true;
         
         return false;

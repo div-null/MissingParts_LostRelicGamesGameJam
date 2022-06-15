@@ -149,14 +149,23 @@ public class CharacterPart : MonoBehaviour
     public void SetRotation()
     {
         //change sprite rotation
-        SetRotation((Rotation + 270) % 360);
+        RotateLinks();
+        SetRotation((Rotation + 90) % 360);
     }
 
     public void SetRotation(int degrees)
     {
         //change sprite rotation
         Rotation = degrees;
+    }
 
+    public void RotateLinks()
+    {
+        CharacterPart temp = Up;
+        Up = Left;
+        Left = Down;
+        Down = Right;
+        Right = temp;
     }
 
     public bool HasPartInDirection(DirectionType direction)
