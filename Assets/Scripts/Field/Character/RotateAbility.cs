@@ -12,11 +12,11 @@ public class RotateAbility : Ability
     public override void Apply()
     {
         //TODO: actions and may be something else
-        TryToRotate2();
+        TryToRotate();
     }
 
     
-    public bool TryToRotate2()
+    public bool TryToRotate()
     {
         //Up -> Right, Right -> Down, Down -> Left, Left -> Up
         HashSet<CharacterPart> visited = new HashSet<CharacterPart>();
@@ -62,8 +62,8 @@ public class RotateAbility : Ability
                 part.SetRotation();
             }
 
-            //_characterPart.CharacterPartAttachment.DetachParts();
-            //_characterPart.CharacterPartAttachment.AttachParts();
+            _characterPart.CharacterPartAttachment.DetachParts();
+            _characterPart.CharacterPartAttachment.AttachParts();
 
             return true;
         }
