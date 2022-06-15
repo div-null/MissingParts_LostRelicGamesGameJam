@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using LevelEditor;
 using UnityEngine;
+using static DG.Tweening.DOTween;
 
 public class CharacterPartView : MonoBehaviour
 {
@@ -11,7 +13,7 @@ public class CharacterPartView : MonoBehaviour
     private bool _isActive;
 
     private SpriteRenderer _spriteRenderer;
-    
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -21,7 +23,6 @@ public class CharacterPartView : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
     }
 
     public void Initialize(CharacterPartData partData)
@@ -36,7 +37,7 @@ public class CharacterPartView : MonoBehaviour
     public void ChangeSprite()
     {
         //Assets/Sprites/CharacterPart/Color/default_1
-        
+
         string color = _colorType.ToString();
         string ability = _abilityType.ToString().ToLower();
         string pathToFile = $"Sprites/CharacterPart/{color}/{ability}_";
@@ -47,7 +48,7 @@ public class CharacterPartView : MonoBehaviour
             sprite = Resources.Load<Sprite>($"{pathToFile}1") as Sprite;
             Debug.LogError($"Cant load sprite in path: {pathToFile}{_spriteNumber}");
         }
-        
+
         if (sprite == null)
         {
             Debug.LogError($"Cant load sprite in path: {pathToFile}1");
@@ -63,5 +64,13 @@ public class CharacterPartView : MonoBehaviour
             _spriteRenderer.color = UnityEngine.Color.white;
         else
             _spriteRenderer.color = UnityEngine.Color.grey;
+    }
+
+    public void SetRotation(int degrees)
+    {
+        Vector2Int lookDirection = degrees.ToDirection().ToVector();
+        Quaternion quaternion = Quaternion.Euler(0, 0, -degrees);
+        //quaternion.
+        _spriteRenderer.gameObject.transform.DORotate(quaternion.eulerAngles, 0.1f, RotateMode.Fast);
     }
 }

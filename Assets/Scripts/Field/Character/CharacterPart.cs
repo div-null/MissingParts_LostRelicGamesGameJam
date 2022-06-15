@@ -2,9 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Assets.Scripts.Field.Cell;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.Serialization;
+using static DG.Tweening.DOTween;
 
 [RequireComponent(typeof(CharacterPartView))]
 public class CharacterPart : MonoBehaviour
@@ -143,9 +145,20 @@ public class CharacterPart : MonoBehaviour
 
         Position = destination;
         //TODO: set transform
-        this.transform.position = _field.Get(destination).gameObject.transform.position - Vector3.forward;
+        Vector3 newPosition = _field.Get(destination).gameObject.transform.position - Vector3.forward;
+        this.transform.DOMove(newPosition, 0.1f).SetEase(Ease.Flash).onComplete += TweenCallback;
     }
 
+    private void TweenCallback()
+    {
+        Debug.Log("Moved!");
+    }
+
+    public void OnMoved(TweenCallback tweenCallback)
+    {
+        
+    }
+    
     public void SetRotation()
     {
         //change sprite rotation
@@ -157,6 +170,7 @@ public class CharacterPart : MonoBehaviour
     {
         //change sprite rotation
         Rotation = degrees;
+        CharacterPartView.SetRotation(degrees);
     }
 
     public void RotateLinks()
