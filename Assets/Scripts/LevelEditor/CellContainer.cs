@@ -1,5 +1,6 @@
 using System;
 using Assets.Scripts.Field.Cell;
+using UnityEngine.Animations;
 
 namespace LevelEditor
 {
@@ -7,10 +8,6 @@ namespace LevelEditor
     public class CellContainer
     {
         public CellType Type;
-
-        public CellContainer(CellType type)
-        {
-            Type = type;
-        }
+        public int Rotation;
     }
 }

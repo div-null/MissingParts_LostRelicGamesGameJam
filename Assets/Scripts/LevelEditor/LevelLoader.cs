@@ -70,12 +70,6 @@ namespace LevelEditor
             return gameLevel;
         }
 
-        private GameLevel DeserializeLevelOld(string json)
-        {
-            var gameLevel = JsonUtility.FromJson<SerializedLevel>(json);
-            return gameLevel.ToLevel();
-        }
-
         // public void SaveLevel(Level level, GameLevel data)
         // {
         //     string levelPath = level switch
@@ -90,84 +84,5 @@ namespace LevelEditor
         //     var levelJson = JsonUtility.ToJson(data);
         //     levelAsset.text = levelJson;
         // }
-
-        [Serializable]
-        private class SerializedLevel
-        {
-            public Wrapper<CellJSON>[] cells;
-            public int height = 2;
-            public int width = 2;
-            public string end_point_color;
-            public CharacterPartData[] character_parts;
-            public Misc[] misc;
-
-            public SerializedLevel(GameLevel level)
-            {
-                width = level.MapWidth;
-                height = level.MapHeight;
-                end_point_color = level.FinishColor.ToString().ToLowerInvariant();
-                character_parts = level.PlayerParts;
-                misc = level.Misc;
-                cells = level.Cells
-                    .Select(row => new Wrapper<CellJSON>()
-                    {
-                        row = row
-                            .Select(cell => new CellJSON(cell))
-                            .ToArray()
-                    })
-                    .ToArray();
-            }
-
-            CellContainer[][] fromRaw(Wrapper<CellJSON>[] raw)
-            {
-                return raw
-                    .Select(row =>
-                    {
-                        return row?.row
-                            .Select(cell => cell.ToCell())
-                            .ToArray() ?? Array.Empty<CellContainer>();
-                    })
-                    .ToArray();
-            }
-
-            public GameLevel ToLevel()
-            {
-                Enum.TryParse<ColorType>(end_point_color, true, out var finishColor);
-                return new GameLevel()
-                {
-                    MapHeight = height,
-                    MapWidth = width,
-                    FinishColor = finishColor,
-                    PlayerParts = character_parts,
-                    Misc = misc,
-                    Cells = fromRaw(cells)
-                };
-            }
-        }
-
-        [Serializable]
-        public class CellJSON
-        {
-            public string type;
-
-            public CellJSON(CellContainer cell)
-            {
-                type = cell.Type.ToString().ToLowerInvariant();
-            }
-
-            public CellContainer ToCell()
-            {
-                if (Enum.TryParse<CellType>(type, true, out var cellType))
-                    return new CellContainer(cellType);
-
-                throw new SerializationException($"Wrong cell type = \"{type}\"");
-            }
-        }
-
-        [Serializable]
-        private class Wrapper<T>
-        {
-            public T[] row;
-        }
     }
 }

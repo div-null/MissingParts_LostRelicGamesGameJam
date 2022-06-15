@@ -3,7 +3,6 @@ using UnityEngine;
 
 namespace LevelEditor
 {
-    [CreateAssetMenu(fileName = "Create New Level", order = 0)]
     [Serializable]
     public class GameLevel
     {
