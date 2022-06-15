@@ -14,18 +14,19 @@ namespace Infrastructure.Scope
         private Field _field;
         private Character _character;
         private Ceiling _ceiling;
-        private ICoroutineRunner _coroutineRunner;
         private GameUI _gameUI;
+        private PlayerInputs _playerInputs;
 
 
-        public LevelEntryPoint(LevelFactory factory, LevelLoader levelLoader, GameUI gameUI, Ceiling ceiling, ICoroutineRunner coroutineRunner)
+        public LevelEntryPoint(LevelFactory factory, LevelLoader levelLoader, PlayerInputs playerInputs, GameUI gameUI, Ceiling ceiling)
         {
+            _playerInputs = playerInputs;
             _gameUI = gameUI;
-            _coroutineRunner = coroutineRunner;
             _ceiling = ceiling;
             _levelLoader = levelLoader;
             _factory = factory;
             _currentLevel = 0;
+            _ceiling.OnFadeOut += UnlockInputs;
         }
 
         public void Start()
@@ -53,8 +54,22 @@ namespace Infrastructure.Scope
             //TODO: event to pass load next level after winning on current level
         }
 
+        public void LoadNextLevel()
+        {
+            _currentLevel++;
+            LoadLevel();
+        }
+
+        public void ReloadLevel()
+        {
+            LockInputs();
+            _ceiling.FadeIn();
+            _ceiling.OnFadeIn += OnReloadLevelTransition;
+        }
+
         private void LevelFinished()
         {
+            LockInputs();
             _ceiling.FadeIn();
             _ceiling.OnFadeIn += OnNextLevelTransition;
         }
@@ -67,18 +82,6 @@ namespace Infrastructure.Scope
             _ceiling.FadeOut();
         }
 
-        public void LoadNextLevel()
-        {
-            _currentLevel++;
-            LoadLevel();
-        }
-
-        public void ReloadLevel()
-        {
-            _ceiling.FadeIn();
-            _ceiling.OnFadeIn += OnReloadLevelTransition;
-        }
-
         private void OnReloadLevelTransition()
         {
             _ceiling.OnFadeIn -= OnReloadLevelTransition;
@@ -87,12 +90,25 @@ namespace Infrastructure.Scope
             _ceiling.FadeOut();
         }
 
-        public void DestroyLevel()
+        private void DestroyLevel()
         {
             _character.Moved -= _field.CheckForFinish;
             _field.Finished -= LevelFinished;
             _field.DestroyField();
             _character.DestroyCharacter();
+        }
+
+
+        private void LockInputs()
+        {
+            Debug.Log("Inputs locked");
+            _playerInputs.Disable();
+        }
+
+        private void UnlockInputs()
+        {
+            Debug.Log("Inputs unlocked");
+            _playerInputs.Enable();
         }
     }
 }

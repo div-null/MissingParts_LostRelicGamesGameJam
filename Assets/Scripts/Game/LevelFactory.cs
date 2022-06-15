@@ -103,8 +103,6 @@ namespace Game
             List<CharacterPart> parts = new List<CharacterPart>();
             Character character = _resolver.Instantiate(_gameSettings.CharacterPrefab);
             character.Initialize(field);
-            var inputListener = character.GetOrAddComponent<InputListener>();
-            inputListener.Initialize(_inputs, character);
             var playerParts = level.PlayerParts.Where(part => part.IsActive);
             foreach (var part in playerParts)
             {
