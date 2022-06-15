@@ -12,6 +12,13 @@ namespace LevelEditor
         public ColorType FinishColor;
         public CharacterPartData[] PlayerParts;
         public Misc[] Misc;
+
+        public CellContainer Get(int x, int y)
+        {
+            if (x < 0 || y < 0 || x >= MapWidth || y >= MapHeight)
+                return null;
+            return Cells[y][x];
+        }
     }
 
     [Serializable]

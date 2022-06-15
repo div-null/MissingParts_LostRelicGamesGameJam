@@ -14,11 +14,9 @@ namespace Game
     {
         private IObjectResolver _resolver;
         private GameSettings _gameSettings;
-        private PlayerInputs _inputs;
 
-        public LevelFactory(IObjectResolver resolver, GameSettings gameSettings, PlayerInputs inputs)
+        public LevelFactory(IObjectResolver resolver, GameSettings gameSettings)
         {
-            _inputs = inputs;
             _gameSettings = gameSettings;
             _resolver = resolver;
         }
@@ -29,16 +27,18 @@ namespace Game
             var characterParts = new List<CharacterPart>();
 
             Field field = _resolver.Instantiate(_gameSettings.FieldPrefab);
-
-            Vector2 centeringOffset = new Vector2(
-                level.MapWidth % 2 == 0 ? level.MapWidth / 2 : level.MapWidth / 2 - 0.5f, 
-                level.MapHeight % 2 == 0 ? level.MapHeight / 2 : level.MapHeight / 2 - 0.5f);
             field.SetCells(cells);
+            SetupCamera(level);
+
             for (int j = 0; j < level.MapHeight; j++)
             {
                 for (int i = 0; i < level.MapWidth; i++)
                 {
-                    Cell newCell = CreateCell(i, j, centeringOffset, field.transform, level.Cells[j][i]);
+                    CellContainer cellData = level.Get(i, j);
+                    DirectionType borders = getBorderDirections(level, i, j);
+
+                    Cell newCell = CreateCell(i, j, field.transform, cellData);
+                    newCell.Initialize(new Vector2Int(i, j), cellData.Type, borders);
                     cells[i, j] = newCell;
                 }
             }
@@ -64,40 +64,6 @@ namespace Game
             return field;
         }
 
-        private List<Cell> FindFinishCells(Cell[,] cells)
-        {
-            var finishCells = new List<Cell>();
-
-            for (int j = 0; j < cells.GetLength(1); j++)
-            {
-                for (int i = 0; i < cells.GetLength(0); i++)
-                {
-                    if (cells[i, j].CellType == CellType.Finish)
-                    {
-                        finishCells.Add(cells[i, j]);
-                    }
-                }
-            }
-
-            return finishCells;
-        }
-
-
-        private Cell CreateCell(int x, int y, Vector2 centeringOffset, Transform parent, CellContainer cellContainer)
-        {
-            Vector3 cellPosition = new Vector3(x - centeringOffset.x, y - centeringOffset.y, -1);
-            Cell cell = cellContainer.Type switch
-            {
-                CellType.Wall => _resolver.Instantiate(_gameSettings.WallCellPrefab, cellPosition, Quaternion.identity, parent),
-                CellType.Empty => _resolver.Instantiate(_gameSettings.EmptyCellPrefab, cellPosition, Quaternion.identity, parent),
-                CellType.Pit => _resolver.Instantiate(_gameSettings.HoleCellPrefab, cellPosition, Quaternion.identity, parent),
-                CellType.Finish => _resolver.Instantiate(_gameSettings.FinishCellPrefab, cellPosition, Quaternion.identity, parent),
-                _ => throw new ArgumentOutOfRangeException(nameof(cellContainer.Type), "Unknown cell type")
-            };
-            cell.Initialize(new Vector2Int(x, y), cellContainer.Type);
-            return cell;
-        }
-
         public Character CreateCharacter(GameLevel level, Field field)
         {
             List<CharacterPart> parts = new List<CharacterPart>();
@@ -116,6 +82,20 @@ namespace Game
 
             character.AddParts(parts);
             return character;
+        }
+
+        private Cell CreateCell(int x, int y, Transform parent, CellContainer cellContainer)
+        {
+            Vector3 cellPosition = new Vector3(x, y, -1);
+            Cell cell = cellContainer.Type switch
+            {
+                CellType.Wall => _resolver.Instantiate(_gameSettings.WallCellPrefab, cellPosition, Quaternion.identity, parent),
+                CellType.Empty => _resolver.Instantiate(_gameSettings.EmptyCellPrefab, cellPosition, Quaternion.identity, parent),
+                CellType.Pit => _resolver.Instantiate(_gameSettings.HoleCellPrefab, cellPosition, Quaternion.identity, parent),
+                CellType.Finish => _resolver.Instantiate(_gameSettings.FinishCellPrefab, cellPosition, Quaternion.identity, parent),
+                _ => throw new ArgumentOutOfRangeException(nameof(cellContainer.Type), "Unknown cell type")
+            };
+            return cell;
         }
 
         private CharacterPart CreateCharacterPart(Field field, CharacterPartData partData)
@@ -138,6 +118,24 @@ namespace Game
             characterPart.CharacterPartMovement = characterMovement;
             characterPart.CharacterPartAttachment = characterAttachment;
             return characterPart;
+        }
+
+        private List<Cell> FindFinishCells(Cell[,] cells)
+        {
+            var finishCells = new List<Cell>();
+
+            for (int j = 0; j < cells.GetLength(1); j++)
+            {
+                for (int i = 0; i < cells.GetLength(0); i++)
+                {
+                    if (cells[i, j].CellType == CellType.Finish)
+                    {
+                        finishCells.Add(cells[i, j]);
+                    }
+                }
+            }
+
+            return finishCells;
         }
 
         private static CharacterPartAttachment setupCharacterAttachment(Field field, CharacterPart characterPart)
@@ -166,6 +164,34 @@ namespace Game
                 var rotateAbility = characterPart.GetOrAddComponent<RotateAbility>();
                 rotateAbility.Initialize(characterPart, field);
             }
+        }
+
+        private void SetupCamera(GameLevel level)
+        {
+            Camera.main.transform.position =
+                new Vector3(level.MapWidth / 2f - 0.5f, level.MapHeight / 2f - 0.5f, -10);
+        }
+
+        private DirectionType getBorderDirections(GameLevel level, int x, int y)
+        {
+            DirectionType borders = DirectionType.None;
+            if (level.Get(x, y).Type != CellType.Wall) return borders;
+
+            var leftCell = level.Get(x - 1, y);
+            var rightCell = level.Get(x + 1, y);
+            var upCell = level.Get(x, y + 1);
+            var downCell = level.Get(x, y - 1);
+
+            if (leftCell != null && leftCell.Type != CellType.Wall)
+                borders = borders | DirectionType.Left;
+            if (rightCell != null && rightCell.Type != CellType.Wall)
+                borders = borders | DirectionType.Right;
+            if (upCell != null && upCell.Type != CellType.Wall)
+                borders = borders | DirectionType.Up;
+            if (downCell != null && downCell.Type != CellType.Wall)
+                borders = borders | DirectionType.Down;
+
+            return borders;
         }
 
         private static DirectionType directionFromAngle(int partRotation)

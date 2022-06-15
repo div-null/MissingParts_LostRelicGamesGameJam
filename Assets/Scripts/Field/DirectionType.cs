@@ -1,14 +1,18 @@
+using System;
 using UnityEngine;
 
+[Flags]
 public enum DirectionType
 {
-    Right = 0,
-    Left = 1,
-    Up,
-    Down
+    None = 0,
+    Right = 1,
+    Left = 2,
+    Up = 4,
+    Down = 8
 }
 
-public static class DirectionExtensions{
+public static class DirectionExtensions
+{
     public static Vector2Int ToVector(this DirectionType direction)
     {
         return direction switch
@@ -19,10 +23,10 @@ public static class DirectionExtensions{
             DirectionType.Down => Vector2Int.down
         };
     }
-    
+
     public static Vector2Int ToVector(this Vector3 direction)
     {
-        return new Vector2Int((int)direction.x, (int)direction.y);
+        return new Vector2Int((int) direction.x, (int) direction.y);
     }
 
     public static DirectionType ToDirection(this Vector2Int direction)
@@ -41,18 +45,18 @@ public static class DirectionExtensions{
             return DirectionType.Down;
         }
     }
-    
+
     public static DirectionType ToDirection(this int degrees)
     {
         return degrees switch
         {
             0 => DirectionType.Up,
-            90=> DirectionType.Left,
+            90 => DirectionType.Left,
             180 => DirectionType.Down,
             270 => DirectionType.Right
         };
     }
-    
+
     public static DirectionType ToDirection(this Vector2 direction)
     {
         if (direction == Vector2.left)
@@ -69,7 +73,7 @@ public static class DirectionExtensions{
             return DirectionType.Down;
         }
     }
-    
+
     public static DirectionType ToDirection(this Vector3 direction)
     {
         if (direction == Vector3.left)
