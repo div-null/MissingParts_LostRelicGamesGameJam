@@ -73,4 +73,10 @@ public class CharacterPartView : MonoBehaviour
         //quaternion.
         _spriteRenderer.gameObject.transform.DORotate(quaternion.eulerAngles, 0.1f, RotateMode.Fast);
     }
+
+    public void SetColor(ColorType color)
+    {
+        _colorType = color;
+        ChangeSprite();
+    }
 }

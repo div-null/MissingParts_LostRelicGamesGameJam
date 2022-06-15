@@ -59,7 +59,7 @@ namespace Game
 
 
             List<Cell> finishCells = FindFinishCells(cells);
-            field.Setup(finishCells);
+            field.Setup(finishCells, level.FinishColor);
 
             return field;
         }

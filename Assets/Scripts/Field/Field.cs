@@ -9,6 +9,7 @@ public class Field : MonoBehaviour
 {
     private Cell[,] _cells;
     private List<Cell> _finishCells;
+    private ColorType _finishColor;
     public event Action Finished;
 
     public void SetCells(Cell[,] cells)
@@ -16,9 +17,10 @@ public class Field : MonoBehaviour
         _cells = cells;
     }
 
-    public void Setup(List<Cell> finishCells)
+    public void Setup(List<Cell> finishCells, ColorType finishColor)
     {
         _finishCells = finishCells;
+        _finishColor = finishColor;
     }
 
     public void CheckForFinish()
@@ -37,8 +39,8 @@ public class Field : MonoBehaviour
         {
             if (finishCell.CharacterPart == null)
                 return false;
-
-            if (!finishCell.CharacterPart.HasRightShape(visitedParts))
+            
+            if (finishCell.CharacterPart.Color != _finishColor || !finishCell.CharacterPart.HasRightShape(visitedParts))
                 return false;
         }
 
