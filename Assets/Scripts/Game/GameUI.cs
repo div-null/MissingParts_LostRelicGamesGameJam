@@ -1,44 +1,28 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameUI : MonoBehaviour
 {
+    public event Action RestartClicked;
+    public event Action MuteSoundClicked;
 
-    public void ToggleAudio()
+    [SerializeField] private AudioSource _audio;
+
+    [SerializeField] private Button _restartButton;
+
+    private void Awake()
     {
-        
-    }
-    
-    public void ToggleMusic()
-    {
-        
-    }
-    
-    public void Quit()
-    {
-        Application.Quit();
-    }
-    
-    public void FadeIn()
-    {
-        //FadeIn when game start changing level
-    }
-    
-    public void FadeOut()
-    {
-        //FadeIn when game finish changing level
-    }
-    
-    // Start is called before the first frame update
-    void Start()
-    {
-        
+        _restartButton.onClick.AddListener(OnRestartClicked);
     }
 
-    // Update is called once per frame
-    void Update()
+    public void DebugMe()
     {
-        
+        Debug.Log("ASD");
+    }
+
+    private void OnRestartClicked()
+    {
+        RestartClicked?.Invoke();
     }
 }

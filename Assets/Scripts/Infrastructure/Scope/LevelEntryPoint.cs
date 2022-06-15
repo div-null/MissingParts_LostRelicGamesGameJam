@@ -15,10 +15,12 @@ namespace Infrastructure.Scope
         private Character _character;
         private Ceiling _ceiling;
         private ICoroutineRunner _coroutineRunner;
+        private GameUI _gameUI;
 
 
-        public LevelEntryPoint(LevelFactory factory, LevelLoader levelLoader, Ceiling ceiling, ICoroutineRunner coroutineRunner)
+        public LevelEntryPoint(LevelFactory factory, LevelLoader levelLoader, GameUI gameUI, Ceiling ceiling, ICoroutineRunner coroutineRunner)
         {
+            _gameUI = gameUI;
             _coroutineRunner = coroutineRunner;
             _ceiling = ceiling;
             _levelLoader = levelLoader;
@@ -28,6 +30,7 @@ namespace Infrastructure.Scope
 
         public void Start()
         {
+            _gameUI.RestartClicked += ReloadLevel;
             LoadNextLevel();
             _ceiling.FadeOut();
         }
