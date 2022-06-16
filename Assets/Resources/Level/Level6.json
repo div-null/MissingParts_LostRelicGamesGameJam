@@ -58,35 +58,6 @@
         "type": "empty"
       },
       {
-        "type": "wall"
-      }
-    ],
-    [
-      {
-        "type": "empty"
-      },
-      {
-        "type": "empty"
-      },
-      {
-        "type": "empty"
-      },
-      {
-        "type": "empty"
-      },
-      {
-        "type": "empty"
-      },
-      {
-        "type": "empty"
-      },
-      {
-        "type": "finish"
-      },
-      {
-        "type": "empty"
-      },
-      {
         "type": "empty"
       }
     ],
@@ -107,54 +78,19 @@
         "type": "empty"
       },
       {
-        "type": "finish"
+        "type": "empty"
       },
       {
-        "type": "finish"
+        "type": "pit"
       },
       {
-        "type": "finish"
+        "type": "pit"
       },
       {
-        "type": "wall"
+        "type": "pit"
       }
     ],
     [
-      {
-        "type": "empty"
-      },
-      {
-        "type": "empty"
-      },
-      {
-        "type": "empty"
-      },
-      {
-        "type": "empty"
-      },
-      {
-        "type": "empty"
-      },
-      {
-        "type": "finish"
-      },
-      {
-        "type": "finish"
-      },
-      {
-        "type": "empty"
-      },
-      {
-        "type": "empty"
-      }
-    ],
-    [
-      {
-        "type": "empty"
-      },
-      {
-        "type": "empty"
-      },
       {
         "type": "empty"
       },
@@ -175,13 +111,77 @@
       },
       {
         "type": "wall"
+      },
+      {
+        "type": "wall"
+      },
+      {
+        "type": "empty"
+      }
+    ],
+    [
+      {
+        "type": "finish"
+      },
+      {
+        "type": "finish"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      }
+    ],
+    [
+      {
+        "type": "finish"
+      },
+      {
+        "type": "finish"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "wall"
+      },
+      {
+        "type": "wall"
+      },
+      {
+        "type": "empty"
       }
     ]
   ],
   "playerParts": [
     {
       "x": 1,
-      "y": 2,
+      "y": 1,
       "isActive": true,
       "rotation": 0,
       "color": "red",
@@ -189,44 +189,26 @@
       "sprite": 1
     },
     {
-      "x": 0,
+      "x": 3,
+      "y": 3,
+      "isActive": false,
+      "rotation": 180,
+      "color": "red",
+      "ability": "hook",
+      "sprite": 2
+    },
+    {
+      "x": 4,
       "y": 1,
       "isActive": false,
       "rotation": 0,
       "color": "red",
-      "ability": "default",
-      "sprite": 2
-    },
-    {
-      "x": 3,
-      "y": 3,
-      "isActive": false,
-      "rotation": 0,
-      "color": "red",
-      "ability": "default",
-      "sprite": 2
-    },
-    {
-      "x": 3,
-      "y": 4,
-      "isActive": false,
-      "rotation": 0,
-      "color": "red",
-      "ability": "default",
+      "ability": "rotation",
       "sprite": 2
     },
     {
       "x": 8,
-      "y": 4,
-      "isActive": false,
-      "rotation": 0,
-      "color": "red",
-      "ability": "default",
-      "sprite": 1
-    },
-    {
-      "x": 8,
-      "y": 2,
+      "y": 5,
       "isActive": false,
       "rotation": 0,
       "color": "red",
