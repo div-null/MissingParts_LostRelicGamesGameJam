@@ -119,16 +119,26 @@ namespace Game
 
         private void spawnCorneredWall(DirectionType direction, Transform parent)
         {
-            Transform corner = spawnOuterCorner(direction, parent);
+            Transform corner = spawnInnerCorner(direction, parent);
             Vector3 horizontal = corner.right * 0.25f;
             Vector3 vertical = -corner.up * 0.25f;
+
+            // TODO: разобраться как упростить
+            if (direction.HasFlag(DirectionType.Right)) 
+                (horizontal, vertical) = (vertical, horizontal);
+
+            if (direction.HasFlag(DirectionType.Down)) 
+                (horizontal, vertical) = (vertical, horizontal);
+
             var flags = direction.GetFlags().ToArray();
 
             var horizontalDirection = flags[1];
             var verticalDirection = flags[2];
 
-            spawnWall(horizontalDirection, parent).Translate(horizontal);
-            spawnWall(verticalDirection, parent).Translate(vertical);
+            Transform wall1 = spawnWall(horizontalDirection, parent);
+            wall1.Translate(vertical, Space.World);
+            Transform wall2 = spawnWall(verticalDirection, parent);
+            wall2.Translate(horizontal, Space.World);
         }
 
         private void spawnPlainWall(DirectionType pointingDirection, Transform parent)
