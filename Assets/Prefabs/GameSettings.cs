@@ -2,9 +2,10 @@ using Assets.Scripts.Field.Cell;
 using Infrastructure.Scope;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Create settings", order = 0)]
+[CreateAssetMenu(fileName = "GameSettings", menuName = "Create settings", order = 0)]
 public class GameSettings : ScriptableObject
 {
+    public WallCellPrefab wallCellPrefab;
     public Cell WallCellPrefab;
     public Cell EmptyCellPrefab;
     public Cell HoleCellPrefab;
