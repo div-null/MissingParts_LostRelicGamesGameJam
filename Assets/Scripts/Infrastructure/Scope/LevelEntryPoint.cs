@@ -1,6 +1,7 @@
 ﻿using Game;
 using LevelEditor;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using VContainer.Unity;
 
 namespace Infrastructure.Scope
@@ -32,8 +33,15 @@ namespace Infrastructure.Scope
         public void Start()
         {
             _gameUI.RestartClicked += ReloadLevel;
+            _playerInputs.CharacterControls.Movement.performed += FirstPlayerInput;
             LoadNextLevel();
             _ceiling.FadeOut();
+        }
+
+        private void FirstPlayerInput(InputAction.CallbackContext obj)
+        {
+            _gameUI.HideMenu();
+            _playerInputs.CharacterControls.Movement.performed -= FirstPlayerInput;
         }
 
         public void LoadLevel()
@@ -44,6 +52,10 @@ namespace Infrastructure.Scope
                 1 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl1),
                 2 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl2),
                 3 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl3),
+                4 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl4),
+                5 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl5),
+                6 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl6),
+                7 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl7),
             };
             _field = _factory.CreateField(level);
             _character = _factory.CreateCharacter(level, _field);

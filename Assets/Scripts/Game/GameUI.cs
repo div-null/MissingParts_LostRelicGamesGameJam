@@ -11,18 +11,25 @@ public class GameUI : MonoBehaviour
 
     [SerializeField] private Button _restartButton;
 
+    [SerializeField] private Animator MainMenuAnimator;
+
     private void Awake()
     {
         _restartButton.onClick.AddListener(OnRestartClicked);
     }
 
-    public void DebugMe()
-    {
-        Debug.Log("ASD");
-    }
-
     private void OnRestartClicked()
     {
         RestartClicked?.Invoke();
+    }
+    
+    public void HideMenu()
+    {
+        MainMenuAnimator.SetTrigger("StartFade");
+    }
+
+    public void ShowCredits()
+    {
+        
     }
 }
