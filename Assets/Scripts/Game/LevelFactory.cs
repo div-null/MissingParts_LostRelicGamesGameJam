@@ -138,14 +138,14 @@ namespace Game
 
             if (pointingDirection == DirectionType.Down || pointingDirection == DirectionType.Up)
             {
-                wall1.Translate(left);
-                wall2.Translate(right);
+                wall1.Translate(left, Space.World);
+                wall2.Translate(right, Space.World);
             }
 
             if (pointingDirection == DirectionType.Left || pointingDirection == DirectionType.Right)
             {
-                wall1.Translate(up);
-                wall2.Translate(down);
+                wall1.Translate(up, Space.World);
+                wall2.Translate(down, Space.World);
             }
         }
 
@@ -168,14 +168,12 @@ namespace Game
             var gameObject = GameObject.Instantiate(_gameSettings.wallCellPrefab.OuterCorner, parent);
 
             var tileTransform = gameObject.transform;
-            tileTransform.position = parent.position;
-            tileTransform.SetParent(parent);
 
             trySetDirection(DirectionType.Up | DirectionType.Left, tileTransform, 0);
             trySetDirection(DirectionType.Up | DirectionType.Right, tileTransform, 90);
             trySetDirection(DirectionType.Down | DirectionType.Right, tileTransform, 180);
             trySetDirection(DirectionType.Down | DirectionType.Left, tileTransform, 270);
-            
+
             // trySetDirection(DirectionType.Down | DirectionType.Right, tileTransform, 0);
             // trySetDirection(DirectionType.Up | DirectionType.Right, tileTransform, 90);
             // trySetDirection(DirectionType.Up | DirectionType.Left, tileTransform, 180);
@@ -195,8 +193,6 @@ namespace Game
             var gameObject = GameObject.Instantiate(_gameSettings.wallCellPrefab.InnerCorner, parent);
 
             var tileTransform = gameObject.transform;
-            tileTransform.position = parent.position;
-            tileTransform.SetParent(parent);
 
             trySetDirection(DirectionType.Up | DirectionType.Left, tileTransform, 0);
             trySetDirection(DirectionType.Up | DirectionType.Right, tileTransform, 90);
@@ -217,13 +213,11 @@ namespace Game
             var gameObject = GameObject.Instantiate(_gameSettings.wallCellPrefab.VerticalWall, parent);
 
             Transform wallTransform = gameObject.transform;
-            wallTransform.position = parent.position;
-            wallTransform.SetParent(parent);
 
             trySetDirection(DirectionType.Right, wallTransform, 0);
-            trySetDirection(DirectionType.Up, wallTransform, 90);
+            trySetDirection(DirectionType.Up, wallTransform, 270);
             trySetDirection(DirectionType.Left, wallTransform, 180);
-            trySetDirection(DirectionType.Down, wallTransform, 270);
+            trySetDirection(DirectionType.Down, wallTransform, 90);
 
             return wallTransform;
         }
@@ -256,13 +250,13 @@ namespace Game
         {
             tile.Rotate(Vector3.back, angle, Space.Self);
             if (pointingDirection.HasFlag(DirectionType.Up))
-                tile.Translate(up);
+                tile.Translate(up, Space.World);
             if (pointingDirection.HasFlag(DirectionType.Right))
-                tile.Translate(right);
+                tile.Translate(right, Space.World);
             if (pointingDirection.HasFlag(DirectionType.Down))
-                tile.Translate(down);
+                tile.Translate(down, Space.World);
             if (pointingDirection.HasFlag(DirectionType.Left))
-                tile.Translate(left);
+                tile.Translate(left, Space.World);
 
             return tile;
         }
