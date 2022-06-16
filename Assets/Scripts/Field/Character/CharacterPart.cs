@@ -312,7 +312,7 @@ public class CharacterPart : MonoBehaviour
         Quaternion quaternion = Quaternion.Euler(0, 0, -180);
         transform.DORotate(quaternion.eulerAngles, 0.25f, RotateMode.Fast).SetLoops(3).SetEase(Ease.Linear);
         transform.DOScale(0.01f, 0.5f).SetEase(Ease.Linear);
-        Destroy(this.gameObject, 1f);
+        Destroy(this.gameObject, 0.6f);
         Debug.Log("destroying part");
     }
 
