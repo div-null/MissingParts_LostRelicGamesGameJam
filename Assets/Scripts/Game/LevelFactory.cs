@@ -15,6 +15,11 @@ namespace Game
         private IObjectResolver _resolver;
         private GameSettings _gameSettings;
 
+        static Vector3 left = Vector3.left * 0.25f;
+        static Vector3 up = Vector3.up * 0.25f;
+        static Vector3 right = -left;
+        static Vector3 down = -up;
+
         public LevelFactory(IObjectResolver resolver, GameSettings gameSettings)
         {
             _gameSettings = gameSettings;
@@ -38,6 +43,9 @@ namespace Game
                     DirectionType borders = getBorderDirections(level, i, j);
 
                     Cell newCell = CreateCell(i, j, field.transform, cellData);
+                    if (newCell.IsWall())
+                        drawBorders(borders, newCell.transform, cells);
+
                     newCell.Initialize(new Vector2Int(i, j), cellData.Type, borders);
                     cells[i, j] = newCell;
                 }
@@ -62,6 +70,201 @@ namespace Game
             field.Setup(finishCells);
 
             return field;
+        }
+
+        private void drawBorders(DirectionType borderDirections, Transform wallTransform, Cell[,] cells)
+        {
+            switch (borderDirections)
+            {
+                case DirectionType.All:
+                    spawnSquaredWall(wallTransform);
+                    break;
+                case DirectionType.Left:
+                    spawnPlainWall(DirectionType.Left, wallTransform);
+                    break;
+                case DirectionType.Up:
+                    spawnPlainWall(DirectionType.Up, wallTransform);
+                    break;
+                case DirectionType.Right:
+                    spawnPlainWall(DirectionType.Right, wallTransform);
+                    break;
+                case DirectionType.Down:
+                    spawnPlainWall(DirectionType.Down, wallTransform);
+                    break;
+                case DirectionType.Up | DirectionType.Right:
+                    spawnCorneredWall(DirectionType.Up | DirectionType.Right, wallTransform);
+                    break;
+                case DirectionType.Up | DirectionType.Left:
+                    spawnCorneredWall(DirectionType.Up | DirectionType.Left, wallTransform);
+                    break;
+                case DirectionType.Down | DirectionType.Left:
+                    spawnCorneredWall(DirectionType.Down | DirectionType.Left, wallTransform);
+                    break;
+                case DirectionType.Down | DirectionType.Right:
+                    spawnCorneredWall(DirectionType.Down | DirectionType.Right, wallTransform);
+                    break;
+            }
+
+            // if (borderDirections.HasFlag(DirectionType.Up) && borderDirections.HasFlag(DirectionType.Right))
+            // {
+            //     Transform topWall = spawnWall(DirectionType.Up, _gameSettings.WallCellSprites.VerticalWall, wall.transform);
+            //     Transform sideWall = spawnWall(DirectionType.Right, _gameSettings.WallCellSprites.VerticalWall, wall.transform);
+            //     Transform corner = spawnOuterCorner(DirectionType.Up | DirectionType.Right, _gameSettings.WallCellSprites.OuterCorner, wall.transform);
+            //
+            //     topWall.Translate(up);
+            //     sideWall.Translate(right);
+            //     corner.Translate(up + right);
+            // }
+        }
+
+        private void spawnCorneredWall(DirectionType direction, Transform parent)
+        {
+            Transform corner = spawnOuterCorner(direction, parent);
+            Vector3 horizontal = corner.right * 0.25f;
+            Vector3 vertical = -corner.up * 0.25f;
+            var flags = direction.GetFlags().ToArray();
+
+            var horizontalDirection = flags[1];
+            var verticalDirection = flags[2];
+
+            spawnWall(horizontalDirection, parent).Translate(horizontal);
+            spawnWall(verticalDirection, parent).Translate(vertical);
+        }
+
+        private void spawnPlainWall(DirectionType pointingDirection, Transform parent)
+        {
+            Transform wall1 = spawnWall(pointingDirection, parent);
+            Transform wall2 = spawnWall(pointingDirection, parent);
+
+            if (pointingDirection == DirectionType.Down || pointingDirection == DirectionType.Up)
+            {
+                wall1.Translate(left);
+                wall2.Translate(right);
+            }
+
+            if (pointingDirection == DirectionType.Left || pointingDirection == DirectionType.Right)
+            {
+                wall1.Translate(up);
+                wall2.Translate(down);
+            }
+        }
+
+        private void spawnSquaredWall(Transform wallTransform)
+        {
+            spawnInnerCorner(DirectionType.Up | DirectionType.Right, wallTransform);
+            spawnInnerCorner(DirectionType.Up | DirectionType.Left, wallTransform);
+            spawnInnerCorner(DirectionType.Down | DirectionType.Right, wallTransform);
+            spawnInnerCorner(DirectionType.Down | DirectionType.Left, wallTransform);
+        }
+
+        public Transform spawnOuterCorner(DirectionType pointingDirection, Transform parent)
+        {
+            void trySetDirection(DirectionType checkDirection, Transform tile, int angle)
+            {
+                if (pointingDirection.HasFlag(checkDirection))
+                    rotateAndTranslate(tile, pointingDirection, angle);
+            }
+
+            var gameObject = GameObject.Instantiate(_gameSettings.wallCellPrefab.OuterCorner, parent);
+
+            var tileTransform = gameObject.transform;
+            tileTransform.position = parent.position;
+            tileTransform.SetParent(parent);
+
+            trySetDirection(DirectionType.Up | DirectionType.Left, tileTransform, 0);
+            trySetDirection(DirectionType.Up | DirectionType.Right, tileTransform, 90);
+            trySetDirection(DirectionType.Down | DirectionType.Right, tileTransform, 180);
+            trySetDirection(DirectionType.Down | DirectionType.Left, tileTransform, 270);
+            
+            // trySetDirection(DirectionType.Down | DirectionType.Right, tileTransform, 0);
+            // trySetDirection(DirectionType.Up | DirectionType.Right, tileTransform, 90);
+            // trySetDirection(DirectionType.Up | DirectionType.Left, tileTransform, 180);
+            // trySetDirection(DirectionType.Down | DirectionType.Left, tileTransform, 270);
+
+            return tileTransform;
+        }
+
+        public Transform spawnInnerCorner(DirectionType pointingDirection, Transform parent)
+        {
+            void trySetDirection(DirectionType checkDirection, Transform tile, int angle)
+            {
+                if (pointingDirection.HasFlag(checkDirection))
+                    rotateAndTranslate(tile, pointingDirection, angle);
+            }
+
+            var gameObject = GameObject.Instantiate(_gameSettings.wallCellPrefab.InnerCorner, parent);
+
+            var tileTransform = gameObject.transform;
+            tileTransform.position = parent.position;
+            tileTransform.SetParent(parent);
+
+            trySetDirection(DirectionType.Up | DirectionType.Left, tileTransform, 0);
+            trySetDirection(DirectionType.Up | DirectionType.Right, tileTransform, 90);
+            trySetDirection(DirectionType.Down | DirectionType.Right, tileTransform, 180);
+            trySetDirection(DirectionType.Down | DirectionType.Left, tileTransform, 270);
+
+            return tileTransform;
+        }
+
+        public Transform spawnWall(DirectionType pointingDirection, Transform parent)
+        {
+            void trySetDirection(DirectionType directionType, Transform transform, int angle)
+            {
+                if (pointingDirection == directionType)
+                    rotateAndTranslate(transform, directionType, angle);
+            }
+
+            var gameObject = GameObject.Instantiate(_gameSettings.wallCellPrefab.VerticalWall, parent);
+
+            Transform wallTransform = gameObject.transform;
+            wallTransform.position = parent.position;
+            wallTransform.SetParent(parent);
+
+            trySetDirection(DirectionType.Right, wallTransform, 0);
+            trySetDirection(DirectionType.Up, wallTransform, 90);
+            trySetDirection(DirectionType.Left, wallTransform, 180);
+            trySetDirection(DirectionType.Down, wallTransform, 270);
+
+            return wallTransform;
+        }
+
+        // private void rotateInnerCorner(DirectionType pointingDirection, Transform cornerTransform)
+        // {
+        //     if (pointingDirection.HasFlag(DirectionType.Up | DirectionType.Left))
+        //         rotateAndTranslate(cornerTransform, pointingDirection, 0);
+        //     if (pointingDirection.HasFlag(DirectionType.Up | DirectionType.Right))
+        //         rotateAndTranslate(cornerTransform, pointingDirection, 90);
+        //     if (pointingDirection.HasFlag(DirectionType.Down | DirectionType.Right))
+        //         rotateAndTranslate(cornerTransform, pointingDirection, 180);
+        //     if (pointingDirection.HasFlag(DirectionType.Down | DirectionType.Left))
+        //         rotateAndTranslate(cornerTransform, pointingDirection, 270);
+        // }
+        //
+        // private void rotateOuterCorner(DirectionType pointingDirection, Transform cornerTransform)
+        // {
+        //     if (pointingDirection.HasFlag(DirectionType.Down | DirectionType.Right))
+        //         rotateAndTranslate(cornerTransform, pointingDirection, 0);
+        //     if (pointingDirection.HasFlag(DirectionType.Up | DirectionType.Right))
+        //         rotateAndTranslate(cornerTransform, pointingDirection, 90);
+        //     if (pointingDirection.HasFlag(DirectionType.Up | DirectionType.Left))
+        //         rotateAndTranslate(cornerTransform, pointingDirection, 180);
+        //     if (pointingDirection.HasFlag(DirectionType.Down | DirectionType.Left))
+        //         rotateAndTranslate(cornerTransform, pointingDirection, 270);
+        // }
+
+        public static Transform rotateAndTranslate(Transform tile, DirectionType pointingDirection, float angle)
+        {
+            tile.Rotate(Vector3.back, angle, Space.Self);
+            if (pointingDirection.HasFlag(DirectionType.Up))
+                tile.Translate(up);
+            if (pointingDirection.HasFlag(DirectionType.Right))
+                tile.Translate(right);
+            if (pointingDirection.HasFlag(DirectionType.Down))
+                tile.Translate(down);
+            if (pointingDirection.HasFlag(DirectionType.Left))
+                tile.Translate(left);
+
+            return tile;
         }
 
         public Character CreateCharacter(GameLevel level, Field field)
