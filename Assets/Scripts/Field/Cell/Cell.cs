@@ -8,13 +8,13 @@ namespace Assets.Scripts.Field.Cell
         public Vector2Int Position;
         public CellType CellType;
         public CharacterPart CharacterPart;
-        [SerializeField]
-        private DirectionType _borderDirections;
+
+        [field: SerializeField] public DirectionType BorderDirections { get; private set; }
         public const float CellSize = 1f;
 
         public void Initialize(Vector2Int position, CellType cellType, DirectionType borderDirections)
         {
-            _borderDirections = borderDirections;
+            BorderDirections = borderDirections;
             Position = position;
             CellType = cellType;
 
@@ -25,15 +25,15 @@ namespace Assets.Scripts.Field.Cell
 
             Debug.DrawRay(Vector3.zero, Vector3.up);
             Debug.DrawRay(Vector3.zero, Vector3.right);
-            
+
             var center = new Vector3(Position.x, Position.y, -1);
-            if (_borderDirections.HasFlag(DirectionType.Up))
+            if (BorderDirections.HasFlag(DirectionType.Up))
                 Debug.DrawLine(leftSide + topSide + center, rightSide + topSide + center, Color.blue, Single.PositiveInfinity);
-            if (_borderDirections.HasFlag(DirectionType.Down))
+            if (BorderDirections.HasFlag(DirectionType.Down))
                 Debug.DrawLine(leftSide + bottomSide + center, rightSide + bottomSide + center, Color.blue, Single.PositiveInfinity);
-            if (_borderDirections.HasFlag(DirectionType.Left))
+            if (BorderDirections.HasFlag(DirectionType.Left))
                 Debug.DrawLine(leftSide + topSide + center, leftSide + bottomSide + center, Color.blue, Single.PositiveInfinity);
-            if (_borderDirections.HasFlag(DirectionType.Right))
+            if (BorderDirections.HasFlag(DirectionType.Right))
                 Debug.DrawLine(rightSide + topSide + center, rightSide + bottomSide + center, Color.blue, Single.PositiveInfinity);
         }
 

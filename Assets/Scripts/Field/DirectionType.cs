@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 [Flags]
@@ -8,11 +9,20 @@ public enum DirectionType
     Right = 1,
     Left = 2,
     Up = 4,
-    Down = 8
+    Down = 8,
+    All = 15
 }
 
 public static class DirectionExtensions
 {
+    public static IEnumerable<TEnum> GetFlags<TEnum>(this TEnum input) where TEnum : Enum
+    {
+        foreach (Enum value in Enum.GetValues(input.GetType()))
+            if (input.HasFlag(value))
+                yield return (TEnum)value;
+    }
+
+
     public static Vector2Int ToVector(this DirectionType direction)
     {
         return direction switch
