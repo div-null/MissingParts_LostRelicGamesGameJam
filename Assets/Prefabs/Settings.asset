@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54c9c74a8eb12e143819078712f7a6a0, type: 3}
   m_Name: Settings
   m_EditorClassIdentifier: 
-  wallCellPrefab: {fileID: 11400000, guid: 3e3360d39b7a75a4e8090024ed806817, type: 2}
+  PitCellPrefabs: {fileID: 11400000, guid: 02e97f011609e2f4fa2f199cf55bf48c, type: 2}
+  WallCellPrefabs: {fileID: 11400000, guid: f9db996de791d3147844ffe1633bacfa, type: 2}
   WallCellPrefab: {fileID: 8390649850809727842, guid: ba281b2c96ac7b948ae6dac7d897b980, type: 3}
   EmptyCellPrefab: {fileID: 7184153879075629607, guid: 6fa564b2398fb0c41a767bea7e297faf, type: 3}
   HoleCellPrefab: {fileID: 9070970298340645812, guid: 8ce11c877d0186f4087308110dd812e5, type: 3}

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(fileName = "WallSprites", menuName = "Create wallSprites", order = 0)]
+[CreateAssetMenu(fileName = "WallSprites", menuName = "Create wall Sprites", order = 0)]
 public class WallCellPrefab : ScriptableObject
 {
     public GameObject InnerCorner;

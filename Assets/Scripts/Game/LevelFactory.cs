@@ -232,7 +232,7 @@ namespace Game
                     rotateAndTranslate(tile, pointingDirection, angle);
             }
 
-            var gameObject = GameObject.Instantiate(_gameSettings.wallCellPrefab.OuterCorner, parent);
+            var gameObject = GameObject.Instantiate(_gameSettings.WallCellPrefabs.OuterCorner, parent);
 
             var tileTransform = gameObject.transform;
 
@@ -257,7 +257,7 @@ namespace Game
                     rotateAndTranslate(tile, pointingDirection, angle);
             }
 
-            var gameObject = GameObject.Instantiate(_gameSettings.wallCellPrefab.InnerCorner, parent);
+            var gameObject = GameObject.Instantiate(_gameSettings.WallCellPrefabs.InnerCorner, parent);
 
             var tileTransform = gameObject.transform;
 
@@ -277,7 +277,7 @@ namespace Game
                     rotateAndTranslate(transform, directionType, angle);
             }
 
-            var gameObject = GameObject.Instantiate(_gameSettings.wallCellPrefab.VerticalWall, parent);
+            var gameObject = GameObject.Instantiate(_gameSettings.WallCellPrefabs.VerticalWall, parent);
 
             Transform wallTransform = gameObject.transform;
 

@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9f3538f7831d465a91c0f549631b5f31, type: 3}
-  m_Name: WallCells
+  m_Script: {fileID: 11500000, guid: bc770956cb2b4bee9df70276b97b7c90, type: 3}
+  m_Name: WallSprites
   m_EditorClassIdentifier: 
   InnerCorner: {fileID: 8663759510974382969, guid: 028e874136d48fd4da741fa3d6cb6bb6, type: 3}
   OuterCorner: {fileID: 8663759510974382969, guid: aa312306a47548d4d83fc43a3faa9163, type: 3}
