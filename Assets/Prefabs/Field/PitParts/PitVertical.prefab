@@ -15,6 +15,26 @@ PrefabInstance:
       propertyPath: m_WasSpriteAssigned
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8359244803254751725, guid: ea8c79db4af1fe64b9442c2ef44849ce, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8359244803254751725, guid: ea8c79db4af1fe64b9442c2ef44849ce, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8359244803254751725, guid: ea8c79db4af1fe64b9442c2ef44849ce, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8359244803254751725, guid: ea8c79db4af1fe64b9442c2ef44849ce, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8359244803254751725, guid: ea8c79db4af1fe64b9442c2ef44849ce, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 180
+      objectReference: {fileID: 0}
     - target: {fileID: 8359244804284725097, guid: ea8c79db4af1fe64b9442c2ef44849ce, type: 3}
       propertyPath: m_Name
       value: PitVertical
