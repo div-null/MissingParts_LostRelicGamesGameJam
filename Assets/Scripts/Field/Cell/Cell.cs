@@ -37,20 +37,17 @@ namespace Assets.Scripts.Field.Cell
                 Debug.DrawLine(rightSide + topSide + center, rightSide + bottomSide + center, Color.blue, Single.PositiveInfinity);
         }
 
-        public bool IsWall()
-        {
-            return CellType == CellType.Wall;
-        }
+        public bool IsWall() => 
+            CellType == CellType.Wall;
 
-        public bool IsPit()
-        {
-            return CellType == CellType.Pit;
-        }
+        public bool IsPit() => 
+            CellType == CellType.Pit;
 
-        public bool IsFinish()
-        {
-            return CellType == CellType.Finish;
-        }
+        public bool IsFinish() => 
+            CellType == CellType.Finish;
+        
+        public bool IsSurface() => 
+            CellType == CellType.Empty;
 
         public bool HasCharacterPart()
         {

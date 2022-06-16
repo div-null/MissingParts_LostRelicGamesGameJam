@@ -13,6 +13,9 @@ namespace LevelEditor
         public CharacterPartData[] PlayerParts;
         public Misc[] Misc;
 
+        public CellContainer Get(Vector2Int coords) =>
+            Get(coords.x, coords.y);
+
         public CellContainer Get(int x, int y)
         {
             if (x < 0 || y < 0 || x >= MapWidth || y >= MapHeight)
