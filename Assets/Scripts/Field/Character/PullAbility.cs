@@ -53,7 +53,7 @@ public class PullAbility : Ability
         {
             DirectionType oppositeDirection = (-vectorDirection).ToDirection();
 
-            if (foundedCharacterPart.IsActive)
+            if (!foundedCharacterPart.IsActive)
             {
                 //Move foundedCharacterPart several times
                 for (int i = 0; i < numberOfSteps; i++)
@@ -152,12 +152,22 @@ public class PullAbility : Ability
         foreach (var part in pulledParts)
             part.TryJoinAllDirections();
 
-        _characterPart.CharacterPartAttachment.AttachParts();
+        //tryjoin сработал, осталось только выключить, если нет связи
+        //нужно проверить, не является ли 
+
+        //Ошибка
+        //_characterPart.CharacterPartAttachment.AttachParts();
         
-        pulledParts.First().SetActiveToAllParts(false);
+        CharacterPart firstPulledPart = pulledParts.First();
+        if (!CanReachPull(firstPulledPart, _characterPart, new List<CharacterPart>()))
+        {
+            firstPulledPart.SetActiveToAllParts(false);
+        }
+        
         _characterPart.SetActiveToAllParts(true);
+        firstPulledPart.CharacterPartAttachment.DetachParts();
         //check for pits
-        pulledParts.First().CharacterPartAttachment.DetachParts();
+        //pulledParts.First().CharacterPartAttachment.DetachParts();
         //turn detach parts inactive
         //turn mainParts active
     }

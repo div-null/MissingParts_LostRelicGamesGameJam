@@ -61,8 +61,7 @@ public class RotateAbility : Ability
                 part.SetPosition(value);
                 part.SetRotation();
             }
-
-            _characterPart.CharacterPartAttachment.DetachParts();
+            
             _characterPart.CharacterPartAttachment.AttachParts();
 
             return true;

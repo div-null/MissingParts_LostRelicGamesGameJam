@@ -91,6 +91,8 @@ public class Character : MonoBehaviour
                 {
                     _mainPart = characterPart;
                     ability.Apply();
+                    _mainPart.CharacterPartAttachment.DetachParts();
+                    Moved?.Invoke();
                 }
             }
         }
