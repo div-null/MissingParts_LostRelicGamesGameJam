@@ -91,6 +91,14 @@ namespace Game
                 case DirectionType.Down:
                     spawnPlainWall(DirectionType.Down, wallTransform);
                     break;
+                case DirectionType.Down | DirectionType.Up:
+                    spawnPlainWall(DirectionType.Down, wallTransform);
+                    spawnPlainWall(DirectionType.Up, wallTransform);
+                    break;
+                case DirectionType.Left | DirectionType.Right:
+                    spawnPlainWall(DirectionType.Left, wallTransform);
+                    spawnPlainWall(DirectionType.Right, wallTransform);
+                    break;
                 case DirectionType.Up | DirectionType.Right:
                     spawnCorneredWall(DirectionType.Up | DirectionType.Right, wallTransform);
                     break;
