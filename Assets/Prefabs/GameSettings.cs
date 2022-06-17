@@ -5,11 +5,11 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "GameSettings", menuName = "Create settings", order = 0)]
 public class GameSettings : ScriptableObject
 {
-    public PitCellPrefab PitCellPrefabs;
-    public WallCellPrefab WallCellPrefabs;
+    // public PitCellPrefab PitCellPrefabs;
+    // public WallCellPrefab WallCellPrefabs;
     public Cell WallCellPrefab;
     public Cell EmptyCellPrefab;
-    public Cell HoleCellPrefab;
+    public Cell PitCellPrefab;
     public Cell FinishCellPrefab;
     public CharacterPart CharacterPartPrefab;
     public Field FieldPrefab;

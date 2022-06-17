@@ -12,11 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54c9c74a8eb12e143819078712f7a6a0, type: 3}
   m_Name: Settings
   m_EditorClassIdentifier: 
-  PitCellPrefabs: {fileID: 11400000, guid: 02e97f011609e2f4fa2f199cf55bf48c, type: 2}
-  WallCellPrefabs: {fileID: 11400000, guid: f9db996de791d3147844ffe1633bacfa, type: 2}
-  WallCellPrefab: {fileID: 8721043678490087218, guid: 04ad11954ccba7a46b159ee75f570e16, type: 3}
+  WallCellPrefab: {fileID: 2487449524744606824, guid: 925a455a8d9c84e42afea302f76ef36a, type: 3}
   EmptyCellPrefab: {fileID: 7184153879075629607, guid: 6fa564b2398fb0c41a767bea7e297faf, type: 3}
-  HoleCellPrefab: {fileID: 9070970298340645812, guid: 8ce11c877d0186f4087308110dd812e5, type: 3}
+  PitCellPrefab: {fileID: 8721043678490087218, guid: 04ad11954ccba7a46b159ee75f570e16, type: 3}
   FinishCellPrefab: {fileID: 9013644365590413842, guid: 6760ae857b27284499d20398d54a0064, type: 3}
   CharacterPartPrefab: {fileID: 352731296914066392, guid: 3711261312c37dc4b8857b74df91c42a, type: 3}
   FieldPrefab: {fileID: 3314515156681114963, guid: fd242e29e5b372f408951d4be7fefa1e, type: 3}
