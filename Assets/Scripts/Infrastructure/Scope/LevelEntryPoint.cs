@@ -26,7 +26,7 @@ namespace Infrastructure.Scope
             _ceiling = ceiling;
             _levelLoader = levelLoader;
             _factory = factory;
-            _currentLevel = 0;
+            _currentLevel = 11;
             _ceiling.OnFadeOut += UnlockInputs;
         }
 
@@ -47,26 +47,56 @@ namespace Infrastructure.Scope
         public void LoadLevel()
         {
             Debug.Log($"Loading Level {_currentLevel}");
-            GameLevel level = _currentLevel switch
+            GameLevel level;
+            switch (_currentLevel)
             {
-                1 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl1),
-                2 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl2),
-                3 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl3),
-                4 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl4),
-                5 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl5),
-                6 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl6),
-                7 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl7),
-                8 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl8),
-                9 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl9),
-                10 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl10),
-                11 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl11),
-                12 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl12),
-            };
+                case 1:
+                    level = _levelLoader.LoadLevel(LevelLoader.Level.Lvl1);
+                    break;
+                case 2:
+                    level = _levelLoader.LoadLevel(LevelLoader.Level.Lvl2);
+                    break;
+                case 3:
+                    level = _levelLoader.LoadLevel(LevelLoader.Level.Lvl3);
+                    break;
+                case 4:
+                    level = _levelLoader.LoadLevel(LevelLoader.Level.Lvl4);
+                    break;
+                case 5:
+                    level = _levelLoader.LoadLevel(LevelLoader.Level.Lvl5);
+                    break;
+                case 6:
+                    level = _levelLoader.LoadLevel(LevelLoader.Level.Lvl6);
+                    break;
+                case 7:
+                    level = _levelLoader.LoadLevel(LevelLoader.Level.Lvl7);
+                    break;
+                case 8:
+                    level = _levelLoader.LoadLevel(LevelLoader.Level.Lvl8);
+                    break;
+                case 9:
+                    level = _levelLoader.LoadLevel(LevelLoader.Level.Lvl9);
+                    break;
+                case 10:
+                    level = _levelLoader.LoadLevel(LevelLoader.Level.Lvl10);
+                    break;
+                case 11:
+                    level = _levelLoader.LoadLevel(LevelLoader.Level.Lvl11);
+                    break;
+                case 12:
+                    level = _levelLoader.LoadLevel(LevelLoader.Level.Lvl12);
+                    break;
+                default:
+                    EndOfTheGame();
+                    return;
+            }
+
             _field = _factory.CreateField(level);
             _character = _factory.CreateCharacter(level, _field);
             _character.Moved += _field.CheckForFinish;
             _field.Finished += LevelFinished;
             _character.Died += ReloadLevel;
+            
             //TODO: event to reload level died and click on reload button
             //TODO: event to pass load next level after winning on current level
         }
@@ -126,6 +156,11 @@ namespace Infrastructure.Scope
         {
             Debug.Log("Inputs unlocked");
             _playerInputs.Enable();
+        }
+
+        private void EndOfTheGame()
+        {
+            _gameUI.ShowCredits();
         }
     }
 }

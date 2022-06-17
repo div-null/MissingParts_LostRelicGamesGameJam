@@ -13,6 +13,8 @@ public class GameUI : MonoBehaviour
 
     [SerializeField] private Animator MainMenuAnimator;
 
+    [SerializeField] private GameObject Credits;
+
     private void Awake()
     {
         _restartButton.onClick.AddListener(OnRestartClicked);
@@ -30,6 +32,6 @@ public class GameUI : MonoBehaviour
 
     public void ShowCredits()
     {
-        
+        Credits.SetActive(true);
     }
 }
