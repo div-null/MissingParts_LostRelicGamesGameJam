@@ -2,10 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Field.Cell;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class PullAbility : Ability
 {
+    [SerializeField]
+    private GameObject _hookPrefab;
+
+    private HookView _hookView;
+    
     private const int _range = 5;
     private DirectionType _lookDirection;
 
@@ -13,6 +19,7 @@ public class PullAbility : Ability
     {
         base.Initialize(character, field);
         _lookDirection = direction;
+        _hookView = GetComponentInChildren<HookView>();
     }
     
     public override void Apply()
@@ -36,10 +43,11 @@ public class PullAbility : Ability
         for (numberOfSteps = 1; numberOfSteps < _range; numberOfSteps++)
         {
             Cell currentCell = _field.Get(_characterPart.Position + vectorDirection * numberOfSteps);
-            if (currentCell.IsWall())
-            {
+
+            if (currentCell == null)
                 break;
-            }
+            else if (currentCell.IsWall())
+                break;
             else if (currentCell.CharacterPart != null)
             {
                 foundedCharacterPart = currentCell.CharacterPart;
@@ -47,14 +55,18 @@ public class PullAbility : Ability
             }
         }
 
+        _hookView.RunForward(numberOfSteps - 1);
+        
         if (foundedCharacterPart == null)
+        {
             return false;
+        }
         else
         {
             DirectionType oppositeDirection = (-vectorDirection).ToDirection();
-
             if (!foundedCharacterPart.IsActive)
             {
+                if (foundedCharacterPart.CharacterPartMovement )
                 //Move foundedCharacterPart several times
                 for (int i = 0; i < numberOfSteps; i++)
                 {
@@ -131,11 +143,13 @@ public class PullAbility : Ability
         List<CharacterPart> pulledParts = GetPulledCharacterParts(detachablePart, _lookDirection);
         if (CanPulledPartsMove(pulledParts))
         {
+            _hookView.RunForward(1);
             MovePulledParts(pulledParts);
             return true;
         }
         else
         {
+            _hookView.RunForward(0);
             return false;
         }
         //try to move pulledParts up and get the result

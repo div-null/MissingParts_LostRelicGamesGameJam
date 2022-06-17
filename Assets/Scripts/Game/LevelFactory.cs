@@ -126,6 +126,13 @@ namespace Game
 
             var partView = characterPart.GetComponent<CharacterPartView>();
 
+            if (partData.Ability == AbilityType.Hook)
+            {
+                var renderer = characterPart.transform.GetComponentInChildren<SpriteRenderer>();
+                var hookView = _resolver.Instantiate(_gameSettings.HookPrefab, renderer.transform);
+                hookView.transform.rotation = Quaternion.identity;
+            }
+
             partView.Initialize(partData);
             characterPart.CharacterPartView = partView;
 

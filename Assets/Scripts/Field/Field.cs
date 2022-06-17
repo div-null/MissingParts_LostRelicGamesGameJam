@@ -26,10 +26,7 @@ public class Field : MonoBehaviour
     public void CheckForFinish()
     {
         if (IsFinished())
-        {
             Finished?.Invoke();
-            Debug.Log("Level complete!");
-        }
     }
 
     public bool IsFinished()
