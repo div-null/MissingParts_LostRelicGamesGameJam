@@ -64,10 +64,10 @@ namespace Game
                     DirectionType borders = cellsBorders[i, j];
                     Vector2Int cellPosition = new Vector2Int(i, j);
                     Cell newCell = CreateCell(i, j, field.transform, cellData);
-                    TileView tileView = newCell.GetComponent<TileView>();
 
-                    if (newCell.IsWall() || newCell.IsPit())
+                    if (cellData.Type == CellType.Wall || cellData.Type == CellType.Pit)
                     {
+                        TileView tileView = newCell.GetComponent<TileView>();
                         drawBorders(borders, tileView);
                     }
 
@@ -119,28 +119,28 @@ namespace Game
                     makePlain(DirectionType.Right, view);
                     break;
                 case DirectionType.Up | DirectionType.Right:
-                    spawnCornered(DirectionType.Up | DirectionType.Right, view);
+                    makeCornered(DirectionType.Up | DirectionType.Right, view);
                     break;
                 case DirectionType.Up | DirectionType.Left:
-                    spawnCornered(DirectionType.Up | DirectionType.Left, view);
+                    makeCornered(DirectionType.Up | DirectionType.Left, view);
                     break;
                 case DirectionType.Down | DirectionType.Left:
-                    spawnCornered(DirectionType.Down | DirectionType.Left, view);
+                    makeCornered(DirectionType.Down | DirectionType.Left, view);
                     break;
                 case DirectionType.Down | DirectionType.Right:
-                    spawnCornered(DirectionType.Down | DirectionType.Right, view);
+                    makeCornered(DirectionType.Down | DirectionType.Right, view);
                     break;
                 case DirectionType.Left | DirectionType.Up | DirectionType.Right:
-                    spawnInpass(DirectionType.Down, view);
+                    makeInpass(DirectionType.Down, view);
                     break;
                 case DirectionType.Up | DirectionType.Right | DirectionType.Down:
-                    spawnInpass(DirectionType.Left, view);
+                    makeInpass(DirectionType.Left, view);
                     break;
                 case DirectionType.Right | DirectionType.Down | DirectionType.Left:
-                    spawnInpass(DirectionType.Up, view);
+                    makeInpass(DirectionType.Up, view);
                     break;
                 case DirectionType.Down | DirectionType.Left | DirectionType.Up:
-                    spawnInpass(DirectionType.Right, view);
+                    makeInpass(DirectionType.Right, view);
                     break;
                 // case DirectionType.None:
                 //     fillCorners(cellPosition, level, borders, view);
@@ -177,27 +177,34 @@ namespace Game
         // }
 
 
-        private void spawnInpass(DirectionType direction, TileView view)
+        private void makeInpass(DirectionType direction, TileView view)
         {
-            
+            view.First.sprite = view.InnerCorner;
+            view.Second.sprite = view.InnerCorner;
+            view.Third.sprite = view.Vertical;
+            view.Fourth.sprite = view.Vertical;
+
             setupInnerCorner(DirectionType.Left | DirectionType.Up, view.First);
             setupInnerCorner(DirectionType.Right | DirectionType.Up, view.Second);
             setupSide(DirectionType.Left, view.Fourth);
             setupSide(DirectionType.Right, view.Third);
-            
-            trySetRotation(direction, DirectionType.Up, view.transform, 0);
-            trySetRotation(direction, DirectionType.Right, view.transform, 90);
-            trySetRotation(direction, DirectionType.Down, view.transform, 180);
-            trySetRotation(direction, DirectionType.Left, view.transform, 270);
-            
+
+            trySetRotation(direction, DirectionType.Down, view.transform, 0);
+            trySetRotation(direction, DirectionType.Left, view.transform, 90);
+            trySetRotation(direction, DirectionType.Up, view.transform, 180);
+            trySetRotation(direction, DirectionType.Right, view.transform, 270);
         }
 
-        private void spawnCornered(DirectionType direction, TileView view)
+        private void makeCornered(DirectionType direction, TileView view)
         {
+            view.First.sprite = view.InnerCorner;
+            view.Second.sprite = view.Vertical;
+            view.Fourth.sprite = view.Vertical;
+
             setupInnerCorner(DirectionType.Left | DirectionType.Up, view.First);
             setupSide(DirectionType.Left, view.Fourth);
             setupSide(DirectionType.Up, view.Second);
-            
+
             trySetRotation(direction, DirectionType.Left | DirectionType.Up, view.transform, 0);
             trySetRotation(direction, DirectionType.Right | DirectionType.Up, view.transform, 90);
             trySetRotation(direction, DirectionType.Right | DirectionType.Down, view.transform, 180);
@@ -207,6 +214,9 @@ namespace Game
         private void makePlain(DirectionType pointingDirection, TileView view)
         {
             SpriteRenderer[] sides = selectTiles(view, pointingDirection);
+            foreach (var side in sides)
+                side.sprite = view.Vertical;
+
             setupSide(pointingDirection, sides[0]);
             setupSide(pointingDirection, sides[1]);
         }
@@ -288,7 +298,7 @@ namespace Game
             {
                 CellType.Wall => _resolver.Instantiate(_gameSettings.WallCellPrefab, cellPosition, Quaternion.identity, parent),
                 CellType.Empty => _resolver.Instantiate(_gameSettings.EmptyCellPrefab, cellPosition, Quaternion.identity, parent),
-                CellType.Pit => _resolver.Instantiate(_gameSettings.HoleCellPrefab, cellPosition, Quaternion.identity, parent),
+                CellType.Pit => _resolver.Instantiate(_gameSettings.PitCellPrefab, cellPosition, Quaternion.identity, parent),
                 CellType.Finish => _resolver.Instantiate(_gameSettings.FinishCellPrefab, cellPosition, Quaternion.identity, parent),
                 _ => throw new ArgumentOutOfRangeException(nameof(cellContainer.Type), "Unknown cell type")
             };
