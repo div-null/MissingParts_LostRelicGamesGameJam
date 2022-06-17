@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [Flags]
@@ -15,11 +16,19 @@ public enum DirectionType
 
 public static class DirectionExtensions
 {
+    public static DirectionType[] directions = new[] {DirectionType.Right, DirectionType.Left, DirectionType.Up, DirectionType.Down};
+    
     public static IEnumerable<TEnum> GetFlags<TEnum>(this TEnum input) where TEnum : Enum
     {
         foreach (Enum value in Enum.GetValues(input.GetType()))
             if (input.HasFlag(value))
                 yield return (TEnum)value;
+    }
+
+    public static DirectionType Invert(this DirectionType direction)
+    {
+        var directionTypes = directions.Except(direction.GetFlags()).Intersect(directions).ToList();
+        return directionTypes.Single();
     }
 
 

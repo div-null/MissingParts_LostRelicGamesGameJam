@@ -51,6 +51,7 @@ namespace Game
             var cells = new Cell[level.MapWidth, level.MapHeight];
             var characterParts = new List<CharacterPart>();
 
+            DirectionType[,] cellsBorders = level.GetCellsBorders();
             Field field = _resolver.Instantiate(_gameSettings.FieldPrefab);
             field.SetCells(cells);
             SetupCamera(level);
@@ -60,12 +61,15 @@ namespace Game
                 for (int i = 0; i < level.MapWidth; i++)
                 {
                     CellContainer cellData = level.Get(i, j);
-                    DirectionType borders = getBorderDirections(level, cellData.Type, i, j);
+                    DirectionType borders = cellsBorders[i, j];
                     Vector2Int cellPosition = new Vector2Int(i, j);
                     Cell newCell = CreateCell(i, j, field.transform, cellData);
+                    TileView tileView = newCell.GetComponent<TileView>();
 
                     if (newCell.IsWall() || newCell.IsPit())
-                        drawBorders(borders, cellPosition, level, newCell.transform);
+                    {
+                        drawBorders(borders, tileView);
+                    }
 
                     newCell.Initialize(cellPosition, cellData.Type, borders);
                     cells[i, j] = newCell;
@@ -93,262 +97,189 @@ namespace Game
             return field;
         }
 
-        private void drawBorders(DirectionType borderDirections, Vector2Int cellPosition, GameLevel level, Transform wallTransform)
+        private void drawBorders(DirectionType currentBorders, TileView view)
         {
-            CellType type = level.Get(cellPosition).Type;
-
-            GameObject sidePrefab;
-            GameObject innerCornerPrefab;
-            GameObject outerCornerPrefab;
-
-            if (type == CellType.Wall)
-            {
-                sidePrefab = _gameSettings.WallCellPrefabs.VerticalWall;
-                innerCornerPrefab = _gameSettings.WallCellPrefabs.InnerCorner;
-                outerCornerPrefab = _gameSettings.WallCellPrefabs.OuterCorner;
-            }
-            else if (type == CellType.Pit)
-            {
-                sidePrefab = _gameSettings.PitCellPrefabs.Vertical;
-                innerCornerPrefab = _gameSettings.PitCellPrefabs.InnerCorner;
-                outerCornerPrefab = _gameSettings.PitCellPrefabs.OuterCorner;
-            }
-            else
-            {
-                return;
-            }
-
-            switch (borderDirections)
+            switch (currentBorders)
             {
                 case DirectionType.All:
-                    spawnSquared(wallTransform, innerCornerPrefab);
+                    makeSquared(view);
                     break;
                 case DirectionType.Left:
-                    spawnPlain(DirectionType.Left, wallTransform, sidePrefab);
-                    break;
                 case DirectionType.Up:
-                    spawnPlain(DirectionType.Up, wallTransform, sidePrefab);
-                    break;
                 case DirectionType.Right:
-                    spawnPlain(DirectionType.Right, wallTransform, sidePrefab);
-                    break;
                 case DirectionType.Down:
-                    spawnPlain(DirectionType.Down, wallTransform, sidePrefab);
+                    makePlain(currentBorders, view);
                     break;
                 case DirectionType.Down | DirectionType.Up:
-                    spawnPlain(DirectionType.Down, wallTransform, sidePrefab);
-                    spawnPlain(DirectionType.Up, wallTransform, sidePrefab);
+                    makePlain(DirectionType.Down, view);
+                    makePlain(DirectionType.Up, view);
                     break;
                 case DirectionType.Left | DirectionType.Right:
-                    spawnPlain(DirectionType.Left, wallTransform, sidePrefab);
-                    spawnPlain(DirectionType.Right, wallTransform, sidePrefab);
+                    makePlain(DirectionType.Left, view);
+                    makePlain(DirectionType.Right, view);
                     break;
                 case DirectionType.Up | DirectionType.Right:
-                    spawnCornered(DirectionType.Up | DirectionType.Right, wallTransform, innerCornerPrefab, sidePrefab);
+                    spawnCornered(DirectionType.Up | DirectionType.Right, view);
                     break;
                 case DirectionType.Up | DirectionType.Left:
-                    spawnCornered(DirectionType.Up | DirectionType.Left, wallTransform, innerCornerPrefab, sidePrefab);
+                    spawnCornered(DirectionType.Up | DirectionType.Left, view);
                     break;
                 case DirectionType.Down | DirectionType.Left:
-                    spawnCornered(DirectionType.Down | DirectionType.Left, wallTransform, innerCornerPrefab, sidePrefab);
+                    spawnCornered(DirectionType.Down | DirectionType.Left, view);
                     break;
                 case DirectionType.Down | DirectionType.Right:
-                    spawnCornered(DirectionType.Down | DirectionType.Right, wallTransform, innerCornerPrefab, sidePrefab);
+                    spawnCornered(DirectionType.Down | DirectionType.Right, view);
                     break;
                 case DirectionType.Left | DirectionType.Up | DirectionType.Right:
-                    spawnInpass(DirectionType.Down, wallTransform, innerCornerPrefab, sidePrefab);
+                    spawnInpass(DirectionType.Down, view);
                     break;
                 case DirectionType.Up | DirectionType.Right | DirectionType.Down:
-                    spawnInpass(DirectionType.Left, wallTransform, innerCornerPrefab, sidePrefab);
+                    spawnInpass(DirectionType.Left, view);
                     break;
                 case DirectionType.Right | DirectionType.Down | DirectionType.Left:
-                    spawnInpass(DirectionType.Up, wallTransform, innerCornerPrefab, sidePrefab);
+                    spawnInpass(DirectionType.Up, view);
                     break;
                 case DirectionType.Down | DirectionType.Left | DirectionType.Up:
-                    spawnInpass(DirectionType.Right, wallTransform, innerCornerPrefab, sidePrefab);
+                    spawnInpass(DirectionType.Right, view);
                     break;
-                case DirectionType.None:
-                    fillCorners(cellPosition, level, wallTransform, outerCornerPrefab);
-                    break;
+                // case DirectionType.None:
+                //     fillCorners(cellPosition, level, borders, view);
+                //     break;
             }
         }
 
-        private void fillCorners(Vector2Int cellPosition, GameLevel level, Transform parent, GameObject outerCornerPrefab)
-        {
-            DirectionType getBorders(Vector2Int coords)
-            {
-                CellContainer cell = level.Get(cellPosition + Vector2Int.up);
-                if (cell == null) return DirectionType.None;
-                return cell.Type == CellType.Wall ? getBorderDirections(level, CellType.Wall, coords.x, coords.y) : DirectionType.None;
-            }
 
-            var top = getBorders(cellPosition + Vector2Int.up);
-            var down = getBorders(cellPosition + Vector2Int.down);
-            var right = getBorders(cellPosition + Vector2Int.right);
-            var left = getBorders(cellPosition + Vector2Int.left);
-
-            if (top.HasFlag(DirectionType.Right) && right.HasFlag(DirectionType.Up))
-                spawnOuterCorner(DirectionType.Right | DirectionType.Up, parent, outerCornerPrefab);
-
-            if (right.HasFlag(DirectionType.Down) && down.HasFlag(DirectionType.Right))
-                spawnOuterCorner(DirectionType.Down | DirectionType.Right, parent, outerCornerPrefab);
-
-            if (down.HasFlag(DirectionType.Left) && left.HasFlag(DirectionType.Down))
-                spawnOuterCorner(DirectionType.Left | DirectionType.Down, parent, outerCornerPrefab);
-
-            if (top.HasFlag(DirectionType.Left) && left.HasFlag(DirectionType.Up))
-                spawnOuterCorner(DirectionType.Left | DirectionType.Up, parent, outerCornerPrefab);
-        }
-
-        // private void spawnInpassWall(DirectionType direction, Transform parent)
+        // private void fillCorners(Vector2Int cellPosition, GameLevel level, Transform parent, GameObject outerCornerPrefab)
         // {
-        //     spawnInpass(direction, parent, _gameSettings)
+        //     DirectionType getBorders(Vector2Int coords)
+        //     {
+        //         CellContainer cell = level.Get(cellPosition + Vector2Int.up);
+        //         if (cell == null) return DirectionType.None;
+        //         return cell.Type == CellType.Wall ? getBorderDirections(level, CellType.Wall, coords.x, coords.y) : DirectionType.None;
+        //     }
+        //
+        //     var top = getBorders(cellPosition + Vector2Int.up);
+        //     var down = getBorders(cellPosition + Vector2Int.down);
+        //     var right = getBorders(cellPosition + Vector2Int.right);
+        //     var left = getBorders(cellPosition + Vector2Int.left);
+        //
+        //     if (top.HasFlag(DirectionType.Right) && right.HasFlag(DirectionType.Up))
+        //         spawnOuterCorner(DirectionType.Right | DirectionType.Up, parent, outerCornerPrefab);
+        //
+        //     if (right.HasFlag(DirectionType.Down) && down.HasFlag(DirectionType.Right))
+        //         spawnOuterCorner(DirectionType.Down | DirectionType.Right, parent, outerCornerPrefab);
+        //
+        //     if (down.HasFlag(DirectionType.Left) && left.HasFlag(DirectionType.Down))
+        //         spawnOuterCorner(DirectionType.Left | DirectionType.Down, parent, outerCornerPrefab);
+        //
+        //     if (top.HasFlag(DirectionType.Left) && left.HasFlag(DirectionType.Up))
+        //         spawnOuterCorner(DirectionType.Left | DirectionType.Up, parent, outerCornerPrefab);
         // }
 
-        private void spawnInpass(DirectionType direction, Transform parent, GameObject innerCornerPrefab, GameObject sidePrefab)
+
+        private void spawnInpass(DirectionType direction, TileView view)
         {
-            //todo: посмотреть можно ли проще
-            spawnInnerCorner(DirectionType.Left | DirectionType.Up, parent, innerCornerPrefab);
-            spawnInnerCorner(DirectionType.Right | DirectionType.Up, parent, innerCornerPrefab);
-
-            spawnSide(DirectionType.Left, parent, sidePrefab).Translate(down, Space.World);
-            spawnSide(DirectionType.Right, parent, sidePrefab).Translate(down, Space.World);
-
             
-            if (direction == DirectionType.Up)
-                parent.Rotate(Vector3.back, 180, Space.Self);
-            if (direction == DirectionType.Left)
-                parent.Rotate(Vector3.back, 90, Space.Self);
-            if (direction == DirectionType.Down)
-                parent.Rotate(Vector3.back, 0, Space.Self);
-            if (direction == DirectionType.Right)
-                parent.Rotate(Vector3.back, 270, Space.Self);
+            setupInnerCorner(DirectionType.Left | DirectionType.Up, view.First);
+            setupInnerCorner(DirectionType.Right | DirectionType.Up, view.Second);
+            setupSide(DirectionType.Left, view.Fourth);
+            setupSide(DirectionType.Right, view.Third);
+            
+            trySetRotation(direction, DirectionType.Up, view.transform, 0);
+            trySetRotation(direction, DirectionType.Right, view.transform, 90);
+            trySetRotation(direction, DirectionType.Down, view.transform, 180);
+            trySetRotation(direction, DirectionType.Left, view.transform, 270);
+            
         }
 
-        private void spawnCornered(DirectionType direction, Transform parent, GameObject innerCornerPrefab, GameObject sidePrefab)
+        private void spawnCornered(DirectionType direction, TileView view)
         {
-            Transform corner = spawnInnerCorner(direction, parent, innerCornerPrefab);
-            Vector3 horizontal = corner.right * 0.25f;
-            Vector3 vertical = -corner.up * 0.25f;
-
-            // TODO: разобраться как упростить
-            if (direction.HasFlag(DirectionType.Right))
-                (horizontal, vertical) = (vertical, horizontal);
-
-            if (direction.HasFlag(DirectionType.Down))
-                (horizontal, vertical) = (vertical, horizontal);
-
-            var flags = direction.GetFlags().ToArray();
-
-            var horizontalDirection = flags[1];
-            var verticalDirection = flags[2];
-
-            Transform wall1 = spawnSide(horizontalDirection, parent, sidePrefab);
-            wall1.Translate(vertical, Space.World);
-            Transform wall2 = spawnSide(verticalDirection, parent, sidePrefab);
-            wall2.Translate(horizontal, Space.World);
+            setupInnerCorner(DirectionType.Left | DirectionType.Up, view.First);
+            setupSide(DirectionType.Left, view.Fourth);
+            setupSide(DirectionType.Up, view.Second);
+            
+            trySetRotation(direction, DirectionType.Left | DirectionType.Up, view.transform, 0);
+            trySetRotation(direction, DirectionType.Right | DirectionType.Up, view.transform, 90);
+            trySetRotation(direction, DirectionType.Right | DirectionType.Down, view.transform, 180);
+            trySetRotation(direction, DirectionType.Left | DirectionType.Down, view.transform, 270);
         }
 
-        private void spawnPlain(DirectionType pointingDirection, Transform parent, GameObject sidePrefab)
+        private void makePlain(DirectionType pointingDirection, TileView view)
         {
-            Transform side1 = spawnSide(pointingDirection, parent, sidePrefab);
-            Transform side2 = spawnSide(pointingDirection, parent, sidePrefab);
+            SpriteRenderer[] sides = selectTiles(view, pointingDirection);
+            setupSide(pointingDirection, sides[0]);
+            setupSide(pointingDirection, sides[1]);
+        }
 
-            if (pointingDirection == DirectionType.Down || pointingDirection == DirectionType.Up)
+        private SpriteRenderer[] selectTiles(TileView view, DirectionType borders)
+        {
+            return borders switch
             {
-                side1.Translate(left, Space.World);
-                side2.Translate(right, Space.World);
-            }
-
-            if (pointingDirection == DirectionType.Left || pointingDirection == DirectionType.Right)
-            {
-                side1.Translate(up, Space.World);
-                side2.Translate(down, Space.World);
-            }
+                DirectionType.None => Array.Empty<SpriteRenderer>(),
+                DirectionType.Right => new[] {view.Second, view.Third},
+                DirectionType.Left => new[] {view.First, view.Fourth},
+                DirectionType.Up => new[] {view.First, view.Second},
+                DirectionType.Down => new[] {view.Third, view.Fourth},
+                DirectionType.Left | DirectionType.Up => new[] {view.First},
+                DirectionType.Right | DirectionType.Up => new[] {view.Second},
+                DirectionType.Right | DirectionType.Down => new[] {view.Third},
+                DirectionType.Left | DirectionType.Down => new[] {view.Fourth},
+                _ => throw new ArgumentOutOfRangeException(nameof(borders), "Can't get borders")
+            };
         }
 
-        private void spawnSquared(Transform parent, GameObject cornerPrefab)
+        void trySetRotation(DirectionType sourceDirection, DirectionType targetDirection, Transform tile, int angle)
         {
-            spawnInnerCorner(DirectionType.Up | DirectionType.Right, parent, cornerPrefab);
-            spawnInnerCorner(DirectionType.Up | DirectionType.Left, parent, cornerPrefab);
-            spawnInnerCorner(DirectionType.Down | DirectionType.Right, parent, cornerPrefab);
-            spawnInnerCorner(DirectionType.Down | DirectionType.Left, parent, cornerPrefab);
+            if (sourceDirection.HasFlag(targetDirection))
+                tile.rotation = Quaternion.AngleAxis(angle, Vector3.back);
         }
 
-        private Transform spawnOuterCorner(DirectionType pointingDirection, Transform parent, GameObject outerCorner)
+        private void makeSquared(TileView tile)
         {
-            void trySetDirection(DirectionType checkDirection, Transform tile, int angle)
-            {
-                if (pointingDirection.HasFlag(checkDirection))
-                    rotateAndTranslate(tile, pointingDirection, angle);
-            }
-
-            var gameObject = GameObject.Instantiate(outerCorner, parent);
-
-            var tileTransform = gameObject.transform;
-
-            trySetDirection(DirectionType.Up | DirectionType.Left, tileTransform, 0);
-            trySetDirection(DirectionType.Up | DirectionType.Right, tileTransform, 90);
-            trySetDirection(DirectionType.Down | DirectionType.Right, tileTransform, 180);
-            trySetDirection(DirectionType.Down | DirectionType.Left, tileTransform, 270);
-
-            return tileTransform;
+            setupInnerCorner(DirectionType.Up | DirectionType.Left, tile.First);
+            setupInnerCorner(DirectionType.Up | DirectionType.Right, tile.Second);
+            setupInnerCorner(DirectionType.Down | DirectionType.Right, tile.Third);
+            setupInnerCorner(DirectionType.Down | DirectionType.Left, tile.Fourth);
         }
 
-        private Transform spawnInnerCorner(DirectionType pointingDirection, Transform parent, GameObject cornerPrefab)
+        private void setupOuterCorner(DirectionType pointingDirection, SpriteRenderer tile)
         {
-            void trySetDirection(DirectionType checkDirection, Transform tile, int angle)
-            {
-                if (pointingDirection.HasFlag(checkDirection))
-                    rotateAndTranslate(tile, pointingDirection, angle);
-            }
-
-            var gameObject = GameObject.Instantiate(cornerPrefab, parent);
-
-            var tileTransform = gameObject.transform;
-
-            trySetDirection(DirectionType.Up | DirectionType.Left, tileTransform, 0);
-            trySetDirection(DirectionType.Up | DirectionType.Right, tileTransform, 90);
-            trySetDirection(DirectionType.Down | DirectionType.Right, tileTransform, 180);
-            trySetDirection(DirectionType.Down | DirectionType.Left, tileTransform, 270);
-
-            return tileTransform;
+            trySetRotation(pointingDirection, DirectionType.Up | DirectionType.Left, tile.transform, 0);
+            trySetRotation(pointingDirection, DirectionType.Up | DirectionType.Right, tile.transform, 90);
+            trySetRotation(pointingDirection, DirectionType.Down | DirectionType.Right, tile.transform, 180);
+            trySetRotation(pointingDirection, DirectionType.Down | DirectionType.Left, tile.transform, 270);
         }
 
-        private Transform spawnSide(DirectionType pointingDirection, Transform parent, GameObject sideSprite)
+        private void setupInnerCorner(DirectionType pointingDirection, SpriteRenderer tile)
         {
-            void trySetDirection(DirectionType directionType, Transform transform, int angle)
-            {
-                if (pointingDirection == directionType)
-                    rotateAndTranslate(transform, directionType, angle);
-            }
-
-            var gameObject = GameObject.Instantiate(sideSprite, parent);
-
-            Transform wallTransform = gameObject.transform;
-
-            trySetDirection(DirectionType.Right, wallTransform, 0);
-            trySetDirection(DirectionType.Up, wallTransform, 270);
-            trySetDirection(DirectionType.Left, wallTransform, 180);
-            trySetDirection(DirectionType.Down, wallTransform, 90);
-
-            return wallTransform;
+            trySetRotation(pointingDirection, DirectionType.Up | DirectionType.Left, tile.transform, 0);
+            trySetRotation(pointingDirection, DirectionType.Up | DirectionType.Right, tile.transform, 90);
+            trySetRotation(pointingDirection, DirectionType.Down | DirectionType.Right, tile.transform, 180);
+            trySetRotation(pointingDirection, DirectionType.Down | DirectionType.Left, tile.transform, 270);
         }
 
-        private static Transform rotateAndTranslate(Transform tile, DirectionType pointingDirection, float angle)
+        private void setupSide(DirectionType pointingDirection, SpriteRenderer tile)
         {
-            tile.Rotate(Vector3.back, angle, Space.Self);
-            if (pointingDirection.HasFlag(DirectionType.Up))
-                tile.Translate(up, Space.World);
-            if (pointingDirection.HasFlag(DirectionType.Right))
-                tile.Translate(right, Space.World);
-            if (pointingDirection.HasFlag(DirectionType.Down))
-                tile.Translate(down, Space.World);
-            if (pointingDirection.HasFlag(DirectionType.Left))
-                tile.Translate(left, Space.World);
-
-            return tile;
+            trySetRotation(pointingDirection, DirectionType.Right, tile.transform, 0);
+            trySetRotation(pointingDirection, DirectionType.Up, tile.transform, 270);
+            trySetRotation(pointingDirection, DirectionType.Left, tile.transform, 180);
+            trySetRotation(pointingDirection, DirectionType.Down, tile.transform, 90);
         }
+
+        // private static Transform rotateAndTranslate(Transform tile, DirectionType pointingDirection, float angle)
+        // {
+        //     tile.Rotate(Vector3.back, angle, Space.Self);
+        //     if (pointingDirection.HasFlag(DirectionType.Up))
+        //         tile.Translate(up, Space.World);
+        //     if (pointingDirection.HasFlag(DirectionType.Right))
+        //         tile.Translate(right, Space.World);
+        //     if (pointingDirection.HasFlag(DirectionType.Down))
+        //         tile.Translate(down, Space.World);
+        //     if (pointingDirection.HasFlag(DirectionType.Left))
+        //         tile.Translate(left, Space.World);
+        //
+        //     return tile;
+        // }
 
         private Cell CreateCell(int x, int y, Transform parent, CellContainer cellContainer)
         {
@@ -443,28 +374,6 @@ namespace Game
         {
             Camera.main.transform.position =
                 new Vector3(level.MapWidth / 2f - 0.5f, level.MapHeight / 2f - 0.5f, -10);
-        }
-
-        private DirectionType getBorderDirections(GameLevel level, CellType fillingType, int x, int y)
-        {
-            DirectionType borders = DirectionType.None;
-            if (level.Get(x, y)?.Type != fillingType) return borders;
-
-            var leftCell = level.Get(x - 1, y);
-            var rightCell = level.Get(x + 1, y);
-            var upCell = level.Get(x, y + 1);
-            var downCell = level.Get(x, y - 1);
-
-            if (leftCell != null && leftCell.Type != fillingType || leftCell == null)
-                borders = borders | DirectionType.Left;
-            if (rightCell != null && rightCell.Type != fillingType || rightCell == null)
-                borders = borders | DirectionType.Right;
-            if (upCell != null && upCell.Type != fillingType || upCell == null)
-                borders = borders | DirectionType.Up;
-            if (downCell != null && downCell.Type != fillingType || downCell == null)
-                borders = borders | DirectionType.Down;
-
-            return borders;
         }
 
         private static DirectionType directionFromAngle(int partRotation)
