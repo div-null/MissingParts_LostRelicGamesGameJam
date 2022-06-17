@@ -26,7 +26,7 @@ namespace Infrastructure.Scope
             _ceiling = ceiling;
             _levelLoader = levelLoader;
             _factory = factory;
-            _currentLevel = 10;
+            _currentLevel = 1;
             _ceiling.OnFadeOut += UnlockInputs;
         }
 
