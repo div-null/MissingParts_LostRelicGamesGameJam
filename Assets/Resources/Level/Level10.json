@@ -1,10 +1,42 @@
 {
-  "mapHeight": 5,
-  "mapWidth": 7,
+  "mapHeight": 7,
+  "mapWidth": 9,
   "finishColor": "green",
   "cells": [
     [
       {
+        "type": "wall"
+      },
+      {
+        "type": "wall"
+      },
+      {
+        "type": "wall"
+      },
+      {
+        "type": "wall"
+      },
+      {
+        "type": "wall"
+      },
+      {
+        "type": "wall"
+      },
+      {
+        "type": "wall"
+      },
+      {
+        "type": "wall"
+      },
+      {
+        "type": "wall"
+      }
+    ],
+    [
+      {
+        "type": "wall"
+      },
+      {
         "type": "empty"
       },
       {
@@ -24,9 +56,15 @@
       },
       {
         "type": "finish"
+      },
+      {
+        "type": "wall"
       }
     ],
     [
+      {
+        "type": "wall"
+      },
       {
         "type": "empty"
       },
@@ -47,11 +85,14 @@
       },
       {
         "type": "finish"
+      },
+      {
+        "type": "wall"
       }
     ],
     [
       {
-        "type": "empty"
+        "type": "wall"
       },
       {
         "type": "empty"
@@ -70,11 +111,17 @@
       },
       {
         "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "wall"
       }
     ],
     [
       {
-        "type": "pit"
+        "type": "wall"
       },
       {
         "type": "pit"
@@ -93,11 +140,17 @@
       },
       {
         "type": "pit"
+      },
+      {
+        "type": "pit"
+      },
+      {
+        "type": "wall"
       }
     ],
     [
       {
-        "type": "empty"
+        "type": "wall"
       },
       {
         "type": "empty"
@@ -116,13 +169,48 @@
       },
       {
         "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "wall"
+      }
+    ],
+    [
+      {
+        "type": "wall"
+      },
+      {
+        "type": "wall"
+      },
+      {
+        "type": "wall"
+      },
+      {
+        "type": "wall"
+      },
+      {
+        "type": "wall"
+      },
+      {
+        "type": "wall"
+      },
+      {
+        "type": "wall"
+      },
+      {
+        "type": "wall"
+      },
+      {
+        "type": "wall"
       }
     ]
   ],
   "playerParts": [
     {
-      "x": 1,
-      "y": 1,
+      "x": 2,
+      "y": 2,
       "isActive": true,
       "rotation": 0,
       "color": "green",
@@ -130,8 +218,8 @@
       "sprite": 1
     },
     {
-      "x": 3,
-      "y": 1,
+      "x": 4,
+      "y": 2,
       "isActive": false,
       "rotation": 0,
       "color": "green",
@@ -139,8 +227,8 @@
       "sprite": 1
     },
     {
-      "x": 3,
-      "y": 4,
+      "x": 4,
+      "y": 5,
       "isActive": false,
       "rotation": 0,
       "color": "blue",
@@ -148,8 +236,8 @@
       "sprite": 2
     },
     {
-      "x": 4,
-      "y": 4,
+      "x": 5,
+      "y": 5,
       "isActive": false,
       "rotation": 0,
       "color": "blue",

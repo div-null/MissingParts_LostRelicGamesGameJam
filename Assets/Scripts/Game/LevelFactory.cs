@@ -87,7 +87,7 @@ namespace Game
             }
 
 
-            List<Cell> finishCells = FindFinishCells(cells);
+            List<Cell> finishCells = GetFinishCells(cells);
             field.Setup(finishCells, level.FinishColor);
 
             return field;
@@ -389,7 +389,7 @@ namespace Game
             return characterPart;
         }
 
-        private List<Cell> FindFinishCells(Cell[,] cells)
+        private List<Cell> GetFinishCells(Cell[,] cells)
         {
             var finishCells = new List<Cell>();
 

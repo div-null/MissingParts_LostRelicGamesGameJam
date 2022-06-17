@@ -21,6 +21,10 @@ public class Field : MonoBehaviour
     {
         _finishCells = finishCells;
         _finishColor = finishColor;
+        foreach (var finishCell in finishCells)
+        {
+            finishCell.GetComponent<FinishView>().SetColor(_finishColor);
+        }
     }
 
     public void CheckForFinish()
