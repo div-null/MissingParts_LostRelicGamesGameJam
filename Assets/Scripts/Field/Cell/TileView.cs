@@ -62,10 +62,12 @@ public class TileView : MonoBehaviour
     {
         void CheckCorner(DirectionType currentTile, DirectionType firstTile, DirectionType secondTile, DirectionType firstDirection, DirectionType secondDirection)
         {
-            if (!currentTile.HasFlag(firstDirection) && firstTile.HasFlag(secondDirection) && !currentTile.HasFlag(secondDirection) && secondTile.HasFlag(firstDirection))
+            if (!currentTile.HasFlag(firstDirection) && !currentTile.HasFlag(secondDirection) &&
+                (firstTile.HasFlag(secondDirection) && secondTile.HasFlag(firstDirection) ||
+                 firstTile.HasFlag(firstDirection) && secondTile.HasFlag(secondDirection)))
             {
-                SpriteRenderer tile = this.SelectTiles(secondDirection | firstDirection).Single();
-                tile.sprite = this.OuterCorner;
+                SpriteRenderer tile = SelectTiles(secondDirection | firstDirection).Single();
+                tile.sprite = OuterCorner;
                 SetupOuterCorner(secondDirection | firstDirection, tile);
             }
         }
