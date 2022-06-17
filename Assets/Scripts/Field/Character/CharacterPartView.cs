@@ -7,18 +7,24 @@ using static DG.Tweening.DOTween;
 
 public class CharacterPartView : MonoBehaviour
 {
+    private static readonly Color activeColor = Color.white;
+    private static readonly Color inactiveColor = new Color(0.5f, 0.5f, 0.5f);
+    private static readonly Color greenColor = new Color(0, 1, 0.3339117f);
+    private static readonly Color blueColor = new Color(0, 0.6480749f, 1);
+    private static readonly Color redColor = new Color(1, 0.1322696f, 0);
+
+    private Color currentColor;
+    
     private ColorType _colorType;
     private AbilityType _abilityType;
     private int _spriteNumber;
     private bool _isActive;
 
-    private SpriteRenderer _spriteRenderer;
-
-    // Start is called before the first frame update
-    void Awake()
-    {
-        _spriteRenderer = gameObject.GetComponentInChildren<SpriteRenderer>();
-    }
+    [SerializeField]
+    private SpriteRenderer _mainSpriteRenderer;
+    
+    [SerializeField]
+    private SpriteRenderer _lightSpriteRenderer;
 
     // Update is called once per frame
     void Update()
@@ -27,43 +33,63 @@ public class CharacterPartView : MonoBehaviour
 
     public void Initialize(CharacterPartData partData)
     {
-        _colorType = partData.Color;
+        SetColor(partData.Color);
         _abilityType = partData.Ability;
         _spriteNumber = partData.Sprite;
-        _isActive = partData.IsActive;
+        SetActive(partData.IsActive);
         ChangeSprite();
     }
 
     public void ChangeSprite()
     {
         //Assets/Sprites/CharacterPart/Color/default_1
-
+        
         string color = _colorType.ToString();
         string ability = _abilityType.ToString().ToLower();
-        string pathToFile = $"Sprites/CharacterPart/{color}/{ability}_";
 
-        Sprite sprite = Resources.Load<Sprite>($"{pathToFile}{_spriteNumber}");
-        if (sprite == null)
+        Sprite mainSprite;
+        Sprite lightSprite;
+        if (TryToLoadSprite(ability, _spriteNumber, out mainSprite, out lightSprite))
         {
-            sprite = Resources.Load<Sprite>($"{pathToFile}1") as Sprite;
-            Debug.LogError($"Cant load sprite in path: {pathToFile}{_spriteNumber}");
+            _mainSpriteRenderer.sprite = mainSprite;
+            _lightSpriteRenderer.sprite = lightSprite;
         }
-
-        if (sprite == null)
+        else
         {
-            Debug.LogError($"Cant load sprite in path: {pathToFile}1");
-            return;
+            Debug.LogError($"Cant load sprite");
+            if (TryToLoadSprite(ability, 1, out mainSprite, out lightSprite))
+            {
+                _mainSpriteRenderer.sprite = mainSprite;
+                _lightSpriteRenderer.sprite = lightSprite;
+            }
+            else
+            {
+                Debug.LogError($"Cant load sprite");
+            }
         }
+    }
 
-        _spriteRenderer.sprite = sprite;
+    private bool TryToLoadSprite(string ability, int spriteNumber, out Sprite mainSprite, out Sprite lightSprite)
+    {
+        string pathToMain = $"Sprites/CharacterPart/{ability}/{_spriteNumber}";
+        string pathToLight = $"Sprites/CharacterPart/{ability}/{_spriteNumber}_light";
+        
+        mainSprite = Resources.Load<Sprite>(pathToMain);
+        lightSprite = Resources.Load<Sprite>(pathToLight);
+
+        if (mainSprite == null || lightSprite == null)
+            return false;
+        else
+            return true;
     }
 
     public void SetActive(bool isActive)
     {
+        _isActive = isActive;
         if (isActive)
-            _spriteRenderer.color = UnityEngine.Color.white;
+            _lightSpriteRenderer.DOColor(activeColor * currentColor, 0.2f);
         else
-            _spriteRenderer.color = UnityEngine.Color.grey;
+            _lightSpriteRenderer.DOColor(inactiveColor * currentColor, 0.2f);
     }
 
     public void SetRotation(int degrees)
@@ -71,6 +97,30 @@ public class CharacterPartView : MonoBehaviour
         Vector2Int lookDirection = degrees.ToDirection().ToVector();
         Quaternion quaternion = Quaternion.Euler(0, 0, -degrees);
         //quaternion.
-        _spriteRenderer.gameObject.transform.DORotate(quaternion.eulerAngles, 0.1f, RotateMode.Fast);
+        _mainSpriteRenderer.gameObject.transform.DORotate(quaternion.eulerAngles, 0.1f, RotateMode.Fast);
+    }
+
+    public void SetColor(ColorType color)
+    {
+        switch (color)
+        {
+            case ColorType.Blue:
+            {
+                currentColor = blueColor;
+                break;
+            }
+            case ColorType.Green:
+            {
+                currentColor = greenColor;
+                break;
+            }
+            default:
+            {
+                currentColor = redColor;
+                break;
+            }
+        }
+
+        _lightSpriteRenderer.DOColor(currentColor, 0.2f);
     }
 }

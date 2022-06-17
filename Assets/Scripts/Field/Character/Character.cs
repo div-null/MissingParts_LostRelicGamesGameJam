@@ -85,7 +85,16 @@ public class Character : MonoBehaviour
             Debug.Log($"hitted something: {objectHit}");
             Ability ability;
             if (objectHit.TryGetComponent<Ability>(out ability))
-                ability.Apply();
+            {
+                CharacterPart characterPart = objectHit.GetComponent<CharacterPart>();
+                if (characterPart.IsActive)
+                {
+                    _mainPart = characterPart;
+                    ability.Apply();
+                    _mainPart.CharacterPartAttachment.DetachParts();
+                    Moved?.Invoke();
+                }
+            }
         }
     }
 

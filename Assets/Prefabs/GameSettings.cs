@@ -17,4 +17,5 @@ public class GameSettings : ScriptableObject
     public GameLifetimeScope GameLifetimeScope;
     public LevelContainer LevelContainer;
     public MenuLifetime MenuLifetime;
+    public HookView HookPrefab;
 }

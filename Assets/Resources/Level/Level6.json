@@ -1,0 +1,226 @@
+{
+  "mapHeight": 6,
+  "mapWidth": 9,
+  "finishColor": "red",
+  "cells": [
+    [
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      }
+    ],
+    [
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      }
+    ],
+    [
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "pit"
+      },
+      {
+        "type": "pit"
+      },
+      {
+        "type": "pit"
+      }
+    ],
+    [
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "wall"
+      },
+      {
+        "type": "wall"
+      },
+      {
+        "type": "empty"
+      }
+    ],
+    [
+      {
+        "type": "finish"
+      },
+      {
+        "type": "finish"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      }
+    ],
+    [
+      {
+        "type": "finish"
+      },
+      {
+        "type": "finish"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "wall"
+      },
+      {
+        "type": "wall"
+      },
+      {
+        "type": "empty"
+      }
+    ]
+  ],
+  "playerParts": [
+    {
+      "x": 1,
+      "y": 1,
+      "isActive": true,
+      "rotation": 0,
+      "color": "red",
+      "ability": "default",
+      "sprite": 1
+    },
+    {
+      "x": 3,
+      "y": 3,
+      "isActive": false,
+      "rotation": 180,
+      "color": "red",
+      "ability": "hook",
+      "sprite": 2
+    },
+    {
+      "x": 4,
+      "y": 1,
+      "isActive": false,
+      "rotation": 0,
+      "color": "red",
+      "ability": "rotation",
+      "sprite": 2
+    },
+    {
+      "x": 8,
+      "y": 5,
+      "isActive": false,
+      "rotation": 0,
+      "color": "red",
+      "ability": "default",
+      "sprite": 2
+    }
+  ],
+  "misc": [
+    {
+      "x": 0,
+      "y": 0,
+      "sprite": 0
+    }
+  ]
+}

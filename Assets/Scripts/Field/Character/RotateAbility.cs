@@ -38,7 +38,11 @@ public class RotateAbility : Ability
             partsWithNewPositions.Add(movingPart, newPosition);
             Cell cell = _field.Get(newPosition);
 
-            if (cell != null)
+            if (cell == null)
+            {
+                return false;
+            }
+            else if (cell != null)
             {
                 if (cell.IsWall())
                     return false;
@@ -61,8 +65,7 @@ public class RotateAbility : Ability
                 part.SetPosition(value);
                 part.SetRotation();
             }
-
-            _characterPart.CharacterPartAttachment.DetachParts();
+            
             _characterPart.CharacterPartAttachment.AttachParts();
 
             return true;

@@ -61,9 +61,9 @@ public static class DirectionExtensions
         return degrees switch
         {
             0 => DirectionType.Up,
-            90 => DirectionType.Left,
+            90=> DirectionType.Right,
             180 => DirectionType.Down,
-            270 => DirectionType.Right
+            270 => DirectionType.Left
         };
     }
 
@@ -99,5 +99,27 @@ public static class DirectionExtensions
             Debug.LogError("Wrong direction");
             return DirectionType.Down;
         }
+    }
+
+    public static DirectionType GetOppositeDirection(this DirectionType direction)
+    {
+        return direction switch
+        {
+            DirectionType.Right => DirectionType.Left,
+            DirectionType.Left => DirectionType.Right,
+            DirectionType.Up => DirectionType.Down,
+            DirectionType.Down => DirectionType.Up
+        };
+    }
+
+    public static DirectionType[] GetPerpendicularDirections(this DirectionType direction)
+    {
+        return direction switch
+        {
+            DirectionType.Right => new DirectionType[]{DirectionType.Up, DirectionType.Down},
+            DirectionType.Left => new DirectionType[]{DirectionType.Up, DirectionType.Down},
+            DirectionType.Up => new DirectionType[]{DirectionType.Left, DirectionType.Right},
+            DirectionType.Down => new DirectionType[]{DirectionType.Left, DirectionType.Right}
+        };
     }
 }

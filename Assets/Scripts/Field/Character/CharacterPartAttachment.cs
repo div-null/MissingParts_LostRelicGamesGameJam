@@ -89,7 +89,10 @@ public class CharacterPartAttachment : MonoBehaviour
             for (int i = 0; i < unitedParts.Count; i++)
             {
                 if (i != index)
+                {
                     unitedParts[i].SetActiveToAllParts(false);
+                    unitedParts[i].CharacterPartAttachment.AttachParts();
+                }
             }
         }
             

@@ -24,3 +24,4 @@ MonoBehaviour:
   GameLifetimeScope: {fileID: 487408232513001636, guid: a6365ae12e8ed7b4585696e044c0dfd8, type: 3}
   LevelContainer: {fileID: 1494113176949575659, guid: e34b45a6a08a1814b8a67dae1f4930aa, type: 3}
   MenuLifetime: {fileID: 2527288589954984380, guid: d31db10401901c748890b232ec889cf0, type: 3}
+  HookPrefab: {fileID: 7740769031523078657, guid: 7631cd0955a14384cb349f130973fd67, type: 3}

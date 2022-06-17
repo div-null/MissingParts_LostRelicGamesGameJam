@@ -37,52 +37,38 @@ public class CharacterPart : MonoBehaviour
         _field = field;
     }
 
+    public void SetPosition(Vector2Int destination)
+    {
+        _field.Get(Position).RemoveCharacterPart(this);
+        _field.Get(destination).AssignCharacterPart(this);
+
+        Position = destination;
+        //TODO: set transform
+        Vector3 newPosition = _field.Get(destination).gameObject.transform.position - Vector3.forward;
+        this.transform.DOMove(newPosition, 0.1f).SetEase(Ease.Flash).onComplete += TweenCallback;
+    }
+    
+    public void SetRotation()
+    {
+        //change sprite rotation
+        RotateLinks();
+        SetRotation((Rotation + 90) % 360);
+    }
+
+    public void SetRotation(int degrees)
+    {
+        //change sprite rotation
+        Rotation = degrees;
+        CharacterPartView.SetRotation(degrees);
+    }
+    
     public void SetActive(bool isActive)
     {
         //change active to this character part
         IsActive = isActive;
         CharacterPartView.SetActive(isActive);
     }
-
-    public bool IsLeaf() =>
-        Right == null || Left == null || Up == null || Down == null;
-
-
-    public void TryJoin(DirectionType direction)
-    {
-        if (GetPartFromDirection(direction) == null)
-        {
-            var checkPosition = Position + direction.ToVector();
-            var characterPart = _field.Get(checkPosition)?.CharacterPart;
-            if (characterPart != null)
-            {
-                Join(characterPart, IsActive);
-            }
-            else
-            {
-                RemoveLinkInDirection(direction);
-            }
-        }
-    }
-
-    public void TryJoinAllDirections()
-    {
-        TryJoin(DirectionType.Down);
-        TryJoin(DirectionType.Up);
-        TryJoin(DirectionType.Left);
-        TryJoin(DirectionType.Right);
-    }
     
-    public void Join(CharacterPart part, bool setActive = true)
-    {
-        Vector2Int joinPosition = part.Position - Position;
-        Assert.IsTrue(joinPosition.magnitude == 1);
-
-        SetLinkInDirection(part, joinPosition.ToDirection());
-
-        SetActiveToAllParts(setActive);
-    }
-
     public void SetActiveToAllParts(bool isActive)
     {
         //Обойти все части characterPart'а и изменить им Active
@@ -102,6 +88,72 @@ public class CharacterPart : MonoBehaviour
         }
 
         visitNode(this);
+    }
+    
+    public void SetColor(ColorType color)
+    {
+        Color = color;
+        CharacterPartView.SetColor(color);
+    }
+    
+    public void SetColorToAllParts(ColorType color)
+    {
+        //Обойти все части characterPart'а и изменить им Active
+        HashSet<CharacterPart> visited = new HashSet<CharacterPart>();
+
+        void visitNode(CharacterPart part)
+        {
+            if (part == null) return;
+            if (visited.Contains(part)) return;
+            visited.Add(part);
+            part.SetColor(color);
+
+            visitNode(part.Down);
+            visitNode(part.Up);
+            visitNode(part.Right);
+            visitNode(part.Left);
+        }
+
+        visitNode(this);
+    }
+
+    public bool IsLeaf() =>
+        Right == null || Left == null || Up == null || Down == null;
+
+
+    public void TryJoin(DirectionType direction)
+    {
+        var checkPosition = Position + direction.ToVector();
+        var characterPart = _field.Get(checkPosition)?.CharacterPart;
+        if (characterPart != null)
+        {
+            Join(characterPart, IsActive);
+        }
+        else
+        {
+            RemoveLinkInDirection(direction);
+        }
+    }
+
+    public void TryJoinAllDirections()
+    {
+        TryJoin(DirectionType.Down);
+        TryJoin(DirectionType.Up);
+        TryJoin(DirectionType.Left);
+        TryJoin(DirectionType.Right);
+    }
+    
+    public void Join(CharacterPart part, bool setActive = true)
+    {
+        Vector2Int joinPosition = part.Position - Position;
+        Assert.IsTrue(joinPosition.magnitude == 1);
+
+        SetLinkInDirection(part, joinPosition.ToDirection());
+
+        SetActiveToAllParts(setActive);
+        
+        if (Color != part.Color)
+            SetColorToAllParts(part.Color);
     }
 
     public CharacterPart GetPartFromDirection(DirectionType direction)
@@ -137,18 +189,7 @@ public class CharacterPart : MonoBehaviour
 
         return characterParts.ToArray();
     }
-
-    public void SetPosition(Vector2Int destination)
-    {
-        _field.Get(Position).RemoveCharacterPart(this);
-        _field.Get(destination).AssignCharacterPart(this);
-
-        Position = destination;
-        //TODO: set transform
-        Vector3 newPosition = _field.Get(destination).gameObject.transform.position - Vector3.forward;
-        this.transform.DOMove(newPosition, 0.1f).SetEase(Ease.Flash).onComplete += TweenCallback;
-    }
-
+    
     private void TweenCallback()
     {
         Debug.Log("Moved!");
@@ -157,20 +198,6 @@ public class CharacterPart : MonoBehaviour
     public void OnMoved(TweenCallback tweenCallback)
     {
         
-    }
-    
-    public void SetRotation()
-    {
-        //change sprite rotation
-        RotateLinks();
-        SetRotation((Rotation + 90) % 360);
-    }
-
-    public void SetRotation(int degrees)
-    {
-        //change sprite rotation
-        Rotation = degrees;
-        CharacterPartView.SetRotation(degrees);
     }
 
     public void RotateLinks()
@@ -280,9 +307,13 @@ public class CharacterPart : MonoBehaviour
 
     public void Delete()
     {
-        Destroy(this.gameObject);
+        _field.Get(Position).RemoveCharacterPart(this);
+        RemoveLinks();
+        Quaternion quaternion = Quaternion.Euler(0, 0, -180);
+        transform.DORotate(quaternion.eulerAngles, 0.25f, RotateMode.Fast).SetLoops(3).SetEase(Ease.Linear);
+        transform.DOScale(0.01f, 0.5f).SetEase(Ease.Linear);
+        Destroy(this.gameObject, 0.6f);
         Debug.Log("destroying part");
-        //Delete after entering the pit
     }
 
     public void RemoveLinks()
