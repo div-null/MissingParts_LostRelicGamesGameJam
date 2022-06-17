@@ -106,7 +106,8 @@ namespace Game
                 sidePrefab = _gameSettings.WallCellPrefabs.VerticalWall;
                 innerCornerPrefab = _gameSettings.WallCellPrefabs.InnerCorner;
                 outerCornerPrefab = _gameSettings.WallCellPrefabs.OuterCorner;
-            } else if (type == CellType.Pit)
+            }
+            else if (type == CellType.Pit)
             {
                 sidePrefab = _gameSettings.PitCellPrefabs.Vertical;
                 innerCornerPrefab = _gameSettings.PitCellPrefabs.InnerCorner;
@@ -116,7 +117,7 @@ namespace Game
             {
                 return;
             }
-            
+
             switch (borderDirections)
             {
                 case DirectionType.All:
@@ -203,7 +204,7 @@ namespace Game
         // {
         //     spawnInpass(direction, parent, _gameSettings)
         // }
-        
+
         private void spawnInpass(DirectionType direction, Transform parent, GameObject innerCornerPrefab, GameObject sidePrefab)
         {
             //todo: посмотреть можно ли проще
@@ -213,10 +214,13 @@ namespace Game
             spawnSide(DirectionType.Left, parent, sidePrefab).Translate(down, Space.World);
             spawnSide(DirectionType.Right, parent, sidePrefab).Translate(down, Space.World);
 
+            
+            if (direction == DirectionType.Up)
+                parent.Rotate(Vector3.back, 180, Space.Self);
             if (direction == DirectionType.Left)
                 parent.Rotate(Vector3.back, 90, Space.Self);
             if (direction == DirectionType.Down)
-                parent.Rotate(Vector3.back, 180, Space.Self);
+                parent.Rotate(Vector3.back, 0, Space.Self);
             if (direction == DirectionType.Right)
                 parent.Rotate(Vector3.back, 270, Space.Self);
         }
@@ -451,13 +455,13 @@ namespace Game
             var upCell = level.Get(x, y + 1);
             var downCell = level.Get(x, y - 1);
 
-            if (leftCell != null && leftCell.Type != fillingType)
+            if (leftCell != null && leftCell.Type != fillingType || leftCell == null)
                 borders = borders | DirectionType.Left;
-            if (rightCell != null && rightCell.Type != fillingType)
+            if (rightCell != null && rightCell.Type != fillingType || rightCell == null)
                 borders = borders | DirectionType.Right;
-            if (upCell != null && upCell.Type != fillingType)
+            if (upCell != null && upCell.Type != fillingType || upCell == null)
                 borders = borders | DirectionType.Up;
-            if (downCell != null && downCell.Type != fillingType)
+            if (downCell != null && downCell.Type != fillingType || downCell == null)
                 borders = borders | DirectionType.Down;
 
             return borders;
