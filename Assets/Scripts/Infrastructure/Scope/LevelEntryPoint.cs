@@ -1,4 +1,5 @@
-﻿using Game;
+﻿using System;
+using Game;
 using LevelEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -8,15 +9,18 @@ namespace Infrastructure.Scope
 {
     public class LevelEntryPoint : IStartable
     {
-        private LevelFactory _factory;
-        private int _currentLevel;
-        private LevelLoader _levelLoader;
+        public event Action FinishGame;
+        public event Action<int> NextLevel;
 
+        private readonly LevelFactory _factory;
+        private readonly LevelLoader _levelLoader;
+        private readonly Ceiling _ceiling;
+        private readonly GameUI _gameUI;
+        private readonly PlayerInputs _playerInputs;
+
+        private int _currentLevel;
         private Field _field;
         private Character _character;
-        private Ceiling _ceiling;
-        private GameUI _gameUI;
-        private PlayerInputs _playerInputs;
 
 
         public LevelEntryPoint(LevelFactory factory, LevelLoader levelLoader, PlayerInputs playerInputs, GameUI gameUI, Ceiling ceiling)
@@ -28,6 +32,17 @@ namespace Infrastructure.Scope
             _factory = factory;
             _currentLevel = 0;
             _ceiling.OnFadeOut += UnlockInputs;
+            
+            RegisterCallback(2, () => Debug.Log("Second level"));
+        }
+
+        private void RegisterCallback(int value, Action callback)
+        {
+            NextLevel += v =>
+            {
+                if (v == value)
+                    callback();
+            };
         }
 
         public void Start()
@@ -47,21 +62,50 @@ namespace Infrastructure.Scope
         public void LoadLevel()
         {
             Debug.Log($"Loading Level {_currentLevel}");
-            GameLevel level = _currentLevel switch
+            GameLevel level;
+            switch (_currentLevel)
             {
-                1 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl1),
-                2 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl2),
-                3 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl3),
-                4 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl4),
-                5 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl5),
-                6 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl6),
-                7 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl7),
-                8 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl8),
-                9 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl9),
-                10 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl10),
-                11 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl11),
-                12 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl12),
-            };
+                case 1:
+                    level = _levelLoader.LoadLevel(LevelLoader.Level.Lvl1);
+                    break;
+                case 2:
+                    level = _levelLoader.LoadLevel(LevelLoader.Level.Lvl2);
+                    break;
+                case 3:
+                    level = _levelLoader.LoadLevel(LevelLoader.Level.Lvl3);
+                    break;
+                case 4:
+                    level = _levelLoader.LoadLevel(LevelLoader.Level.Lvl4);
+                    break;
+                case 5:
+                    level = _levelLoader.LoadLevel(LevelLoader.Level.Lvl5);
+                    break;
+                case 6:
+                    level = _levelLoader.LoadLevel(LevelLoader.Level.Lvl6);
+                    break;
+                case 7:
+                    level = _levelLoader.LoadLevel(LevelLoader.Level.Lvl7);
+                    break;
+                case 8:
+                    level = _levelLoader.LoadLevel(LevelLoader.Level.Lvl8);
+                    break;
+                case 9:
+                    level = _levelLoader.LoadLevel(LevelLoader.Level.Lvl9);
+                    break;
+                case 10:
+                    level = _levelLoader.LoadLevel(LevelLoader.Level.Lvl10);
+                    break;
+                case 11:
+                    level = _levelLoader.LoadLevel(LevelLoader.Level.Lvl11);
+                    break;
+                case 12:
+                    level = _levelLoader.LoadLevel(LevelLoader.Level.Lvl12);
+                    break;
+                default:
+                    FinishGame?.Invoke();
+                    return;
+            }
+
             _field = _factory.CreateField(level);
             _character = _factory.CreateCharacter(level, _field);
             _character.Moved += _field.CheckForFinish;
@@ -71,9 +115,11 @@ namespace Infrastructure.Scope
             //TODO: event to pass load next level after winning on current level
         }
 
+
         public void LoadNextLevel()
         {
             _currentLevel++;
+            NextLevel?.Invoke(_currentLevel);
             LoadLevel();
         }
 
