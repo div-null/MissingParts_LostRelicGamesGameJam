@@ -17,17 +17,19 @@ namespace Infrastructure.Scope
         private Ceiling _ceiling;
         private GameUI _gameUI;
         private PlayerInputs _playerInputs;
+        private AudioManager _audioManager;
 
 
-        public LevelEntryPoint(LevelFactory factory, LevelLoader levelLoader, PlayerInputs playerInputs, GameUI gameUI, Ceiling ceiling)
+        public LevelEntryPoint(LevelFactory factory, LevelLoader levelLoader, PlayerInputs playerInputs, GameUI gameUI, Ceiling ceiling, AudioManager audioManager)
         {
             _playerInputs = playerInputs;
             _gameUI = gameUI;
             _ceiling = ceiling;
             _levelLoader = levelLoader;
             _factory = factory;
-            _currentLevel = 11;
+            _currentLevel = 0;
             _ceiling.OnFadeOut += UnlockInputs;
+            _audioManager = audioManager;
         }
 
         public void Start()
@@ -85,6 +87,9 @@ namespace Infrastructure.Scope
                     break;
                 case 12:
                     level = _levelLoader.LoadLevel(LevelLoader.Level.Lvl12);
+                    break;
+                case 13:
+                    level = _levelLoader.LoadLevel(LevelLoader.Level.Lvl13);
                     break;
                 default:
                     EndOfTheGame();

@@ -13,6 +13,7 @@ namespace Infrastructure.Scope
             builder.Register<PlayerInputs>(Lifetime.Scoped);
             builder.RegisterEntryPoint<LevelEntryPoint>();
             builder.RegisterComponentInHierarchy<GameUI>();
+            builder.RegisterComponentInHierarchy<AudioManager>();
             builder.RegisterComponentInHierarchy<Ceiling>();
             builder.RegisterBuildCallback(resolver=>
             {
