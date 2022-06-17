@@ -22,7 +22,12 @@ namespace LevelEditor
             Lvl4,
             Lvl5,
             Lvl6,
-            Lvl7
+            Lvl7,
+            Lvl8,
+            Lvl9,
+            Lvl10,
+            Lvl11,
+            Lvl12
         }
 
         // Assets/Resources/Level/Level1.json
@@ -33,6 +38,11 @@ namespace LevelEditor
         public const string Level5 = "Level/Level5";
         public const string Level6 = "Level/Level6";
         public const string Level7 = "Level/Level7";
+        public const string Level8 = "Level/Level8";
+        public const string Level9 = "Level/Level9";
+        public const string Level10 = "Level/Level10";
+        public const string Level11 = "Level/Level11";
+        public const string Level12 = "Level/Level12";
 
         public LevelLoader()
         {
@@ -60,6 +70,11 @@ namespace LevelEditor
                 Level.Lvl5 => Level5,
                 Level.Lvl6 => Level6,
                 Level.Lvl7 => Level7,
+                Level.Lvl8 => Level8,
+                Level.Lvl9 => Level9,
+                Level.Lvl10 => Level10,
+                Level.Lvl11 => Level11,
+                Level.Lvl12=> Level12,
                 _ => throw new ArgumentOutOfRangeException(nameof(level), level, "Level does not exist")
             };
 

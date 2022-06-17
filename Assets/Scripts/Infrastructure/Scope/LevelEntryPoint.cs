@@ -26,7 +26,7 @@ namespace Infrastructure.Scope
             _ceiling = ceiling;
             _levelLoader = levelLoader;
             _factory = factory;
-            _currentLevel = 0;
+            _currentLevel = 10;
             _ceiling.OnFadeOut += UnlockInputs;
         }
 
@@ -56,6 +56,11 @@ namespace Infrastructure.Scope
                 5 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl5),
                 6 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl6),
                 7 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl7),
+                8 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl8),
+                9 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl9),
+                10 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl10),
+                11 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl11),
+                12 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl12),
             };
             _field = _factory.CreateField(level);
             _character = _factory.CreateCharacter(level, _field);
