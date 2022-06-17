@@ -1,11 +1,11 @@
 {
-  "mapHeight": 3,
-  "mapWidth": 7,
+  "mapHeight": 6,
+  "mapWidth": 4,
   "finishColor": "red",
   "cells": [
     [
       {
-        "type": "empty"
+        "type": "finish"
       },
       {
         "type": "empty"
@@ -14,16 +14,49 @@
         "type": "empty"
       },
       {
-        "type": "wall"
-      },
-      {
         "type": "empty"
-      },
-      {
-        "type": "empty"
-      },
+      }
+    ],
+    [
       {
         "type": "finish"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      }
+    ],
+    [
+      {
+        "type": "finish"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      }
+    ],
+    [
+      {
+        "type": "pit"
+      },
+      {
+        "type": "pit"
+      },
+      {
+        "type": "pit"
+      },
+      {
+        "type": "pit"
       }
     ],
     [
@@ -38,15 +71,6 @@
       },
       {
         "type": "empty"
-      },
-      {
-        "type": "empty"
-      },
-      {
-        "type": "empty"
-      },
-      {
-        "type": "finish"
       }
     ],
     [
@@ -60,22 +84,13 @@
         "type": "empty"
       },
       {
-        "type": "wall"
-      },
-      {
         "type": "empty"
-      },
-      {
-        "type": "empty"
-      },
-      {
-        "type": "finish"
       }
     ]
   ],
   "playerParts": [
     {
-      "x": 0,
+      "x": 2,
       "y": 0,
       "isActive": true,
       "rotation": 0,
@@ -84,17 +99,17 @@
       "sprite": 1
     },
     {
-      "x": 1,
-      "y": 1,
+      "x": 3,
+      "y": 2,
       "isActive": false,
       "rotation": 0,
       "color": "red",
-      "ability": "rotation",
-      "sprite": 1
+      "ability": "hook",
+      "sprite": 2
     },
     {
-      "x": 2,
-      "y": 2,
+      "x": 3,
+      "y": 5,
       "isActive": false,
       "rotation": 0,
       "color": "red",

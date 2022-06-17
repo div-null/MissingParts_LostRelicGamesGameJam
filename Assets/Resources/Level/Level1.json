@@ -1,361 +1,127 @@
 {
-  "mapHeight": 10,
-  "mapWidth": 8,
+  "mapHeight": 5,
+  "mapWidth": 7,
   "finishColor": "red",
   "cells": [
     [
       {
-        "type": "wall",
-        "rotation": 0
+        "type": "empty"
       },
       {
-        "type": "wall",
-        "rotation": 0
+        "type": "empty"
       },
       {
-        "type": "wall",
-        "rotation": 0
+        "type": "empty"
       },
       {
-        "type": "wall",
-        "rotation": 0
+        "type": "empty"
       },
       {
-        "type": "wall",
-        "rotation": 0
+        "type": "empty"
       },
       {
-        "type": "wall",
-        "rotation": 0
+        "type": "empty"
       },
       {
-        "type": "wall",
-        "rotation": 0
-      },
-      {
-        "type": "wall",
-        "rotation": 0
+        "type": "empty"
       }
     ],
     [
       {
-        "type": "wall",
-        "rotation": 0
+        "type": "empty"
       },
       {
-        "type": "empty",
-        "rotation": 0
+        "type": "empty"
       },
       {
-        "type": "empty",
-        "rotation": 0
+        "type": "empty"
       },
       {
-        "type": "empty",
-        "rotation": 0
+        "type": "empty"
       },
       {
-        "type": "empty",
-        "rotation": 0
+        "type": "empty"
       },
       {
-        "type": "empty",
-        "rotation": 0
+        "type": "empty"
       },
       {
-        "type": "empty",
-        "rotation": 0
-      },
-      {
-        "type": "wall",
-        "rotation": 0
+        "type": "empty"
       }
     ],
     [
       {
-        "type": "wall",
-        "rotation": 0
+        "type": "empty"
       },
       {
-        "type": "empty",
-        "rotation": 0
+        "type": "empty"
       },
       {
-        "type": "empty",
-        "rotation": 0
+        "type": "empty"
       },
       {
-        "type": "empty",
-        "rotation": 0
+        "type": "empty"
       },
       {
-        "type": "empty",
-        "rotation": 0
+        "type": "finish"
       },
       {
-        "type": "empty",
-        "rotation": 0
+        "type": "finish"
       },
       {
-        "type": "empty",
-        "rotation": 0
-      },
-      {
-        "type": "wall",
-        "rotation": 0
+        "type": "empty"
       }
     ],
     [
       {
-        "type": "wall",
-        "rotation": 0
+        "type": "empty"
       },
       {
-        "type": "empty",
-        "rotation": 0
+        "type": "empty"
       },
       {
-        "type": "empty",
-        "rotation": 0
+        "type": "empty"
       },
       {
-        "type": "empty",
-        "rotation": 0
+        "type": "empty"
       },
       {
-        "type": "empty",
-        "rotation": 0
+        "type": "empty"
       },
       {
-        "type": "empty",
-        "rotation": 0
+        "type": "empty"
       },
       {
-        "type": "empty",
-        "rotation": 0
-      },
-      {
-        "type": "wall",
-        "rotation": 0
+        "type": "empty"
       }
     ],
     [
       {
-        "type": "wall",
-        "rotation": 0
+        "type": "empty"
       },
       {
-        "type": "empty",
-        "rotation": 0
+        "type": "empty"
       },
       {
-        "type": "empty",
-        "rotation": 0
+        "type": "empty"
       },
       {
-        "type": "empty",
-        "rotation": 0
+        "type": "empty"
       },
       {
-        "type": "empty",
-        "rotation": 0
+        "type": "empty"
       },
       {
-        "type": "empty",
-        "rotation": 0
+        "type": "empty"
       },
       {
-        "type": "empty",
-        "rotation": 0
-      },
-      {
-        "type": "wall",
-        "rotation": 0
-      }
-    ],
-    [
-      {
-        "type": "wall",
-        "rotation": 0
-      },
-      {
-        "type": "empty",
-        "rotation": 0
-      },
-      {
-        "type": "pit",
-        "rotation": 0
-      },
-      {
-        "type": "empty",
-        "rotation": 0
-      },
-      {
-        "type": "pit",
-        "rotation": 0
-      },
-      {
-        "type": "empty",
-        "rotation": 0
-      },
-      {
-        "type": "empty",
-        "rotation": 0
-      },
-      {
-        "type": "wall",
-        "rotation": 0
-      }
-    ],
-    [
-      {
-        "type": "wall",
-        "rotation": 0
-      },
-      {
-        "type": "empty",
-        "rotation": 0
-      },
-      {
-        "type": "empty",
-        "rotation": 0
-      },
-      {
-        "type": "empty",
-        "rotation": 0
-      },
-      {
-        "type": "empty",
-        "rotation": 0
-      },
-      {
-        "type": "empty",
-        "rotation": 0
-      },
-      {
-        "type": "empty",
-        "rotation": 0
-      },
-      {
-        "type": "wall",
-        "rotation": 0
-      }
-    ],
-    [
-      {
-        "type": "wall",
-        "rotation": 0
-      },
-      {
-        "type": "empty",
-        "rotation": 0
-      },
-      {
-        "type": "empty",
-        "rotation": 0
-      },
-      {
-        "type": "empty",
-        "rotation": 0
-      },
-      {
-        "type": "empty",
-        "rotation": 0
-      },
-      {
-        "type": "empty",
-        "rotation": 0
-      },
-      {
-        "type": "empty",
-        "rotation": 0
-      },
-      {
-        "type": "wall",
-        "rotation": 0
-      }
-    ],
-    [
-      {
-        "type": "wall",
-        "rotation": 0
-      },
-      {
-        "type": "empty",
-        "rotation": 0
-      },
-      {
-        "type": "empty",
-        "rotation": 0
-      },
-      {
-        "type": "empty",
-        "rotation": 0
-      },
-      {
-        "type": "empty",
-        "rotation": 0
-      },
-      {
-        "type": "finish",
-        "rotation": 0
-      },
-      {
-        "type": "finish",
-        "rotation": 0
-      },
-      {
-        "type": "wall",
-        "rotation": 0
-      }
-    ],
-    [
-      {
-        "type": "wall",
-        "rotation": 0
-      },
-      {
-        "type": "wall",
-        "rotation": 0
-      },
-      {
-        "type": "wall",
-        "rotation": 0
-      },
-      {
-        "type": "wall",
-        "rotation": 0
-      },
-      {
-        "type": "wall",
-        "rotation": 0
-      },
-      {
-        "type": "wall",
-        "rotation": 0
-      },
-      {
-        "type": "wall",
-        "rotation": 0
-      },
-      {
-        "type": "wall",
-        "rotation": 0
+        "type": "empty"
       }
     ]
   ],
   "playerParts": [
     {
-      "x": 1,
-      "y": 2,
-      "isActive": false,
-      "rotation": 90,
-      "color": "red",
-      "ability": "hook",
-      "sprite": 1
-    },
-    {
-      "x": 6,
+      "x": 0,
       "y": 2,
       "isActive": true,
       "rotation": 0,
@@ -364,67 +130,13 @@
       "sprite": 1
     },
     {
-      "x": 4,
-      "y": 3,
-      "isActive": false,
-      "rotation": 0,
-      "color": "red",
-      "ability": "rotation",
-      "sprite": 1
-    },
-    {
-      "x": 3,
-      "y": 1,
-      "isActive": false,
-      "rotation": 0,
-      "color": "green",
-      "ability": "default",
-      "sprite": 1
-    },
-    {
-      "x": 6,
-      "y": 6,
-      "isActive": false,
-      "rotation": 0,
-      "color": "red",
-      "ability": "default",
-      "sprite": 1
-    },
-    {
       "x": 2,
-      "y": 6,
+      "y": 2,
       "isActive": false,
       "rotation": 0,
       "color": "red",
       "ability": "default",
-      "sprite": 1
-    },
-    {
-      "x": 3,
-      "y": 7,
-      "isActive": false,
-      "rotation": 0,
-      "color": "red",
-      "ability": "default",
-      "sprite": 1
-    },
-    {
-      "x": 3,
-      "y": 8,
-      "isActive": false,
-      "rotation": 0,
-      "color": "red",
-      "ability": "default",
-      "sprite": 1
-    },
-    {
-      "x": 3,
-      "y": 9,
-      "isActive": false,
-      "rotation": 0,
-      "color": "red",
-      "ability": "default",
-      "sprite": 1
+      "sprite": 2
     }
   ],
   "misc": [

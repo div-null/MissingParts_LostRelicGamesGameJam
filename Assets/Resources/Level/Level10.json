@@ -1,7 +1,7 @@
 {
-  "mapHeight": 3,
+  "mapHeight": 5,
   "mapWidth": 7,
-  "finishColor": "red",
+  "finishColor": "green",
   "cells": [
     [
       {
@@ -14,13 +14,36 @@
         "type": "empty"
       },
       {
-        "type": "wall"
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "finish"
+      },
+      {
+        "type": "finish"
+      }
+    ],
+    [
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
       },
       {
         "type": "empty"
       },
       {
         "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "finish"
       },
       {
         "type": "finish"
@@ -46,7 +69,30 @@
         "type": "empty"
       },
       {
-        "type": "finish"
+        "type": "empty"
+      }
+    ],
+    [
+      {
+        "type": "pit"
+      },
+      {
+        "type": "pit"
+      },
+      {
+        "type": "pit"
+      },
+      {
+        "type": "pit"
+      },
+      {
+        "type": "pit"
+      },
+      {
+        "type": "pit"
+      },
+      {
+        "type": "pit"
       }
     ],
     [
@@ -60,46 +106,55 @@
         "type": "empty"
       },
       {
-        "type": "wall"
-      },
-      {
         "type": "empty"
       },
       {
         "type": "empty"
       },
       {
-        "type": "finish"
+        "type": "empty"
+      },
+      {
+        "type": "empty"
       }
     ]
   ],
   "playerParts": [
     {
-      "x": 0,
-      "y": 0,
+      "x": 1,
+      "y": 1,
       "isActive": true,
       "rotation": 0,
-      "color": "red",
+      "color": "green",
       "ability": "default",
       "sprite": 1
     },
     {
-      "x": 1,
+      "x": 3,
       "y": 1,
       "isActive": false,
       "rotation": 0,
-      "color": "red",
-      "ability": "rotation",
+      "color": "green",
+      "ability": "hook",
       "sprite": 1
     },
     {
-      "x": 2,
-      "y": 2,
+      "x": 3,
+      "y": 4,
       "isActive": false,
       "rotation": 0,
-      "color": "red",
+      "color": "blue",
       "ability": "default",
       "sprite": 2
+    },
+    {
+      "x": 4,
+      "y": 4,
+      "isActive": false,
+      "rotation": 0,
+      "color": "blue",
+      "ability": "rotation",
+      "sprite": 1
     }
   ],
   "misc": [

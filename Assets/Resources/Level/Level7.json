@@ -1,6 +1,6 @@
 {
-  "mapHeight": 8,
-  "mapWidth": 8,
+  "mapHeight": 6,
+  "mapWidth": 9,
   "finishColor": "red",
   "cells": [
     [
@@ -17,6 +17,9 @@
         "type": "empty"
       },
       {
+        "type": "pit"
+      },
+      {
         "type": "empty"
       },
       {
@@ -30,15 +33,6 @@
       }
     ],
     [
-      {
-        "type": "empty"
-      },
-      {
-        "type": "empty"
-      },
-      {
-        "type": "empty"
-      },
       {
         "type": "empty"
       },
@@ -53,98 +47,6 @@
       },
       {
         "type": "finish"
-      }
-    ],
-    [
-      {
-        "type": "empty"
-      },
-      {
-        "type": "empty"
-      },
-      {
-        "type": "empty"
-      },
-      {
-        "type": "empty"
-      },
-      {
-        "type": "empty"
-      },
-      {
-        "type": "empty"
-      },
-      {
-        "type": "empty"
-      },
-      {
-        "type": "empty"
-      }
-    ],
-    [
-      {
-        "type": "empty"
-      },
-      {
-        "type": "empty"
-      },
-      {
-        "type": "empty"
-      },
-      {
-        "type": "empty"
-      },
-      {
-        "type": "empty"
-      },
-      {
-        "type": "empty"
-      },
-      {
-        "type": "empty"
-      },
-      {
-        "type": "empty"
-      }
-    ],
-    [
-      {
-        "type": "pit"
-      },
-      {
-        "type": "pit"
-      },
-      {
-        "type": "pit"
-      },
-      {
-        "type": "pit"
-      },
-      {
-        "type": "pit"
-      },
-      {
-        "type": "pit"
-      },
-      {
-        "type": "pit"
-      },
-      {
-        "type": "pit"
-      }
-    ],
-    [
-      {
-        "type": "empty"
-      },
-      {
-        "type": "empty"
-      },
-      {
-        "type": "empty"
-      },
-      {
-        "type": "empty"
       },
       {
         "type": "finish"
@@ -170,10 +72,71 @@
         "type": "empty"
       },
       {
+        "type": "pit"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "pit"
+      },
+      {
         "type": "empty"
       },
       {
         "type": "empty"
+      },
+      {
+        "type": "empty"
+      }
+    ],
+    [
+      {
+        "type": "empty"
+      },
+      {
+        "type": "pit"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "pit"
+      },
+      {
+        "type": "empty"
+      }
+    ],
+    [
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "pit"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "pit"
       },
       {
         "type": "empty"
@@ -196,10 +159,13 @@
         "type": "empty"
       },
       {
-        "type": "empty"
+        "type": "pit"
       },
       {
         "type": "empty"
+      },
+      {
+        "type": "pit"
       },
       {
         "type": "empty"
@@ -215,7 +181,7 @@
   "playerParts": [
     {
       "x": 0,
-      "y": 1,
+      "y": 0,
       "isActive": true,
       "rotation": 0,
       "color": "red",
@@ -224,16 +190,7 @@
     },
     {
       "x": 2,
-      "y": 1,
-      "isActive": false,
-      "rotation": 0,
-      "color": "red",
-      "ability": "hook",
-      "sprite": 1
-    },
-    {
-      "x": 6,
-      "y": 5,
+      "y": 2,
       "isActive": false,
       "rotation": 0,
       "color": "red",
@@ -241,8 +198,8 @@
       "sprite": 1
     },
     {
-      "x": 6,
-      "y": 6,
+      "x": 4,
+      "y": 5,
       "isActive": false,
       "rotation": 0,
       "color": "red",
