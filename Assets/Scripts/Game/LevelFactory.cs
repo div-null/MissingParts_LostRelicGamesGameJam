@@ -15,11 +15,6 @@ namespace Game
         private IObjectResolver _resolver;
         private GameSettings _gameSettings;
 
-        static Vector3 left = Vector3.left * 0.25f;
-        static Vector3 up = Vector3.up * 0.25f;
-        static Vector3 right = -left;
-        static Vector3 down = -up;
-
         public LevelFactory(IObjectResolver resolver, GameSettings gameSettings)
         {
             _gameSettings = gameSettings;
@@ -51,7 +46,7 @@ namespace Game
             var cells = new Cell[level.MapWidth, level.MapHeight];
             var characterParts = new List<CharacterPart>();
 
-            DirectionType[,] cellsBorders = level.GetCellsBorders();
+            DirectionType[,] bordersMap = level.GetCellsBorders();
             Field field = _resolver.Instantiate(_gameSettings.FieldPrefab);
             field.SetCells(cells);
             SetupCamera(level);
@@ -61,14 +56,14 @@ namespace Game
                 for (int i = 0; i < level.MapWidth; i++)
                 {
                     CellContainer cellData = level.Get(i, j);
-                    DirectionType borders = cellsBorders[i, j];
+                    DirectionType borders = bordersMap[i, j];
                     Vector2Int cellPosition = new Vector2Int(i, j);
                     Cell newCell = CreateCell(i, j, field.transform, cellData);
 
                     if (cellData.Type == CellType.Wall || cellData.Type == CellType.Pit)
                     {
                         TileView tileView = newCell.GetComponent<TileView>();
-                        drawBorders(borders, tileView);
+                        tileView.DrawBorders(borders, cellPosition, bordersMap);
                     }
 
                     newCell.Initialize(cellPosition, cellData.Type, borders);
@@ -97,199 +92,6 @@ namespace Game
             return field;
         }
 
-        private void drawBorders(DirectionType currentBorders, TileView view)
-        {
-            switch (currentBorders)
-            {
-                case DirectionType.All:
-                    makeSquared(view);
-                    break;
-                case DirectionType.Left:
-                case DirectionType.Up:
-                case DirectionType.Right:
-                case DirectionType.Down:
-                    makePlain(currentBorders, view);
-                    break;
-                case DirectionType.Down | DirectionType.Up:
-                    makePlain(DirectionType.Down, view);
-                    makePlain(DirectionType.Up, view);
-                    break;
-                case DirectionType.Left | DirectionType.Right:
-                    makePlain(DirectionType.Left, view);
-                    makePlain(DirectionType.Right, view);
-                    break;
-                case DirectionType.Up | DirectionType.Right:
-                    makeCornered(DirectionType.Up | DirectionType.Right, view);
-                    break;
-                case DirectionType.Up | DirectionType.Left:
-                    makeCornered(DirectionType.Up | DirectionType.Left, view);
-                    break;
-                case DirectionType.Down | DirectionType.Left:
-                    makeCornered(DirectionType.Down | DirectionType.Left, view);
-                    break;
-                case DirectionType.Down | DirectionType.Right:
-                    makeCornered(DirectionType.Down | DirectionType.Right, view);
-                    break;
-                case DirectionType.Left | DirectionType.Up | DirectionType.Right:
-                    makeInpass(DirectionType.Down, view);
-                    break;
-                case DirectionType.Up | DirectionType.Right | DirectionType.Down:
-                    makeInpass(DirectionType.Left, view);
-                    break;
-                case DirectionType.Right | DirectionType.Down | DirectionType.Left:
-                    makeInpass(DirectionType.Up, view);
-                    break;
-                case DirectionType.Down | DirectionType.Left | DirectionType.Up:
-                    makeInpass(DirectionType.Right, view);
-                    break;
-                // case DirectionType.None:
-                //     fillCorners(cellPosition, level, borders, view);
-                //     break;
-            }
-        }
-
-
-        // private void fillCorners(Vector2Int cellPosition, GameLevel level, Transform parent, GameObject outerCornerPrefab)
-        // {
-        //     DirectionType getBorders(Vector2Int coords)
-        //     {
-        //         CellContainer cell = level.Get(cellPosition + Vector2Int.up);
-        //         if (cell == null) return DirectionType.None;
-        //         return cell.Type == CellType.Wall ? getBorderDirections(level, CellType.Wall, coords.x, coords.y) : DirectionType.None;
-        //     }
-        //
-        //     var top = getBorders(cellPosition + Vector2Int.up);
-        //     var down = getBorders(cellPosition + Vector2Int.down);
-        //     var right = getBorders(cellPosition + Vector2Int.right);
-        //     var left = getBorders(cellPosition + Vector2Int.left);
-        //
-        //     if (top.HasFlag(DirectionType.Right) && right.HasFlag(DirectionType.Up))
-        //         spawnOuterCorner(DirectionType.Right | DirectionType.Up, parent, outerCornerPrefab);
-        //
-        //     if (right.HasFlag(DirectionType.Down) && down.HasFlag(DirectionType.Right))
-        //         spawnOuterCorner(DirectionType.Down | DirectionType.Right, parent, outerCornerPrefab);
-        //
-        //     if (down.HasFlag(DirectionType.Left) && left.HasFlag(DirectionType.Down))
-        //         spawnOuterCorner(DirectionType.Left | DirectionType.Down, parent, outerCornerPrefab);
-        //
-        //     if (top.HasFlag(DirectionType.Left) && left.HasFlag(DirectionType.Up))
-        //         spawnOuterCorner(DirectionType.Left | DirectionType.Up, parent, outerCornerPrefab);
-        // }
-
-
-        private void makeInpass(DirectionType direction, TileView view)
-        {
-            view.First.sprite = view.InnerCorner;
-            view.Second.sprite = view.InnerCorner;
-            view.Third.sprite = view.Vertical;
-            view.Fourth.sprite = view.Vertical;
-
-            setupInnerCorner(DirectionType.Left | DirectionType.Up, view.First);
-            setupInnerCorner(DirectionType.Right | DirectionType.Up, view.Second);
-            setupSide(DirectionType.Left, view.Fourth);
-            setupSide(DirectionType.Right, view.Third);
-
-            trySetRotation(direction, DirectionType.Down, view.transform, 0);
-            trySetRotation(direction, DirectionType.Left, view.transform, 90);
-            trySetRotation(direction, DirectionType.Up, view.transform, 180);
-            trySetRotation(direction, DirectionType.Right, view.transform, 270);
-        }
-
-        private void makeCornered(DirectionType direction, TileView view)
-        {
-            view.First.sprite = view.InnerCorner;
-            view.Second.sprite = view.Vertical;
-            view.Fourth.sprite = view.Vertical;
-
-            setupInnerCorner(DirectionType.Left | DirectionType.Up, view.First);
-            setupSide(DirectionType.Left, view.Fourth);
-            setupSide(DirectionType.Up, view.Second);
-
-            trySetRotation(direction, DirectionType.Left | DirectionType.Up, view.transform, 0);
-            trySetRotation(direction, DirectionType.Right | DirectionType.Up, view.transform, 90);
-            trySetRotation(direction, DirectionType.Right | DirectionType.Down, view.transform, 180);
-            trySetRotation(direction, DirectionType.Left | DirectionType.Down, view.transform, 270);
-        }
-
-        private void makePlain(DirectionType pointingDirection, TileView view)
-        {
-            SpriteRenderer[] sides = selectTiles(view, pointingDirection);
-            foreach (var side in sides)
-                side.sprite = view.Vertical;
-
-            setupSide(pointingDirection, sides[0]);
-            setupSide(pointingDirection, sides[1]);
-        }
-
-        private SpriteRenderer[] selectTiles(TileView view, DirectionType borders)
-        {
-            return borders switch
-            {
-                DirectionType.None => Array.Empty<SpriteRenderer>(),
-                DirectionType.Right => new[] {view.Second, view.Third},
-                DirectionType.Left => new[] {view.First, view.Fourth},
-                DirectionType.Up => new[] {view.First, view.Second},
-                DirectionType.Down => new[] {view.Third, view.Fourth},
-                DirectionType.Left | DirectionType.Up => new[] {view.First},
-                DirectionType.Right | DirectionType.Up => new[] {view.Second},
-                DirectionType.Right | DirectionType.Down => new[] {view.Third},
-                DirectionType.Left | DirectionType.Down => new[] {view.Fourth},
-                _ => throw new ArgumentOutOfRangeException(nameof(borders), "Can't get borders")
-            };
-        }
-
-        void trySetRotation(DirectionType sourceDirection, DirectionType targetDirection, Transform tile, int angle)
-        {
-            if (sourceDirection.HasFlag(targetDirection))
-                tile.rotation = Quaternion.AngleAxis(angle, Vector3.back);
-        }
-
-        private void makeSquared(TileView tile)
-        {
-            setupInnerCorner(DirectionType.Up | DirectionType.Left, tile.First);
-            setupInnerCorner(DirectionType.Up | DirectionType.Right, tile.Second);
-            setupInnerCorner(DirectionType.Down | DirectionType.Right, tile.Third);
-            setupInnerCorner(DirectionType.Down | DirectionType.Left, tile.Fourth);
-        }
-
-        private void setupOuterCorner(DirectionType pointingDirection, SpriteRenderer tile)
-        {
-            trySetRotation(pointingDirection, DirectionType.Up | DirectionType.Left, tile.transform, 0);
-            trySetRotation(pointingDirection, DirectionType.Up | DirectionType.Right, tile.transform, 90);
-            trySetRotation(pointingDirection, DirectionType.Down | DirectionType.Right, tile.transform, 180);
-            trySetRotation(pointingDirection, DirectionType.Down | DirectionType.Left, tile.transform, 270);
-        }
-
-        private void setupInnerCorner(DirectionType pointingDirection, SpriteRenderer tile)
-        {
-            trySetRotation(pointingDirection, DirectionType.Up | DirectionType.Left, tile.transform, 0);
-            trySetRotation(pointingDirection, DirectionType.Up | DirectionType.Right, tile.transform, 90);
-            trySetRotation(pointingDirection, DirectionType.Down | DirectionType.Right, tile.transform, 180);
-            trySetRotation(pointingDirection, DirectionType.Down | DirectionType.Left, tile.transform, 270);
-        }
-
-        private void setupSide(DirectionType pointingDirection, SpriteRenderer tile)
-        {
-            trySetRotation(pointingDirection, DirectionType.Right, tile.transform, 0);
-            trySetRotation(pointingDirection, DirectionType.Up, tile.transform, 270);
-            trySetRotation(pointingDirection, DirectionType.Left, tile.transform, 180);
-            trySetRotation(pointingDirection, DirectionType.Down, tile.transform, 90);
-        }
-
-        // private static Transform rotateAndTranslate(Transform tile, DirectionType pointingDirection, float angle)
-        // {
-        //     tile.Rotate(Vector3.back, angle, Space.Self);
-        //     if (pointingDirection.HasFlag(DirectionType.Up))
-        //         tile.Translate(up, Space.World);
-        //     if (pointingDirection.HasFlag(DirectionType.Right))
-        //         tile.Translate(right, Space.World);
-        //     if (pointingDirection.HasFlag(DirectionType.Down))
-        //         tile.Translate(down, Space.World);
-        //     if (pointingDirection.HasFlag(DirectionType.Left))
-        //         tile.Translate(left, Space.World);
-        //
-        //     return tile;
-        // }
 
         private Cell CreateCell(int x, int y, Transform parent, CellContainer cellContainer)
         {
