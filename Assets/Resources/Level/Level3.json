@@ -1,8 +1,43 @@
 {
-  "mapHeight": 7,
+  "mapHeight": 8,
   "mapWidth": 11,
   "finishColor": "green",
   "cells": [
+    [
+      {
+        "type": "wall"
+      },
+      {
+        "type": "wall"
+      },
+      {
+        "type": "wall"
+      },
+      {
+        "type": "wall"
+      },
+      {
+        "type": "wall"
+      },
+      {
+        "type": "wall"
+      },
+      {
+        "type": "wall"
+      },
+      {
+        "type": "wall"
+      },
+      {
+        "type": "wall"
+      },
+      {
+        "type": "wall"
+      },
+      {
+        "type": "wall"
+      }
+    ],
       [
       {
         "type": "wall"
@@ -257,7 +292,7 @@
       "rotation": 0,
       "color": "red",
       "ability": "default",
-      "sprite": 1
+      "sprite": 2
     },
     {
       "x": 4,

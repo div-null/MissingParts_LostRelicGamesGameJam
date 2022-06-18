@@ -48,7 +48,7 @@
         "type": "wall"
       },
       {
-        "type": "finish"
+        "type": "empty"
       },
       {
         "type": "empty"
@@ -166,22 +166,22 @@
   ],
   "playerParts": [
     {
-      "x": 3,
-      "y": 1,
-      "isActive": true,
-      "rotation": 0,
-      "color": "red",
-      "ability": "default",
-      "sprite": 1
-    },
-    {
       "x": 4,
       "y": 3,
-      "isActive": false,
+      "isActive": true,
       "rotation": 0,
       "color": "red",
       "ability": "hook",
       "sprite": 1
+    },
+    {
+      "x": 4,
+      "y": 5,
+      "isActive": false,
+      "rotation": 0,
+      "color": "red",
+      "ability": "default",
+      "sprite": 2
     },
     {
       "x": 4,

@@ -1,7 +1,7 @@
 {
-  "mapHeight": 7,
-  "mapWidth": 9,
-  "finishColor": "green",
+  "mapHeight": 8,
+  "mapWidth": 11,
+  "finishColor": "blue",
   "cells": [
     [
       {
@@ -30,6 +30,117 @@
       },
       {
         "type": "wall"
+      },
+      {
+        "type": "wall"
+      },
+      {
+        "type": "wall"
+      }
+    ],
+    [
+      {
+        "type": "wall"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "wall"
+      }
+    ],
+    [
+      {
+        "type": "wall"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "wall"
+      },
+      {
+        "type": "wall"
+      }
+    ],
+    [
+      {
+        "type": "wall"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "finish"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "wall"
       }
     ],
     [
@@ -58,6 +169,12 @@
         "type": "finish"
       },
       {
+        "type": "finish"
+      },
+      {
+        "type": "wall"
+      },
+      {
         "type": "wall"
       }
     ],
@@ -87,29 +204,6 @@
         "type": "finish"
       },
       {
-        "type": "wall"
-      }
-    ],
-    [
-      {
-        "type": "wall"
-      },
-      {
-        "type": "empty"
-      },
-      {
-        "type": "empty"
-      },
-      {
-        "type": "empty"
-      },
-      {
-        "type": "empty"
-      },
-      {
-        "type": "empty"
-      },
-      {
         "type": "empty"
       },
       {
@@ -124,25 +218,31 @@
         "type": "wall"
       },
       {
-        "type": "pit"
+        "type": "empty"
       },
       {
-        "type": "pit"
+        "type": "empty"
       },
       {
-        "type": "pit"
+        "type": "empty"
       },
       {
-        "type": "pit"
+        "type": "empty"
       },
       {
-        "type": "pit"
+        "type": "empty"
       },
       {
-        "type": "pit"
+        "type": "empty"
       },
       {
-        "type": "pit"
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "wall"
       },
       {
         "type": "wall"
@@ -153,31 +253,8 @@
         "type": "wall"
       },
       {
-        "type": "empty"
-      },
-      {
-        "type": "empty"
-      },
-      {
-        "type": "empty"
-      },
-      {
-        "type": "empty"
-      },
-      {
-        "type": "empty"
-      },
-      {
-        "type": "empty"
-      },
-      {
-        "type": "empty"
-      },
-      {
         "type": "wall"
-      }
-    ],
-    [
+      },
       {
         "type": "wall"
       },
@@ -210,24 +287,42 @@
   "playerParts": [
     {
       "x": 2,
-      "y": 2,
+      "y": 3,
       "isActive": true,
       "rotation": 0,
-      "color": "green",
+      "color": "red",
       "ability": "default",
       "sprite": 2
     },
     {
-      "x": 4,
+      "x": 1,
       "y": 2,
       "isActive": false,
       "rotation": 0,
       "color": "green",
-      "ability": "hook",
-      "sprite": 1
+      "ability": "default",
+      "sprite": 2
     },
     {
       "x": 4,
+      "y": 4,
+      "isActive": false,
+      "rotation": 0,
+      "color": "red",
+      "ability": "default",
+      "sprite": 2
+    },
+    {
+      "x": 4,
+      "y": 5,
+      "isActive": false,
+      "rotation": 0,
+      "color": "red",
+      "ability": "default",
+      "sprite": 2
+    },
+    {
+      "x": 9,
       "y": 5,
       "isActive": false,
       "rotation": 0,
@@ -236,13 +331,13 @@
       "sprite": 2
     },
     {
-      "x": 5,
-      "y": 5,
+      "x": 9,
+      "y": 3,
       "isActive": false,
       "rotation": 0,
-      "color": "blue",
-      "ability": "rotation",
-      "sprite": 1
+      "color": "red",
+      "ability": "default",
+      "sprite": 2
     }
   ],
   "misc": [
