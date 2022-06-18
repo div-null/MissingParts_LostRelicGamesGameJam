@@ -1,9 +1,21 @@
 {
-  "mapHeight": 8,
-  "mapWidth": 6,
+  "mapHeight": 7,
+  "mapWidth": 10,
   "finishColor": "red",
   "cells": [
-    [
+      [
+      {
+        "type": "wall"
+      },
+      {
+        "type": "wall"
+      },
+      {
+        "type": "wall"
+      },
+      {
+        "type": "wall"
+      },
       {
         "type": "wall"
       },
@@ -26,35 +38,59 @@
     [
       {
         "type": "wall"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "wall"
+      }
+    ],
+    [
+      {
+        "type": "wall"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
       },
       {
         "type": "finish"
       },
       {
-        "type": "empty"
-      },
-      {
-        "type": "empty"
-      },
-      {
-        "type": "empty"
-      },
-      {
-        "type": "wall"
-      }
-    ],
-    [
-      {
-        "type": "wall"
-      },
-      {
-        "type": "empty"
-      },
-      {
-        "type": "empty"
-      },
-      {
-        "type": "empty"
+        "type": "pit"
       },
       {
         "type": "empty"
@@ -66,52 +102,24 @@
     [
       {
         "type": "wall"
+      },
+      {
+        "type": "pit"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
       },
       {
         "type": "finish"
       },
       {
-        "type": "empty"
-      },
-      {
-        "type": "empty"
-      },
-      {
-        "type": "empty"
-      },
-      {
-        "type": "wall"
-      }
-    ],
-    [
-      {
-        "type": "wall"
-      },
-      {
         "type": "pit"
-      },
-      {
-        "type": "pit"
-      },
-      {
-        "type": "pit"
-      },
-      {
-        "type": "pit"
-      },
-      {
-        "type": "wall"
-      }
-    ],
-    [
-      {
-        "type": "wall"
-      },
-      {
-        "type": "empty"
-      },
-      {
-        "type": "empty"
       },
       {
         "type": "empty"
@@ -140,10 +148,66 @@
         "type": "empty"
       },
       {
+        "type": "empty"
+      },
+      {
+        "type": "finish"
+      },
+      {
+        "type": "pit"
+      },
+      {
+        "type": "empty"
+      },
+      {
         "type": "wall"
       }
     ],
     [
+      {
+        "type": "wall"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "wall"
+      }
+    ],
+    [
+      {
+        "type": "wall"
+      },
+      {
+        "type": "wall"
+      },
+      {
+        "type": "wall"
+      },
+      {
+        "type": "wall"
+      },
       {
         "type": "wall"
       },
@@ -166,17 +230,26 @@
   ],
   "playerParts": [
     {
-      "x": 4,
-      "y": 3,
+      "x": 2,
+      "y": 2,
       "isActive": true,
       "rotation": 0,
       "color": "red",
-      "ability": "hook",
-      "sprite": 1
+      "ability": "default",
+      "sprite": 2
     },
     {
-      "x": 4,
-      "y": 5,
+      "x": 2,
+      "y": 4,
+      "isActive": false,
+      "rotation": 0,
+      "color": "red",
+      "ability": "default",
+      "sprite": 2
+    },
+    {
+      "x": 1,
+      "y": 4,
       "isActive": false,
       "rotation": 0,
       "color": "red",
@@ -185,7 +258,16 @@
     },
     {
       "x": 4,
-      "y": 6,
+      "y": 1,
+      "isActive": false,
+      "rotation": 0,
+      "color": "red",
+      "ability": "default",
+      "sprite": 2
+    },
+    {
+      "x": 4,
+      "y": 3,
       "isActive": false,
       "rotation": 0,
       "color": "red",

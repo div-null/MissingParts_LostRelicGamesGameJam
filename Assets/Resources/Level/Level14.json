@@ -1,5 +1,5 @@
 {
-  "mapHeight": 7,
+  "mapHeight": 10,
   "mapWidth": 10,
   "finishColor": "red",
   "cells": [
@@ -58,7 +58,7 @@
         "type": "empty"
       },
       {
-        "type": "finish"
+        "type": "empty"
       },
       {
         "type": "empty"
@@ -84,16 +84,112 @@
         "type": "empty"
       },
       {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
         "type": "finish"
       },
       {
         "type": "finish"
+      },
+      {
+        "type": "wall"
+      }
+    ],
+    [
+      {
+        "type": "wall"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "wall"
+      }
+    ],
+    [
+      {
+        "type": "wall"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "wall"
+      }
+    ],
+    [
+      {
+        "type": "wall"
       },
       {
         "type": "pit"
       },
       {
-        "type": "finish"
+        "type": "pit"
+      },
+      {
+        "type": "pit"
+      },
+      {
+        "type": "pit"
+      },
+      {
+        "type": "pit"
+      },
+      {
+        "type": "pit"
+      },
+      {
+        "type": "pit"
+      },
+      {
+        "type": "pit"
       },
       {
         "type": "wall"
@@ -116,13 +212,13 @@
         "type": "empty"
       },
       {
-        "type": "empty"
-      },
-      {
-        "type": "empty"
-      },
-      {
         "type": "finish"
+      },
+      {
+        "type": "empty"
+      },
+      {
+        "type": "empty"
       },
       {
         "type": "empty"
@@ -239,26 +335,17 @@
       "sprite": 2
     },
     {
-      "x": 1,
-      "y": 4,
-      "isActive": false,
-      "rotation": 0,
-      "color": "red",
-      "ability": "default",
-      "sprite": 2
-    },
-    {
-      "x": 5,
-      "y": 4,
-      "isActive": false,
-      "rotation": 0,
-      "color": "red",
-      "ability": "default",
-      "sprite": 2
-    },
-    {
-      "x": 4,
+      "x": 3,
       "y": 2,
+      "isActive": false,
+      "rotation": 0,
+      "color": "red",
+      "ability": "hook",
+      "sprite": 1
+    },
+    {
+      "x": 7,
+      "y": 6,
       "isActive": false,
       "rotation": 0,
       "color": "red",
@@ -266,17 +353,8 @@
       "sprite": 1
     },
     {
-      "x": 6,
-      "y": 5,
-      "isActive": false,
-      "rotation": 0,
-      "color": "red",
-      "ability": "default",
-      "sprite": 2
-    },
-    {
       "x": 7,
-      "y": 4,
+      "y": 7,
       "isActive": false,
       "rotation": 0,
       "color": "red",
