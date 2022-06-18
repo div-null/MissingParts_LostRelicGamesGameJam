@@ -30,7 +30,7 @@ namespace Infrastructure.Scope
             _ceiling = ceiling;
             _levelLoader = levelLoader;
             _factory = factory;
-            _currentLevel = 0;
+            _currentLevel = 9;
             _ceiling.OnFadeOut += UnlockInputs;
             _audioManager = audioManager;
             

@@ -93,7 +93,7 @@ public class Character : MonoBehaviour
                 {
                     _mainPart = characterPart;
                     ability.Apply();
-                    var newMainPart = _mainPart.CharacterPartAttachment.DetachParts();
+                    var newMainPart = _mainPart.CharacterPartAttachment.DetachParts(_mainPart);
 
                     //if (result)
                     //    Detached.Invoke();
