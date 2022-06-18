@@ -17,13 +17,9 @@ namespace Infrastructure.Scope
         private readonly Ceiling _ceiling;
         private readonly GameUI _gameUI;
         private readonly PlayerInputs _playerInputs;
-
         private int _currentLevel;
         private Field _field;
         private Character _character;
-        private Ceiling _ceiling;
-        private GameUI _gameUI;
-        private PlayerInputs _playerInputs;
         private AudioManager _audioManager;
 
 
@@ -109,6 +105,15 @@ namespace Infrastructure.Scope
                 case 13:
                     level = _levelLoader.LoadLevel(LevelLoader.Level.Lvl13);
                     break;
+                case 14:
+                    level = _levelLoader.LoadLevel(LevelLoader.Level.Lvl14);
+                    break;
+                case 15:
+                    level = _levelLoader.LoadLevel(LevelLoader.Level.Lvl15);
+                    break;
+                case 16:
+                    level = _levelLoader.LoadLevel(LevelLoader.Level.Lvl16);
+                    break;
                 default:
                     EndOfTheGame();
                     return;
@@ -119,7 +124,8 @@ namespace Infrastructure.Scope
             _character.Moved += _field.CheckForFinish;
             _field.Finished += LevelFinished;
             _character.Died += ReloadLevel;
-            
+            NextLevel += _gameUI.ToNextLevel;
+
             //TODO: event to reload level died and click on reload button
             //TODO: event to pass load next level after winning on current level
         }
