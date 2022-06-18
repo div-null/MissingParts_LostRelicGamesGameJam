@@ -70,16 +70,16 @@ public class GameUI : MonoBehaviour
             case 9:
                 Tutorial5.SetActive(true);
                 break;
-            case 10:
+            case 11:
                 Tutorial6.SetActive(true);
                 break;
-            case 11:
+            case 12:
                 Tutorial7.SetActive(true);
                 break;
-            case 12:
+            case 13:
                 Tutorial8.SetActive(true);
                 break;
-            case 13:
+            case 14:
                 Tutorial9.SetActive(true);
                 break;
         }

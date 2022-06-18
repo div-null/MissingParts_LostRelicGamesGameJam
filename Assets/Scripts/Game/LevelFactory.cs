@@ -14,9 +14,11 @@ namespace Game
     {
         private IObjectResolver _resolver;
         private GameSettings _gameSettings;
+        private AudioManager _audioManager;
 
-        public LevelFactory(IObjectResolver resolver, GameSettings gameSettings)
+        public LevelFactory(IObjectResolver resolver, GameSettings gameSettings, AudioManager audioManager)
         {
+            _audioManager = audioManager;
             _gameSettings = gameSettings;
             _resolver = resolver;
         }
@@ -168,12 +170,12 @@ namespace Game
             return characterMovement;
         }
 
-        private static void setupAbilities(CharacterPartData partData, Field field, CharacterPart characterPart)
+        private void setupAbilities(CharacterPartData partData, Field field, CharacterPart characterPart)
         {
             if (partData.Ability == AbilityType.Hook)
             {
                 var pullAbility = characterPart.GetOrAddComponent<PullAbility>();
-                pullAbility.Initialize(characterPart, field, directionFromAngle(partData.Rotation));
+                pullAbility.Initialize(characterPart, field, directionFromAngle(partData.Rotation), _audioManager);
             }
             else if (partData.Ability == AbilityType.Rotation)
             {

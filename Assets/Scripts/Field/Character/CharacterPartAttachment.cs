@@ -13,7 +13,6 @@ public class CharacterPartAttachment : MonoBehaviour
         _field = field;
     }
 
-    public void AttachParts()
     {
         HashSet<CharacterPart> visited = new HashSet<CharacterPart>();
 
@@ -57,23 +56,82 @@ public class CharacterPartAttachment : MonoBehaviour
         visitNode(_characterPart);
     }
 
-    public CharacterPart DetachParts()
     {
         //Find all parts in pits
         //Remove their links with other parts
         //Create lists for remaining parts and deleting parts
         List<CharacterPart> deletingParts;
         List<CharacterPart> remainingParts = SeparateCharacterPartsToRemainingAndDeleting(out deletingParts);
-        
+
         //delete deleting parts
         foreach (var part in deletingParts)
         {
             part.Delete();
         }
-        
+
         if (remainingParts.Count == 0)
         {
-            return null;
+            mainCharacterPart = null;
+            return true;
+        }
+
+        //Unite them in groups and remove united parts from list
+        List<CharacterPart> unitedParts = UniteCharacterPartsInGroups(remainingParts);
+
+
+        //Choose max size chain as main character
+        int main = FindUnitedWithPart(unitedParts, characterPart);
+
+        //Other chains will turn inactive
+        if (unitedParts.Count > 1)
+        {
+            for (int i = 0; i < unitedParts.Count; i++)
+            {
+                if (i != main)
+                {
+                    unitedParts[i].SetActiveToAllParts(false);
+                    unitedParts[i].CharacterPartAttachment.AttachParts();
+                }
+            }
+        }
+
+        unitedParts[main].SetActiveToAllParts(true);
+
+        mainCharacterPart = unitedParts[main];
+        return deletingParts.Count > 0;
+    }
+
+    private int FindUnitedWithPart(List<CharacterPart> unitedParts, CharacterPart characterPart)
+    {
+        for (int i = 0; i < unitedParts.Count; i++)
+        {
+            if (FindPart(unitedParts[i], characterPart))
+            {
+                return i;
+            }
+        }
+
+        return unitedParts.Count - 1;
+    }
+
+    public bool DetachParts(out CharacterPart mainCharacterPart)
+    {
+        //Find all parts in pits
+        //Remove their links with other parts
+        //Create lists for remaining parts and deleting parts
+        List<CharacterPart> deletingParts;
+        List<CharacterPart> remainingParts = SeparateCharacterPartsToRemainingAndDeleting(out deletingParts);
+
+        //delete deleting parts
+        foreach (var part in deletingParts)
+        {
+            part.Delete();
+        }
+
+        if (remainingParts.Count == 0)
+        {
+            mainCharacterPart = null;
+            return false;
         }
 
         //Unite them in groups and remove united parts from list
@@ -82,7 +140,7 @@ public class CharacterPartAttachment : MonoBehaviour
 
         //Choose max size chain as main character
         int maxSize = MaxSizeOfDifferentChainsOfCharacterParts(unitedParts, out int index);
-            
+
         //Other chains will turn inactive
         if (unitedParts.Count > 1)
         {
@@ -95,11 +153,18 @@ public class CharacterPartAttachment : MonoBehaviour
                 }
             }
         }
-            
+
         if (maxSize > 0)
-            return unitedParts[index];
+        {
+            mainCharacterPart = unitedParts[index];
+            
+        }
         else
-            return null;
+        {
+            mainCharacterPart = null;
+        }
+        
+        return deletingParts.Count > 0;
     }
 
     private List<CharacterPart> SeparateCharacterPartsToRemainingAndDeleting(out List<CharacterPart> deletingParts)
@@ -142,7 +207,7 @@ public class CharacterPartAttachment : MonoBehaviour
         {
             if (!visited.Contains(part))
                 unitedParts.Add(part);
-            
+
             void visitNodes(CharacterPart part)
             {
                 if (part == null) return;
@@ -181,7 +246,7 @@ public class CharacterPartAttachment : MonoBehaviour
     //FindMax
     //ChangeMainPart
     //Get cell from field for logic
-   
+
     public int SizeOfCharacterPartsChain(CharacterPart characterPart)
     {
         HashSet<CharacterPart> visited = new HashSet<CharacterPart>();
@@ -200,5 +265,25 @@ public class CharacterPartAttachment : MonoBehaviour
 
         visitNode(characterPart);
         return visited.Count;
+    }
+
+    public bool FindPart(CharacterPart united, CharacterPart characterPart)
+    {
+        HashSet<CharacterPart> visited = new HashSet<CharacterPart>();
+
+        bool visitNode(CharacterPart part)
+        {
+            if (part == null) return false;
+            if (visited.Contains(part)) return false;
+            visited.Add(part);
+
+            if (part == characterPart)
+                return true;
+            else
+                return visitNode(part.Down) || visitNode(part.Up) || visitNode(part.Right) || visitNode(part.Left);
+        }
+
+
+        return visitNode(united);
     }
 }

@@ -46,7 +46,7 @@ public class Character : MonoBehaviour
     {
         StartMoving?.Invoke();
         _mainPart.CharacterPartMovement.Move(vectorDirection.ToDirection());
-        CharacterPart newMainPart = _mainPart.CharacterPartAttachment.DetachParts();
+        var result = _mainPart.CharacterPartAttachment.DetachParts(out var mainPart);
 
         if (newMainPart == null)
         {
@@ -91,8 +91,16 @@ public class Character : MonoBehaviour
                 {
                     _mainPart = characterPart;
                     ability.Apply();
-                    _mainPart.CharacterPartAttachment.DetachParts();
-                    Moved?.Invoke();
+                    var result = _mainPart.CharacterPartAttachment.DetachParts(_mainPart, out var mainPart);
+
+                    if (result)
+                        Detached.Invoke();
+                    
+                    _mainPart = mainPart;
+                    if (ability.GetType() == typeof(PullAbility))
+                        AppliedPullAbility?.Invoke();
+                    else
+                        AppliedRotateAbility?.Invoke();
                 }
             }
         }

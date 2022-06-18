@@ -179,7 +179,9 @@ public class PullAbility : Ability
         }
         
         _characterPart.SetActiveToAllParts(true);
-        firstPulledPart.CharacterPartAttachment.DetachParts();
+        var result = firstPulledPart.CharacterPartAttachment.DetachParts(out var charPart);
+
+        return result;
         //check for pits
         //pulledParts.First().CharacterPartAttachment.DetachParts();
         //turn detach parts inactive

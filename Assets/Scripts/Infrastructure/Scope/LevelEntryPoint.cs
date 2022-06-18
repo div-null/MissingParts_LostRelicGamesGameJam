@@ -114,6 +114,12 @@ namespace Infrastructure.Scope
                 case 16:
                     level = _levelLoader.LoadLevel(LevelLoader.Level.Lvl16);
                     break;
+                case 17:
+                    level = _levelLoader.LoadLevel(LevelLoader.Level.Lvl17);
+                    break;
+                case 18:
+                    level = _levelLoader.LoadLevel(LevelLoader.Level.Lvl18);
+                    break;
                 default:
                     EndOfTheGame();
                     return;
@@ -122,10 +128,15 @@ namespace Infrastructure.Scope
             _field = _factory.CreateField(level);
             _character = _factory.CreateCharacter(level, _field);
             _character.Moved += _field.CheckForFinish;
+            _character.AppliedPullAbility += _field.CheckForFinish;
+            _character.AppliedRotateAbility += _field.CheckForFinish;
             _field.Finished += LevelFinished;
             _character.Died += ReloadLevel;
             NextLevel += _gameUI.ToNextLevel;
-
+            _character.Moved += _audioManager.PlayMove;
+            _character.Detached += _audioManager.PlayDetach;
+            _character.AppliedPullAbility += _audioManager.PlayPullIn;
+            _character.AppliedRotateAbility += _audioManager.PlayRotate;
             //TODO: event to reload level died and click on reload button
             //TODO: event to pass load next level after winning on current level
         }
@@ -171,6 +182,8 @@ namespace Infrastructure.Scope
         private void DestroyLevel()
         {
             _character.Moved -= _field.CheckForFinish;
+            _character.AppliedPullAbility -= _field.CheckForFinish;
+            _character.AppliedRotateAbility -= _field.CheckForFinish;
             _field.Finished -= LevelFinished;
             _field.DestroyField();
             _character.DestroyCharacter();
