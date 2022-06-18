@@ -1,4 +1,5 @@
-﻿using Game;
+﻿using System;
+using Game;
 using LevelEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -8,10 +9,16 @@ namespace Infrastructure.Scope
 {
     public class LevelEntryPoint : IStartable
     {
-        private LevelFactory _factory;
-        private int _currentLevel;
-        private LevelLoader _levelLoader;
+        //public event Action FinishGame;
+        public event Action<int> NextLevel;
 
+        private readonly LevelFactory _factory;
+        private readonly LevelLoader _levelLoader;
+        private readonly Ceiling _ceiling;
+        private readonly GameUI _gameUI;
+        private readonly PlayerInputs _playerInputs;
+
+        private int _currentLevel;
         private Field _field;
         private Character _character;
         private Ceiling _ceiling;
@@ -30,6 +37,17 @@ namespace Infrastructure.Scope
             _currentLevel = 0;
             _ceiling.OnFadeOut += UnlockInputs;
             _audioManager = audioManager;
+            
+            RegisterCallback(2, () => Debug.Log("Second level"));
+        }
+
+        private void RegisterCallback(int value, Action callback)
+        {
+            NextLevel += v =>
+            {
+                if (v == value)
+                    callback();
+            };
         }
 
         public void Start()
@@ -106,9 +124,11 @@ namespace Infrastructure.Scope
             //TODO: event to pass load next level after winning on current level
         }
 
+
         public void LoadNextLevel()
         {
             _currentLevel++;
+            NextLevel?.Invoke(_currentLevel);
             LoadLevel();
         }
 
