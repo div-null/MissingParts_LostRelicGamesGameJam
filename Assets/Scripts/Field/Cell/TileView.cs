@@ -111,6 +111,11 @@ public class TileView : MonoBehaviour
 
     private void MakeSquared()
     {
+        First.sprite = InnerCorner;
+        Second.sprite = InnerCorner;
+        Third.sprite = InnerCorner;
+        Fourth.sprite = InnerCorner;
+        
         SetupInnerCorner(DirectionType.Up | DirectionType.Left, First);
         SetupInnerCorner(DirectionType.Up | DirectionType.Right, Second);
         SetupInnerCorner(DirectionType.Down | DirectionType.Right, Third);
