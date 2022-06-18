@@ -17,18 +17,44 @@ public enum DirectionType
 public static class DirectionExtensions
 {
     public static DirectionType[] directions = new[] {DirectionType.Right, DirectionType.Left, DirectionType.Up, DirectionType.Down};
-    
+
     public static IEnumerable<TEnum> GetFlags<TEnum>(this TEnum input) where TEnum : Enum
     {
         foreach (Enum value in Enum.GetValues(input.GetType()))
             if (input.HasFlag(value))
-                yield return (TEnum)value;
+                yield return (TEnum) value;
+    }
+
+    public static bool HasFlagEq<TEnum>(this TEnum source, TEnum flags) where TEnum : Enum =>
+        source.Equals(flags) || source.HasFlag(flags);
+
+    public static DirectionType RotateRight(this DirectionType direction)
+    {
+        switch (direction)
+        {
+            case DirectionType.Up | DirectionType.Right:
+                return DirectionType.Right | DirectionType.Down;
+            case DirectionType.Up | DirectionType.Left:
+                return DirectionType.Up | DirectionType.Right;
+            case DirectionType.Down | DirectionType.Left:
+                return DirectionType.Up | DirectionType.Left;
+            case DirectionType.Down | DirectionType.Right:
+                return DirectionType.Down | DirectionType.Left;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(direction), "Not allowed");
+        }
+    }
+
+    public static DirectionType InvertSingle(this DirectionType direction)
+    {
+        var directionTypes = directions.Except(direction.GetFlags()).Intersect(directions).ToList();
+        return directionTypes.Single();
     }
 
     public static DirectionType Invert(this DirectionType direction)
     {
         var directionTypes = directions.Except(direction.GetFlags()).Intersect(directions).ToList();
-        return directionTypes.Single();
+        return directionTypes.Aggregate(DirectionType.None, (acc, cur) => acc | cur);
     }
 
 
@@ -70,7 +96,7 @@ public static class DirectionExtensions
         return degrees switch
         {
             0 => DirectionType.Up,
-            90=> DirectionType.Right,
+            90 => DirectionType.Right,
             180 => DirectionType.Down,
             270 => DirectionType.Left
         };
@@ -125,10 +151,10 @@ public static class DirectionExtensions
     {
         return direction switch
         {
-            DirectionType.Right => new DirectionType[]{DirectionType.Up, DirectionType.Down},
-            DirectionType.Left => new DirectionType[]{DirectionType.Up, DirectionType.Down},
-            DirectionType.Up => new DirectionType[]{DirectionType.Left, DirectionType.Right},
-            DirectionType.Down => new DirectionType[]{DirectionType.Left, DirectionType.Right}
+            DirectionType.Right => new DirectionType[] {DirectionType.Up, DirectionType.Down},
+            DirectionType.Left => new DirectionType[] {DirectionType.Up, DirectionType.Down},
+            DirectionType.Up => new DirectionType[] {DirectionType.Left, DirectionType.Right},
+            DirectionType.Down => new DirectionType[] {DirectionType.Left, DirectionType.Right}
         };
     }
 }

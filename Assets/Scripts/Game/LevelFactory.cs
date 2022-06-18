@@ -65,7 +65,7 @@ namespace Game
                     if (cellData.Type == CellType.Wall || cellData.Type == CellType.Pit)
                     {
                         TileView tileView = newCell.GetComponent<TileView>();
-                        tileView.DrawBorders(borders, cellPosition, bordersMap);
+                        tileView.DrawBorders(borders, cellPosition, bordersMap, level.Get);
                     }
 
                     newCell.Initialize(cellPosition, cellData.Type, borders);
