@@ -27,7 +27,7 @@ public class GameUI : MonoBehaviour
     [SerializeField] private GameObject Tutorial6;
     [SerializeField] private GameObject Tutorial7;
     [SerializeField] private GameObject Tutorial8;
-    [SerializeField] private GameObject Tutorial9;
+    //[SerializeField] private GameObject Tutorial9;
 
     private void Awake()
     {
@@ -79,8 +79,7 @@ public class GameUI : MonoBehaviour
             case 13:
                 Tutorial8.SetActive(true);
                 break;
-            case 14:
-                Tutorial9.SetActive(true);
+            default:
                 break;
         }
         if (levelNumber == 2)
