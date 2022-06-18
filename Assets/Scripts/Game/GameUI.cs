@@ -15,6 +15,8 @@ public class GameUI : MonoBehaviour
 
     [SerializeField] private GameObject Credits;
 
+    [SerializeField] private GameObject Tutorial1;
+
     private void Awake()
     {
         _restartButton.onClick.AddListener(OnRestartClicked);
