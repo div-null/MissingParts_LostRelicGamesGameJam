@@ -13,6 +13,8 @@ public class Character : MonoBehaviour
     private PlayerInputs _playerInputs;
 
     public event Action Moved;
+    public event Action AppliedPullAbility;
+    public event Action AppliedRotateAbility;
     public event Action StartMoving;
     public event Action Died;
 
@@ -46,7 +48,7 @@ public class Character : MonoBehaviour
     {
         StartMoving?.Invoke();
         _mainPart.CharacterPartMovement.Move(vectorDirection.ToDirection());
-        var result = _mainPart.CharacterPartAttachment.DetachParts(out var mainPart);
+        var newMainPart = _mainPart.CharacterPartAttachment.DetachParts();
 
         if (newMainPart == null)
         {
@@ -91,12 +93,12 @@ public class Character : MonoBehaviour
                 {
                     _mainPart = characterPart;
                     ability.Apply();
-                    var result = _mainPart.CharacterPartAttachment.DetachParts(_mainPart, out var mainPart);
+                    var newMainPart = _mainPart.CharacterPartAttachment.DetachParts();
 
-                    if (result)
-                        Detached.Invoke();
-                    
-                    _mainPart = mainPart;
+                    //if (result)
+                    //    Detached.Invoke();
+                    //
+                    _mainPart = newMainPart;
                     if (ability.GetType() == typeof(PullAbility))
                         AppliedPullAbility?.Invoke();
                     else

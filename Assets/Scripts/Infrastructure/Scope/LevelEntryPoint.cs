@@ -134,9 +134,9 @@ namespace Infrastructure.Scope
             _character.Died += ReloadLevel;
             NextLevel += _gameUI.ToNextLevel;
             _character.Moved += _audioManager.PlayMove;
-            _character.Detached += _audioManager.PlayDetach;
-            _character.AppliedPullAbility += _audioManager.PlayPullIn;
-            _character.AppliedRotateAbility += _audioManager.PlayRotate;
+            //_character.Detached += _audioManager.PlayDetach;
+            //_character.AppliedPullAbility += _audioManager.PlayPullIn;
+            //_character.AppliedRotateAbility += _audioManager.PlayRotate;
             //TODO: event to reload level died and click on reload button
             //TODO: event to pass load next level after winning on current level
         }

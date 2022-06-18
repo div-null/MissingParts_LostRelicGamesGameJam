@@ -13,6 +13,7 @@ public class CharacterPartAttachment : MonoBehaviour
         _field = field;
     }
 
+    public void AttachParts()
     {
         HashSet<CharacterPart> visited = new HashSet<CharacterPart>();
 
@@ -21,7 +22,7 @@ public class CharacterPartAttachment : MonoBehaviour
             if (part == null) return;
             if (visited.Contains(part)) return;
             visited.Add(part);
-            
+
             visitNode(part.Left);
             visitNode(part.Right);
             visitNode(part.Up);
@@ -33,7 +34,7 @@ public class CharacterPartAttachment : MonoBehaviour
 
         visitNode(_characterPart);
     }
-    
+
     public void CheckForPits()
     {
         HashSet<CharacterPart> visited = new HashSet<CharacterPart>();
@@ -56,6 +57,7 @@ public class CharacterPartAttachment : MonoBehaviour
         visitNode(_characterPart);
     }
 
+    public CharacterPart DetachParts(CharacterPart characterPart)
     {
         //Find all parts in pits
         //Remove their links with other parts
@@ -71,8 +73,7 @@ public class CharacterPartAttachment : MonoBehaviour
 
         if (remainingParts.Count == 0)
         {
-            mainCharacterPart = null;
-            return true;
+            return null;
         }
 
         //Unite them in groups and remove united parts from list
@@ -97,8 +98,7 @@ public class CharacterPartAttachment : MonoBehaviour
 
         unitedParts[main].SetActiveToAllParts(true);
 
-        mainCharacterPart = unitedParts[main];
-        return deletingParts.Count > 0;
+        return unitedParts[main];
     }
 
     private int FindUnitedWithPart(List<CharacterPart> unitedParts, CharacterPart characterPart)
@@ -114,7 +114,7 @@ public class CharacterPartAttachment : MonoBehaviour
         return unitedParts.Count - 1;
     }
 
-    public bool DetachParts(out CharacterPart mainCharacterPart)
+    public CharacterPart DetachParts()
     {
         //Find all parts in pits
         //Remove their links with other parts
@@ -130,8 +130,7 @@ public class CharacterPartAttachment : MonoBehaviour
 
         if (remainingParts.Count == 0)
         {
-            mainCharacterPart = null;
-            return false;
+            return null;
         }
 
         //Unite them in groups and remove united parts from list
@@ -156,15 +155,13 @@ public class CharacterPartAttachment : MonoBehaviour
 
         if (maxSize > 0)
         {
-            mainCharacterPart = unitedParts[index];
+            return unitedParts[index];
             
         }
         else
         {
-            mainCharacterPart = null;
+            return null;
         }
-        
-        return deletingParts.Count > 0;
     }
 
     private List<CharacterPart> SeparateCharacterPartsToRemainingAndDeleting(out List<CharacterPart> deletingParts)

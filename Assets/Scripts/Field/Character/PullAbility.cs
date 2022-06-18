@@ -15,11 +15,14 @@ public class PullAbility : Ability
     private const int _range = 5;
     private DirectionType _lookDirection;
 
-    public void Initialize(CharacterPart character, Field field, DirectionType direction)
+    private AudioManager _audioManager;
+
+    public void Initialize(CharacterPart character, Field field, DirectionType direction, AudioManager audioManager)
     {
         base.Initialize(character, field);
         _lookDirection = direction;
         _hookView = GetComponentInChildren<HookView>();
+        _audioManager = audioManager;
     }
     
     public override void Apply()
@@ -179,9 +182,7 @@ public class PullAbility : Ability
         }
         
         _characterPart.SetActiveToAllParts(true);
-        var result = firstPulledPart.CharacterPartAttachment.DetachParts(out var charPart);
-
-        return result;
+        firstPulledPart.CharacterPartAttachment.DetachParts();
         //check for pits
         //pulledParts.First().CharacterPartAttachment.DetachParts();
         //turn detach parts inactive
