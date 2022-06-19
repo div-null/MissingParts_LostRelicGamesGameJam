@@ -11,8 +11,10 @@ namespace UI
         [SerializeField]
         private TMP_Text TMP_text;
 
-        public void OnPointerClick(PointerEventData eventData) {
-            int linkIndex = TMP_TextUtilities.FindIntersectingLink(TMP_text, Mouse.current.position.ReadValue(), Camera.current);
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            Vector3 mousePosition2 = Mouse.current.position.ReadValue();
+            int linkIndex = TMP_TextUtilities.FindIntersectingLink(TMP_text, mousePosition2, null);
             if( linkIndex != -1 ) { // was a link clicked?
                 TMP_LinkInfo linkInfo = TMP_text.textInfo.linkInfo[linkIndex];
 
