@@ -58,6 +58,7 @@ namespace Infrastructure.Scope
         {
             _gameUI.HideMenu();
             _playerInputs.CharacterControls.Movement.performed -= FirstPlayerInput;
+            _playerInputs.CharacterControls.Restart.performed += ReloadLevel;
         }
 
         public void LoadLevel()
@@ -150,6 +151,13 @@ namespace Infrastructure.Scope
         }
 
         public void ReloadLevel()
+        {
+            LockInputs();
+            _ceiling.FadeIn();
+            _ceiling.OnFadeIn += OnReloadLevelTransition;
+        }
+        
+        public void ReloadLevel(InputAction.CallbackContext obj)
         {
             LockInputs();
             _ceiling.FadeIn();

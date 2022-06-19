@@ -44,6 +44,15 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Restart"",
+                    ""type"": ""Button"",
+                    ""id"": ""26dd7f94-4599-4899-946c-c3363852eed4"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -211,6 +220,17 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
                     ""action"": ""Select"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b63d9f0d-4de1-4e74-b27a-73256d3f0a59"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Restart"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -221,6 +241,7 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
         m_CharacterControls = asset.FindActionMap("CharacterControls", throwIfNotFound: true);
         m_CharacterControls_Movement = m_CharacterControls.FindAction("Movement", throwIfNotFound: true);
         m_CharacterControls_Select = m_CharacterControls.FindAction("Select", throwIfNotFound: true);
+        m_CharacterControls_Restart = m_CharacterControls.FindAction("Restart", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -282,12 +303,14 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
     private ICharacterControlsActions m_CharacterControlsActionsCallbackInterface;
     private readonly InputAction m_CharacterControls_Movement;
     private readonly InputAction m_CharacterControls_Select;
+    private readonly InputAction m_CharacterControls_Restart;
     public struct CharacterControlsActions
     {
         private @PlayerInputs m_Wrapper;
         public CharacterControlsActions(@PlayerInputs wrapper) { m_Wrapper = wrapper; }
         public InputAction @Movement => m_Wrapper.m_CharacterControls_Movement;
         public InputAction @Select => m_Wrapper.m_CharacterControls_Select;
+        public InputAction @Restart => m_Wrapper.m_CharacterControls_Restart;
         public InputActionMap Get() { return m_Wrapper.m_CharacterControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -303,6 +326,9 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
                 @Select.started -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnSelect;
                 @Select.performed -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnSelect;
                 @Select.canceled -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnSelect;
+                @Restart.started -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnRestart;
+                @Restart.performed -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnRestart;
+                @Restart.canceled -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnRestart;
             }
             m_Wrapper.m_CharacterControlsActionsCallbackInterface = instance;
             if (instance != null)
@@ -313,6 +339,9 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
                 @Select.started += instance.OnSelect;
                 @Select.performed += instance.OnSelect;
                 @Select.canceled += instance.OnSelect;
+                @Restart.started += instance.OnRestart;
+                @Restart.performed += instance.OnRestart;
+                @Restart.canceled += instance.OnRestart;
             }
         }
     }
@@ -321,5 +350,6 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
     {
         void OnMovement(InputAction.CallbackContext context);
         void OnSelect(InputAction.CallbackContext context);
+        void OnRestart(InputAction.CallbackContext context);
     }
 }
