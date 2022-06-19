@@ -43,18 +43,18 @@ public class Character : MonoBehaviour
         _mainPart = parts.First();
         _playerInputs.CharacterControls.Movement.performed += Move_performed;
         _playerInputs.CharacterControls.Select.performed += Select_performed;
-        _playerInputs.CharacterControls.PrimaryContact.started += StartTouchPrimary;
-        _playerInputs.CharacterControls.PrimaryContact.canceled += EndTouchPrimary;
+        /*_playerInputs.CharacterControls.PrimaryContact.started += StartTouchPrimary;
+        _playerInputs.CharacterControls.PrimaryContact.canceled += EndTouchPrimary;*/
     }
 
-    private void StartTouchPrimary(InputAction.CallbackContext obj)
+    /*private void StartTouchPrimary(InputAction.CallbackContext obj)
     {
         startTime = (float) obj.startTime;
         Vector2 touchPosition = _playerInputs.CharacterControls.PramaryPosition.ReadValue<Vector2>();
         startPosition = Camera.main.ScreenToWorldPoint(touchPosition);
-    }
+    }*/
     
-    private void EndTouchPrimary(InputAction.CallbackContext obj)
+    /*private void EndTouchPrimary(InputAction.CallbackContext obj)
     {
         float endTime = (float)obj.time;
         Vector2 touchPosition = _playerInputs.CharacterControls.PramaryPosition.ReadValue<Vector2>();
@@ -88,7 +88,7 @@ public class Character : MonoBehaviour
         {
             Debug.Log($"no {Vector3.Distance(startPosition, endPosition)} > {minDistance} && {deltaTime} < {maxTime}");
         }
-    }
+    }*/
 
     public void DestroyCharacter()
     {
