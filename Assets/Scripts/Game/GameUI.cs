@@ -18,16 +18,15 @@ public class GameUI : MonoBehaviour
     [SerializeField] private GameObject Credits;
 
     [SerializeField] private TextMeshProUGUI LevelNumber;
+    
+    [SerializeField] private GameObject TutorialPillsPanel;
 
-    [SerializeField] private GameObject Tutorial1;
-    [SerializeField] private GameObject Tutorial2;
-    [SerializeField] private GameObject Tutorial3;
-    [SerializeField] private GameObject Tutorial4;
-    [SerializeField] private GameObject Tutorial5;
-    [SerializeField] private GameObject Tutorial6;
-    [SerializeField] private GameObject Tutorial7;
-    [SerializeField] private GameObject Tutorial8;
-    //[SerializeField] private GameObject Tutorial9;
+    [Header("Tutorials")]
+    [SerializeField] private GameObject[] Tutorials = new GameObject[8];
+
+    [Header("TutorialsPills")]
+    [SerializeField] private GameObject[] TutorialPills = new GameObject[8];
+    [SerializeField] private GameObject emptyTutorialsText;
 
     private void Awake()
     {
@@ -56,35 +55,56 @@ public class GameUI : MonoBehaviour
         switch (levelNumber)
         {
             case 2:
-                Tutorial1.SetActive(true);
+                emptyTutorialsText.SetActive(false);
+                UnlockTutorial(1);
                 break;
             case 3:
-                Tutorial2.SetActive(true);
+                UnlockTutorial(2);
                 break;
             case 6:
-                Tutorial3.SetActive(true);
+                UnlockTutorial(3);
                 break;
             case 7:
-                Tutorial4.SetActive(true);
+                UnlockTutorial(4);
                 break;
             case 9:
-                Tutorial5.SetActive(true);
+                UnlockTutorial(5);
                 break;
             case 11:
-                Tutorial6.SetActive(true);
+                UnlockTutorial(6);
                 break;
             case 12:
-                Tutorial7.SetActive(true);
+                UnlockTutorial(7);
                 break;
             case 13:
-                Tutorial8.SetActive(true);
+                UnlockTutorial(8);
                 break;
             default:
                 break;
         }
-        if (levelNumber == 2)
+    }
+
+    public void UnlockTutorial(int tutorialNumber)
+    {
+        if (tutorialNumber >=Tutorials.Length) tutorialNumber = Tutorials.Length;
+        OpenTutorial(tutorialNumber);
+        TutorialPills[tutorialNumber - 1].SetActive(true);
+    }
+    
+    public void OpenTutorial(int tutorialNumber)
+    {
+        Tutorials[tutorialNumber - 1].SetActive(true);
+    }
+    
+    public void ClickQuestion()
+    {
+        if (TutorialPillsPanel.activeSelf)
         {
-            Tutorial1.SetActive(true);
+            TutorialPillsPanel.SetActive(false);
+        }
+        else
+        {
+            TutorialPillsPanel.SetActive(true);
         }
     }
 }
