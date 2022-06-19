@@ -56,7 +56,7 @@ public class GameUI : MonoBehaviour
 
     public void ToNextLevel(int levelNumber)
     {
-        LevelNumber.text = $"Level_{levelNumber}/{17}";
+        LevelNumber.text = $"Level {levelNumber}/{17}";
 
         switch (levelNumber)
         {
