@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using Assets.Scripts.Field.Cell;
+using LevelEditor;
 using UnityEngine;
 
 public class TileView : MonoBehaviour
@@ -13,9 +16,12 @@ public class TileView : MonoBehaviour
     public Sprite InnerCorner;
     public Sprite Vertical;
 
+    [SerializeField] private Vector2Int _position;
 
-    public void DrawBorders(DirectionType borders, Vector2Int position, DirectionType[,] bordersMap)
+
+    public void DrawBorders(DirectionType borders, Vector2Int position, DirectionType[,] bordersMap, Func<int, int, CellContainer> getCell)
     {
+        _position = position;
         switch (borders)
         {
             case DirectionType.All:
@@ -55,20 +61,30 @@ public class TileView : MonoBehaviour
                 break;
         }
 
-        this.FillCorners(position, bordersMap);
+        this.FillCorners(position, bordersMap, getCell);
     }
 
-    private void FillCorners(Vector2Int cellPosition, DirectionType[,] bordersMap)
+    private void FillCorners(Vector2Int cellPosition, DirectionType[,] bordersMap, Func<int, int, CellContainer> getCell)
     {
         void CheckCorner(DirectionType currentTile, DirectionType firstTile, DirectionType secondTile, DirectionType firstDirection, DirectionType secondDirection)
         {
-            if (!currentTile.HasFlag(firstDirection) && !currentTile.HasFlag(secondDirection) &&
-                (firstTile.HasFlag(secondDirection) && secondTile.HasFlag(firstDirection) ||
-                 firstTile.HasFlag(firstDirection) && secondTile.HasFlag(secondDirection)))
+            DirectionType cornerDirection = firstDirection | secondDirection;
+            if (!currentTile.HasFlag(firstDirection) && !currentTile.HasFlag(secondDirection) && firstTile != secondTile.Invert() )
             {
-                SpriteRenderer tile = SelectTiles(secondDirection | firstDirection).Single();
-                tile.sprite = OuterCorner;
-                SetupOuterCorner(secondDirection | firstDirection, tile);
+                // rich shape
+                if (firstTile.HasFlagEq(secondDirection) && secondTile.HasFlagEq(firstDirection))
+                {
+                    SpriteRenderer tile = SelectTiles(cornerDirection).Single();
+                    tile.sprite = OuterCorner;
+                    SetupOuterCorner(cornerDirection, tile);
+                }
+                // outside of map corners
+                else if (firstTile.HasFlagEq(firstDirection) && secondTile.HasFlagEq(secondDirection))
+                {
+                    SpriteRenderer tile = SelectTiles(cornerDirection).Single();
+                    tile.sprite = OuterCorner;
+                    SetupOuterCorner(cornerDirection, tile);
+                }
             }
         }
 
@@ -79,17 +95,35 @@ public class TileView : MonoBehaviour
             return bordersMap[coords.x, coords.y];
         }
 
+        CellType? GerType(Vector2Int coords)
+        {
+            if (coords.x < 0 || coords.y < 0 || coords.x >= bordersMap.GetLength(0) || coords.y >= bordersMap.GetLength(1))
+                return null;
+            return getCell(coords.x, coords.y)?.Type;
+        }
+
+
         DirectionType current = GerBorders(cellPosition);
+        CellType? currentType = GerType(cellPosition);
 
         var top = GerBorders(cellPosition + Vector2Int.up);
         var down = GerBorders(cellPosition + Vector2Int.down);
         var right = GerBorders(cellPosition + Vector2Int.right);
         var left = GerBorders(cellPosition + Vector2Int.left);
 
-        CheckCorner(current, top, right, DirectionType.Right, DirectionType.Up);
-        CheckCorner(current, right, down, DirectionType.Down, DirectionType.Right);
-        CheckCorner(current, down, left, DirectionType.Left, DirectionType.Down);
-        CheckCorner(current, left, top, DirectionType.Up, DirectionType.Left);
+        var topType = GerType(cellPosition + Vector2Int.up);
+        var downType = GerType(cellPosition + Vector2Int.down);
+        var rightType = GerType(cellPosition + Vector2Int.right);
+        var leftType = GerType(cellPosition + Vector2Int.left);
+
+        if (currentType == topType && currentType == rightType)
+            CheckCorner(current, top, right, DirectionType.Right, DirectionType.Up);
+        if (currentType == rightType && currentType == downType)
+            CheckCorner(current, right, down, DirectionType.Down, DirectionType.Right);
+        if (currentType == downType && currentType == leftType)
+            CheckCorner(current, down, left, DirectionType.Left, DirectionType.Down);
+        if (currentType == topType && currentType == leftType)
+            CheckCorner(current, left, top, DirectionType.Up, DirectionType.Left);
     }
 
     private SpriteRenderer[] SelectTiles(DirectionType borders)
@@ -111,6 +145,11 @@ public class TileView : MonoBehaviour
 
     private void MakeSquared()
     {
+        First.sprite = InnerCorner;
+        Second.sprite = InnerCorner;
+        Third.sprite = InnerCorner;
+        Fourth.sprite = InnerCorner;
+
         SetupInnerCorner(DirectionType.Up | DirectionType.Left, First);
         SetupInnerCorner(DirectionType.Up | DirectionType.Right, Second);
         SetupInnerCorner(DirectionType.Down | DirectionType.Right, Third);
@@ -129,18 +168,20 @@ public class TileView : MonoBehaviour
 
     private void MakeCornered(DirectionType direction)
     {
-        First.sprite = InnerCorner;
-        Second.sprite = Vertical;
-        Fourth.sprite = Vertical;
+        DirectionType rightSide = direction.RotateRight();
+        DirectionType downSide = rightSide.RotateRight().RotateRight();
 
-        SetupInnerCorner(DirectionType.Left | DirectionType.Up, First);
-        SetupSide(DirectionType.Left, Fourth);
-        SetupSide(DirectionType.Up, Second);
+        SpriteRenderer corner = SelectTiles(direction).Single();
+        SpriteRenderer right = SelectTiles(rightSide).Single();
+        SpriteRenderer down = SelectTiles(downSide).Single();
 
-        TrySetRotation(direction, DirectionType.Left | DirectionType.Up, transform, 0);
-        TrySetRotation(direction, DirectionType.Right | DirectionType.Up, transform, 90);
-        TrySetRotation(direction, DirectionType.Right | DirectionType.Down, transform, 180);
-        TrySetRotation(direction, DirectionType.Left | DirectionType.Down, transform, 270);
+        right.sprite = Vertical;
+        corner.sprite = InnerCorner;
+        down.sprite = Vertical;
+
+        SetupSide(rightSide & direction, right);
+        SetupInnerCorner(direction, corner);
+        SetupSide(downSide & direction, down);
     }
 
     private void MakeInpass(DirectionType direction)
