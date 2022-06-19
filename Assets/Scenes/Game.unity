@@ -1962,7 +1962,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _audio: {fileID: 0}
   _restartButton: {fileID: 1804839643}
-  MainMenuAnimator: {fileID: 1178371610}
+  _menu: {fileID: 1178371608}
+  _mainMenuAnimator: {fileID: 1178371610}
   Credits: {fileID: 117887556}
   LevelNumber: {fileID: 39011631}
   TutorialPillsPanel: {fileID: 1666027465}

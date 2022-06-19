@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class FinishView : MonoBehaviour
 {
-    private static readonly Color colorRed = new Color(0.717f, 0.159437f, 0);
-    private static readonly Color colorGreen = new Color(0, 0.7176471f, 0.1244776f);
-    private static readonly Color colorBlue = new Color(0, 0.3267215f, 0.7176471f);
+    private static readonly Color colorRed = new Color(1, 0.079f, 0);
+    private static readonly Color colorGreen = new Color(0, 0.92f, 0.18f);
+    private static readonly Color colorBlue = new Color(0, 0.666f, 1);
 
     private Color _currentColor;
 

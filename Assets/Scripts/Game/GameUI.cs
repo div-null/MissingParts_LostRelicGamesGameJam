@@ -16,7 +16,9 @@ public class GameUI : MonoBehaviour
 
     [SerializeField] private Button _restartButton;
 
-    [SerializeField] private Animator MainMenuAnimator;
+    [SerializeField] private GameObject _menu;
+    
+    [SerializeField] private Animator _mainMenuAnimator;
 
     [SerializeField] private GameObject Credits;
 
@@ -43,11 +45,12 @@ public class GameUI : MonoBehaviour
     
     public void HideMenu()
     {
-        MainMenuAnimator.SetTrigger("StartFade");
+        _mainMenuAnimator.SetTrigger("StartFade");
     }
 
     public void ShowCredits()
     {
+        _menu.SetActive(false);
         Credits.SetActive(true);
     }
 
@@ -113,6 +116,7 @@ public class GameUI : MonoBehaviour
 
     public void ClickExtraLevel(int level)
     {
+        _menu.SetActive(true);
         Credits.SetActive(false);
         ChooseExtraLevel?.Invoke(level);
     }
