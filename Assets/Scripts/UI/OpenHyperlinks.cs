@@ -1,6 +1,8 @@
 ﻿using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
 
 namespace UI
 {
@@ -10,7 +12,7 @@ namespace UI
         private TMP_Text TMP_text;
 
         public void OnPointerClick(PointerEventData eventData) {
-            int linkIndex = TMP_TextUtilities.FindIntersectingLink(TMP_text, Input.mousePosition, Camera.current);
+            int linkIndex = TMP_TextUtilities.FindIntersectingLink(TMP_text, Mouse.current.position.ReadValue(), Camera.current);
             if( linkIndex != -1 ) { // was a link clicked?
                 TMP_LinkInfo linkInfo = TMP_text.textInfo.linkInfo[linkIndex];
 
