@@ -799,8 +799,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Move around the map and assemble the robot into a certain <b>shape</b>
-    on <b>colored checkpoints</b>
+  m_text: Move around the map and assemble the robot of a certain <b>shape</b> on
+    <b>colored checkpoints</b>.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c10a87b5aab64af439c2905519e59d44, type: 2}
   m_sharedMaterial: {fileID: -2406306523549315964, guid: c10a87b5aab64af439c2905519e59d44, type: 2}
@@ -1473,8 +1473,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: When joining a block of a different color, you <b>accept its color</b>.
-    The <b>color of the robot</b> should be the same as <b>the color of the checkpoint</b>
+  m_text: The <b>robot</b> gets the <b>color</b> of a joined  <b>block</b>. The <b>robot's
+    color</b> and the <b>color of the checkpoint</b> should be the <b>same</b>.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c10a87b5aab64af439c2905519e59d44, type: 2}
   m_sharedMaterial: {fileID: -2406306523549315964, guid: c10a87b5aab64af439c2905519e59d44, type: 2}
@@ -1609,7 +1609,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: tutorial - hello magnet block
+  m_text: tutorial - magnet block
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c10a87b5aab64af439c2905519e59d44, type: 2}
   m_sharedMaterial: {fileID: -2406306523549315964, guid: c10a87b5aab64af439c2905519e59d44, type: 2}
@@ -1903,9 +1903,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: <b>Pits</b> can break the connection between robot parts and make them
-    inactive. When the robot rotates, <b>the pits are ignored</b>, so you can maneuver
-    through them using the rotation block.
+  m_text: <b>Pits</b> break the connection between robot parts and make them inactive.
+    <b>Pits are ignored during rotation</b>, which can be used to maneuver through
+    them with the help of a rotation block.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c10a87b5aab64af439c2905519e59d44, type: 2}
   m_sharedMaterial: {fileID: -2406306523549315964, guid: c10a87b5aab64af439c2905519e59d44, type: 2}
@@ -2040,7 +2040,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: TUROTIAL - Pits sometimes help
+  m_text: TUTORIAL - Pits may help
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c10a87b5aab64af439c2905519e59d44, type: 2}
   m_sharedMaterial: {fileID: -2406306523549315964, guid: c10a87b5aab64af439c2905519e59d44, type: 2}
@@ -2254,9 +2254,12 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: By clicking on the magnet block, it will attract parts of the robot at
-    a distance of <b>4 blocks</b>, ignoring the pits. The block can also <b>detach</b>
-    attached parts. Uncoupled parts will always be <b>inactive</b>
+  m_text: 'If you attach a magnet block, you can attract robot parts from the distance.
+    The maximum range is <b>4 blocks</b>.
+
+    Pits are ignored during attraction.
+    The block can also <b>detach</b> attached parts. <b>Detached parts</b> will always
+    be <b>inactive</b>.'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c10a87b5aab64af439c2905519e59d44, type: 2}
   m_sharedMaterial: {fileID: -2406306523549315964, guid: c10a87b5aab64af439c2905519e59d44, type: 2}
@@ -2391,7 +2394,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: tutorial - Meet the colors
+  m_text: tutorial - mind the colors
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c10a87b5aab64af439c2905519e59d44, type: 2}
   m_sharedMaterial: {fileID: -2406306523549315964, guid: c10a87b5aab64af439c2905519e59d44, type: 2}
@@ -3127,8 +3130,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Inactive parts can be connected to each other. Using a block magnet, you
-    can <b>push the blocks together</b>
+  m_text: Inactive parts can be connected to each other. Using a magnet block, you
+    can <b>push them together</b>.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c10a87b5aab64af439c2905519e59d44, type: 2}
   m_sharedMaterial: {fileID: -2406306523549315964, guid: c10a87b5aab64af439c2905519e59d44, type: 2}
@@ -3425,7 +3428,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: tutorial - walls > magnet block
+  m_text: tutorial - mind walls
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c10a87b5aab64af439c2905519e59d44, type: 2}
   m_sharedMaterial: {fileID: -2406306523549315964, guid: c10a87b5aab64af439c2905519e59d44, type: 2}
@@ -3846,8 +3849,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: If you attach a <b>rotation block</b>, then by clicking on it you can rotate
-    your robot to avoid obstacles
+  m_text: If you attach a <b>rotation block</b>, you can rotate your robot by clicking
+    on the block to avoid obstacles.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c10a87b5aab64af439c2905519e59d44, type: 2}
   m_sharedMaterial: {fileID: -2406306523549315964, guid: c10a87b5aab64af439c2905519e59d44, type: 2}
@@ -4385,8 +4388,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Walls make it difficult to <b>attract connection of blocks</b> with a magnet
-    block. You can use it.
+  m_text: <b>Walls</b> prevent the attraction of <b>connected blocks</b>. You can
+    use it.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c10a87b5aab64af439c2905519e59d44, type: 2}
   m_sharedMaterial: {fileID: -2406306523549315964, guid: c10a87b5aab64af439c2905519e59d44, type: 2}
@@ -5059,8 +5062,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Use the pits <b>to form the desired shapes</b>. Don't be afraid to lose
-    a part of the robot
+  m_text: Use the pits <b>to form desired shapes</b>. Don't be afraid to lose a part
+    of the robot.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c10a87b5aab64af439c2905519e59d44, type: 2}
   m_sharedMaterial: {fileID: -2406306523549315964, guid: c10a87b5aab64af439c2905519e59d44, type: 2}
