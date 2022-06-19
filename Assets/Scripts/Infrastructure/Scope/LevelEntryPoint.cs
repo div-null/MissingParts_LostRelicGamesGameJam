@@ -22,6 +22,8 @@ namespace Infrastructure.Scope
         private Character _character;
         private AudioManager _audioManager;
 
+        private bool _justStarted;
+
 
         public LevelEntryPoint(LevelFactory factory, LevelLoader levelLoader, PlayerInputs playerInputs, GameUI gameUI, Ceiling ceiling, AudioManager audioManager)
         {
@@ -33,6 +35,7 @@ namespace Infrastructure.Scope
             _currentLevel = 0;
             _ceiling.OnFadeOut += UnlockInputs;
             _audioManager = audioManager;
+            _justStarted = true;
             
             RegisterCallback(2, () => Debug.Log("Second level"));
         }
@@ -50,15 +53,14 @@ namespace Infrastructure.Scope
         {
             _gameUI.RestartClicked += ReloadLevel;
             _gameUI.ChooseExtraLevel += LoadExtraLevel;
-            _playerInputs.CharacterControls.Movement.performed += FirstPlayerInput;
             LoadNextLevel();
             _ceiling.FadeOut();
         }
 
-        private void FirstPlayerInput(InputAction.CallbackContext obj)
+        private void FirstPlayerInput()
         {
             _gameUI.HideMenu();
-            _playerInputs.CharacterControls.Movement.performed -= FirstPlayerInput;
+            _character.Moved -= FirstPlayerInput;
             _playerInputs.CharacterControls.Restart.performed += ReloadLevel;
         }
 
@@ -139,6 +141,13 @@ namespace Infrastructure.Scope
             _character.Died += ReloadLevel;
             NextLevel += _gameUI.ToNextLevel;
             _character.Moved += _audioManager.PlayMove;
+
+            if (_justStarted)
+            {
+                _justStarted = false;
+                _character.Moved += FirstPlayerInput;
+            } 
+            
             //_character.Detached += _audioManager.PlayDetach;
             //_character.AppliedPullAbility += _audioManager.PlayPullIn;
             //_character.AppliedRotateAbility += _audioManager.PlayRotate;
