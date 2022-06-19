@@ -61,7 +61,6 @@ public class GameUI : MonoBehaviour
         switch (levelNumber)
         {
             case 2:
-                emptyTutorialsText.SetActive(false);
                 UnlockTutorial(1);
                 break;
             case 3:
@@ -95,6 +94,8 @@ public class GameUI : MonoBehaviour
         if (tutorialNumber >=Tutorials.Length) tutorialNumber = Tutorials.Length;
         OpenTutorial(tutorialNumber);
         TutorialPills[tutorialNumber - 1].SetActive(true);
+        if (emptyTutorialsText.activeSelf)
+            emptyTutorialsText.SetActive(false);
     }
     
     public void OpenTutorial(int tutorialNumber)

@@ -1838,7 +1838,7 @@ MonoBehaviour:
   _mainMenuAnimator: {fileID: 1178371610}
   Credits: {fileID: 117887556}
   LevelNumber: {fileID: 39011631}
-  TutorialPillsPanel: {fileID: 0}
+  TutorialPillsPanel: {fileID: 667538305355692835}
   Tutorials:
   - {fileID: 252014642}
   - {fileID: 1593476261}
@@ -1849,15 +1849,15 @@ MonoBehaviour:
   - {fileID: 1916078113}
   - {fileID: 1298333314}
   TutorialPills:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  emptyTutorialsText: {fileID: 0}
+  - {fileID: 667538305355692834}
+  - {fileID: 667538305355692833}
+  - {fileID: 667538305355692832}
+  - {fileID: 667538305355692831}
+  - {fileID: 667538305355692830}
+  - {fileID: 667538305355692829}
+  - {fileID: 667538305355692828}
+  - {fileID: 667538305355692827}
+  emptyTutorialsText: {fileID: 667538305355692826}
 --- !u!1 &422754200
 GameObject:
   m_ObjectHideFlags: 0
@@ -8362,6 +8362,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 415806635}
+    - target: {fileID: 667538304794799007, guid: af1051e84d3ea73479f1b2e747269ac7, type: 3}
+      propertyPath: m_text
+      value: rotation and pits
+      objectReference: {fileID: 0}
     - target: {fileID: 667538304906901186, guid: af1051e84d3ea73479f1b2e747269ac7, type: 3}
       propertyPath: m_Name
       value: QuestionButton
@@ -8484,6 +8488,56 @@ PrefabInstance:
       objectReference: {fileID: 415806635}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: af1051e84d3ea73479f1b2e747269ac7, type: 3}
+--- !u!1 &667538305355692826 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 667538305079474538, guid: af1051e84d3ea73479f1b2e747269ac7, type: 3}
+  m_PrefabInstance: {fileID: 667538305355692825}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &667538305355692827 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 667538306119818607, guid: af1051e84d3ea73479f1b2e747269ac7, type: 3}
+  m_PrefabInstance: {fileID: 667538305355692825}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &667538305355692828 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 667538306178714064, guid: af1051e84d3ea73479f1b2e747269ac7, type: 3}
+  m_PrefabInstance: {fileID: 667538305355692825}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &667538305355692829 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 667538304935556926, guid: af1051e84d3ea73479f1b2e747269ac7, type: 3}
+  m_PrefabInstance: {fileID: 667538305355692825}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &667538305355692830 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 667538304213171496, guid: af1051e84d3ea73479f1b2e747269ac7, type: 3}
+  m_PrefabInstance: {fileID: 667538305355692825}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &667538305355692831 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 667538305930343728, guid: af1051e84d3ea73479f1b2e747269ac7, type: 3}
+  m_PrefabInstance: {fileID: 667538305355692825}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &667538305355692832 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 667538305303928959, guid: af1051e84d3ea73479f1b2e747269ac7, type: 3}
+  m_PrefabInstance: {fileID: 667538305355692825}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &667538305355692833 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 667538304412966853, guid: af1051e84d3ea73479f1b2e747269ac7, type: 3}
+  m_PrefabInstance: {fileID: 667538305355692825}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &667538305355692834 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 667538306060715099, guid: af1051e84d3ea73479f1b2e747269ac7, type: 3}
+  m_PrefabInstance: {fileID: 667538305355692825}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &667538305355692835 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 667538304874099920, guid: af1051e84d3ea73479f1b2e747269ac7, type: 3}
+  m_PrefabInstance: {fileID: 667538305355692825}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2923618221935595374
 PrefabInstance:
   m_ObjectHideFlags: 0
