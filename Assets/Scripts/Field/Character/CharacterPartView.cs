@@ -25,11 +25,7 @@ public class CharacterPartView : MonoBehaviour
     
     [SerializeField]
     private SpriteRenderer _lightSpriteRenderer;
-
-    // Update is called once per frame
-    void Update()
-    {
-    }
+    
 
     public void Initialize(CharacterPartData partData)
     {
