@@ -3,13 +3,14 @@ using LevelEditor;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameUI : MonoBehaviour
 {
     public event Action RestartClicked;
     public event Action MuteSoundClicked;
-    
+
     public event Action<int> ChooseExtraLevel;
 
     [SerializeField] private AudioSource _audio;
@@ -17,32 +18,36 @@ public class GameUI : MonoBehaviour
     [SerializeField] private Button _restartButton;
 
     [SerializeField] private GameObject _menu;
-    
+
     [SerializeField] private Animator _mainMenuAnimator;
 
     [SerializeField] private GameObject Credits;
 
     [SerializeField] private TextMeshProUGUI LevelNumber;
-    
+
     [SerializeField] private GameObject TutorialPillsPanel;
 
-    [Header("Tutorials")]
-    [SerializeField] private GameObject[] Tutorials = new GameObject[8];
+    [Header("Tutorials")] [SerializeField] private GameObject[] Tutorials = new GameObject[8];
 
-    [Header("TutorialsPills")]
-    [SerializeField] private GameObject[] TutorialPills = new GameObject[8];
+    [Header("TutorialsPills")] [SerializeField]
+    private GameObject[] TutorialPills = new GameObject[8];
+
     [SerializeField] private GameObject emptyTutorialsText;
+    [SerializeField] private Button closeButton;
+
 
     private void Awake()
     {
         _restartButton.onClick.AddListener(OnRestartClicked);
+
+        DeactivateCloseButton();
     }
 
     private void OnRestartClicked()
     {
         RestartClicked?.Invoke();
     }
-    
+
     public void HideMenu()
     {
         _mainMenuAnimator.SetTrigger("StartFade");
@@ -92,16 +97,16 @@ public class GameUI : MonoBehaviour
 
     public void UnlockTutorial(int tutorialNumber)
     {
-        if (tutorialNumber >=Tutorials.Length) tutorialNumber = Tutorials.Length;
+        if (tutorialNumber >= Tutorials.Length) tutorialNumber = Tutorials.Length;
         OpenTutorial(tutorialNumber);
         TutorialPills[tutorialNumber - 1].SetActive(true);
     }
-    
+
     public void OpenTutorial(int tutorialNumber)
     {
         Tutorials[tutorialNumber - 1].SetActive(true);
     }
-    
+
     public void ClickQuestion()
     {
         if (TutorialPillsPanel.activeSelf)
@@ -124,5 +129,12 @@ public class GameUI : MonoBehaviour
     public void Quit()
     {
         Application.Quit();
+    }
+
+    private void DeactivateCloseButton()
+    {
+#if PLATFORM_STANDALONE || PLATFORM_STANDALONE_WIN || UNITY_EDITOR || UNITY_EDITOR_64
+        closeButton.gameObject.SetActive(true);
+#endif
     }
 }

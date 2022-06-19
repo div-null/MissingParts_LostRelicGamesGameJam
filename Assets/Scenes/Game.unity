@@ -935,7 +935,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &117887557
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1863,6 +1863,7 @@ MonoBehaviour:
   - {fileID: 823046857}
   - {fileID: 915269238}
   emptyTutorialsText: {fileID: 1888174707}
+  closeButton: {fileID: 915371535}
 --- !u!1 &422754200
 GameObject:
   m_ObjectHideFlags: 0
@@ -3748,6 +3749,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: QuitButton
       objectReference: {fileID: 0}
+    - target: {fileID: 667538304906901186, guid: af1051e84d3ea73479f1b2e747269ac7, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 667538304906901188, guid: af1051e84d3ea73479f1b2e747269ac7, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -3879,6 +3884,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 667538304906901189, guid: af1051e84d3ea73479f1b2e747269ac7, type: 3}
   m_PrefabInstance: {fileID: 915371533}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &915371535 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 667538304906901188, guid: af1051e84d3ea73479f1b2e747269ac7, type: 3}
+  m_PrefabInstance: {fileID: 915371533}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &922528200
 GameObject:
   m_ObjectHideFlags: 0
