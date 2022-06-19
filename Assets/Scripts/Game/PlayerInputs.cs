@@ -53,6 +53,24 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""PrimaryContact"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""7787c0e0-b305-44e2-9ab8-9ce2b32302ec"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Press"",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""PramaryPosition"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""b9b4666a-05ec-4ba5-82c6-70c67d06436d"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -231,6 +249,28 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
                     ""action"": ""Restart"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""29babdec-9a4a-4ee9-9afb-834cd30d5fe8"",
+                    ""path"": ""<Touchscreen>/primaryTouch/press"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PrimaryContact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""144ebb23-17cb-4678-bfb9-35866e16f173"",
+                    ""path"": ""<Touchscreen>/primaryTouch/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PramaryPosition"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -242,6 +282,8 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
         m_CharacterControls_Movement = m_CharacterControls.FindAction("Movement", throwIfNotFound: true);
         m_CharacterControls_Select = m_CharacterControls.FindAction("Select", throwIfNotFound: true);
         m_CharacterControls_Restart = m_CharacterControls.FindAction("Restart", throwIfNotFound: true);
+        m_CharacterControls_PrimaryContact = m_CharacterControls.FindAction("PrimaryContact", throwIfNotFound: true);
+        m_CharacterControls_PramaryPosition = m_CharacterControls.FindAction("PramaryPosition", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -304,6 +346,8 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
     private readonly InputAction m_CharacterControls_Movement;
     private readonly InputAction m_CharacterControls_Select;
     private readonly InputAction m_CharacterControls_Restart;
+    private readonly InputAction m_CharacterControls_PrimaryContact;
+    private readonly InputAction m_CharacterControls_PramaryPosition;
     public struct CharacterControlsActions
     {
         private @PlayerInputs m_Wrapper;
@@ -311,6 +355,8 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
         public InputAction @Movement => m_Wrapper.m_CharacterControls_Movement;
         public InputAction @Select => m_Wrapper.m_CharacterControls_Select;
         public InputAction @Restart => m_Wrapper.m_CharacterControls_Restart;
+        public InputAction @PrimaryContact => m_Wrapper.m_CharacterControls_PrimaryContact;
+        public InputAction @PramaryPosition => m_Wrapper.m_CharacterControls_PramaryPosition;
         public InputActionMap Get() { return m_Wrapper.m_CharacterControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -329,6 +375,12 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
                 @Restart.started -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnRestart;
                 @Restart.performed -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnRestart;
                 @Restart.canceled -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnRestart;
+                @PrimaryContact.started -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnPrimaryContact;
+                @PrimaryContact.performed -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnPrimaryContact;
+                @PrimaryContact.canceled -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnPrimaryContact;
+                @PramaryPosition.started -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnPramaryPosition;
+                @PramaryPosition.performed -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnPramaryPosition;
+                @PramaryPosition.canceled -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnPramaryPosition;
             }
             m_Wrapper.m_CharacterControlsActionsCallbackInterface = instance;
             if (instance != null)
@@ -342,6 +394,12 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
                 @Restart.started += instance.OnRestart;
                 @Restart.performed += instance.OnRestart;
                 @Restart.canceled += instance.OnRestart;
+                @PrimaryContact.started += instance.OnPrimaryContact;
+                @PrimaryContact.performed += instance.OnPrimaryContact;
+                @PrimaryContact.canceled += instance.OnPrimaryContact;
+                @PramaryPosition.started += instance.OnPramaryPosition;
+                @PramaryPosition.performed += instance.OnPramaryPosition;
+                @PramaryPosition.canceled += instance.OnPramaryPosition;
             }
         }
     }
@@ -351,5 +409,7 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
         void OnMovement(InputAction.CallbackContext context);
         void OnSelect(InputAction.CallbackContext context);
         void OnRestart(InputAction.CallbackContext context);
+        void OnPrimaryContact(InputAction.CallbackContext context);
+        void OnPramaryPosition(InputAction.CallbackContext context);
     }
 }

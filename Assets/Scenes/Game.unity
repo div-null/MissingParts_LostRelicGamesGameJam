@@ -1858,7 +1858,7 @@ MonoBehaviour:
   - {fileID: 667538305355692828}
   - {fileID: 667538305355692827}
   emptyTutorialsText: {fileID: 667538305355692826}
-  closeButton: {fileID: 0}
+  closeButton: {fileID: 667538304194724041}
 --- !u!1 &422754200
 GameObject:
   m_ObjectHideFlags: 0
