@@ -1858,6 +1858,7 @@ MonoBehaviour:
   - {fileID: 667538305355692828}
   - {fileID: 667538305355692827}
   emptyTutorialsText: {fileID: 667538305355692826}
+  closeButton: {fileID: 0}
 --- !u!1 &422754200
 GameObject:
   m_ObjectHideFlags: 0
@@ -8346,7 +8347,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1001 &667538305355692825
 PrefabInstance:
   m_ObjectHideFlags: 0
