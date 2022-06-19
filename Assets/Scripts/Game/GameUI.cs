@@ -1,4 +1,5 @@
 using System;
+using LevelEditor;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
@@ -8,6 +9,8 @@ public class GameUI : MonoBehaviour
 {
     public event Action RestartClicked;
     public event Action MuteSoundClicked;
+    
+    public event Action<int> ChooseExtraLevel;
 
     [SerializeField] private AudioSource _audio;
 
@@ -50,7 +53,7 @@ public class GameUI : MonoBehaviour
 
     public void ToNextLevel(int levelNumber)
     {
-        LevelNumber.text = $"Level_{levelNumber}";
+        LevelNumber.text = $"Level_{levelNumber}/{17}";
 
         switch (levelNumber)
         {
@@ -106,5 +109,16 @@ public class GameUI : MonoBehaviour
         {
             TutorialPillsPanel.SetActive(true);
         }
+    }
+
+    public void ClickExtraLevel(int level)
+    {
+        Credits.SetActive(false);
+        ChooseExtraLevel?.Invoke(level);
+    }
+
+    public void Quit()
+    {
+        Application.Quit();
     }
 }

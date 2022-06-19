@@ -49,6 +49,7 @@ namespace Infrastructure.Scope
         public void Start()
         {
             _gameUI.RestartClicked += ReloadLevel;
+            _gameUI.ChooseExtraLevel += LoadExtraLevel;
             _playerInputs.CharacterControls.Movement.performed += FirstPlayerInput;
             LoadNextLevel();
             _ceiling.FadeOut();
@@ -118,8 +119,11 @@ namespace Infrastructure.Scope
                 case 17:
                     level = _levelLoader.LoadLevel(LevelLoader.Level.Lvl17);
                     break;
-                case 18:
-                    level = _levelLoader.LoadLevel(LevelLoader.Level.Lvl18);
+                //case 18:
+                //    level = _levelLoader.LoadLevel(LevelLoader.Level.Lvl18);
+                //    break;
+                case 21:
+                    level = _levelLoader.LoadLevel(LevelLoader.Level.Lvl21);
                     break;
                 default:
                     EndOfTheGame();
@@ -163,6 +167,15 @@ namespace Infrastructure.Scope
             _ceiling.FadeIn();
             _ceiling.OnFadeIn += OnReloadLevelTransition;
         }
+        
+        public void LoadExtraLevel(int level)
+        {
+            //fix fade in
+            LockInputs();
+            _currentLevel = level;
+            _ceiling.FadeIn();
+            _ceiling.OnFadeIn += OnExtraLevelTransition;
+        }
 
         private void LevelFinished()
         {
@@ -183,6 +196,13 @@ namespace Infrastructure.Scope
         {
             _ceiling.OnFadeIn -= OnReloadLevelTransition;
             DestroyLevel();
+            LoadLevel();
+            _ceiling.FadeOut();
+        }
+
+        private void OnExtraLevelTransition()
+        {
+            _ceiling.OnFadeIn -= OnExtraLevelTransition;
             LoadLevel();
             _ceiling.FadeOut();
         }
