@@ -9,11 +9,9 @@ public class Ceiling : MonoBehaviour
     public event Action OnFadeOut;
     public event Action OnFadeIn;
 
-    [SerializeField]
-    private Animator animator;
+    [SerializeField] private Animator animator;
 
-    [SerializeField]
-    private Image image; 
+    [SerializeField] private Image image;
 
     private static readonly int In = Animator.StringToHash("fadeIn");
     private static readonly int Out = Animator.StringToHash("fadeOut");
@@ -39,17 +37,5 @@ public class Ceiling : MonoBehaviour
     {
         image.enabled = false;
         OnFadeOut?.Invoke();
-    }
-    
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }
