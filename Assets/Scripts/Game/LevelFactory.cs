@@ -171,8 +171,6 @@ namespace Game
             }
             else if (partData.Ability == AbilityType.Rotation)
             {
-                var rotateAbility = characterPartView.GetOrAddComponent<RotateAbility>();
-                rotateAbility.Initialize(characterPart, field);
             }
         }
 
