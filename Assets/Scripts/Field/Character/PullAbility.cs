@@ -7,11 +7,10 @@ using UnityEngine;
 
 public class PullAbility : Ability
 {
-    [SerializeField]
-    private GameObject _hookPrefab;
+    [SerializeField] private GameObject _hookPrefab;
 
     private HookView _hookView;
-    
+
     private const int _range = 5;
     private DirectionType _lookDirection;
 
@@ -24,7 +23,7 @@ public class PullAbility : Ability
         _hookView = GetComponentInChildren<HookView>();
         _audioManager = audioManager;
     }
-    
+
     public override void Apply()
     {
         _lookDirection = _characterPart.Rotation.ToDirection();
@@ -59,7 +58,7 @@ public class PullAbility : Ability
         }
 
         _hookView.RunForward(numberOfSteps - 1);
-        
+
         if (foundedCharacterPart == null)
         {
             return false;
@@ -69,18 +68,18 @@ public class PullAbility : Ability
             DirectionType oppositeDirection = (-vectorDirection).ToDirection();
             if (!foundedCharacterPart.IsActive)
             {
-                if (foundedCharacterPart.CharacterPartMovement )
-                //Move foundedCharacterPart several times
-                for (int i = 0; i < numberOfSteps; i++)
-                {
-                    bool isMoved = foundedCharacterPart.CharacterPartMovement.Move(oppositeDirection);
-                    _characterPart.CharacterPartAttachment.AttachParts();
-                    foundedCharacterPart.CharacterPartAttachment.AttachParts();
-                    if (!isMoved || foundedCharacterPart.IsActive)
+                if (foundedCharacterPart.CharacterPartMovement)
+                    //Move foundedCharacterPart several times
+                    for (int i = 0; i < numberOfSteps; i++)
                     {
-                        break;
+                        bool isMoved = foundedCharacterPart.CharacterPartMovement.Move(oppositeDirection);
+                        _characterPart.CharacterPartAttachment.AttachParts();
+                        foundedCharacterPart.CharacterPartAttachment.AttachParts();
+                        if (!isMoved || foundedCharacterPart.IsActive)
+                        {
+                            break;
+                        }
                     }
-                }
             }
             else
             {
@@ -92,22 +91,23 @@ public class PullAbility : Ability
                         if (!part.CharacterPartMovement.CanThisMove(oppositeDirection))
                             return false;
                     }
-                
+
                     foreach (var part in pulledParts)
                     {
                         part.CharacterPartMovement.MoveThis(oppositeDirection);
                     }
+
                     _characterPart.CharacterPartAttachment.AttachParts();
                 }
             }
-            
+
             //if he managed to join, then the operation was successful
             if (foundedCharacterPart.IsActive)
                 return true;
             else
                 return false;
-            
-            
+
+
             //Attach all connected parts:
             //   1. Try to move all parts to character part
             //   *if it cant be moved because of the walls then return false*
@@ -174,13 +174,13 @@ public class PullAbility : Ability
 
         //Ошибка
         //_characterPart.CharacterPartAttachment.AttachParts();
-        
+
         CharacterPart firstPulledPart = pulledParts.First();
         if (!CanReachPull(firstPulledPart, _characterPart, new List<CharacterPart>()))
         {
             firstPulledPart.SetActiveToAllParts(false);
         }
-        
+
         _characterPart.SetActiveToAllParts(true);
         firstPulledPart.CharacterPartAttachment.DetachParts();
         //check for pits
@@ -240,6 +240,7 @@ public class PullAbility : Ability
     private bool CanReachPull(CharacterPart characterPart, CharacterPart desiredPart, List<CharacterPart> pulledParts)
     {
         HashSet<CharacterPart> visited = new HashSet<CharacterPart>();
+
         bool DetourToPull(CharacterPart part, CharacterPart desiredPart)
         {
             if (part == null) return false;

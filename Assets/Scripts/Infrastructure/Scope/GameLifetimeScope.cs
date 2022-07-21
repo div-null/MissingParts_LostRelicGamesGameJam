@@ -13,7 +13,7 @@ namespace Infrastructure.Scope
 
         protected override void Awake()
         {
-   var containers = FindObjectsOfType<GameLifetimeScope>();
+            var containers = FindObjectsOfType<GameLifetimeScope>();
             if (SceneManager.GetActiveScene().name == "Initial")
             {
                 DontDestroyOnLoad(this);

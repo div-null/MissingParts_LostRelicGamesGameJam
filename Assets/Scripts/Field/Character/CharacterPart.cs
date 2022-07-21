@@ -47,7 +47,7 @@ public class CharacterPart : MonoBehaviour
         Vector3 newPosition = _field.Get(destination).gameObject.transform.position - Vector3.forward;
         this.transform.DOMove(newPosition, 0.1f).SetEase(Ease.Flash).onComplete += TweenCallback;
     }
-    
+
     public void SetRotation()
     {
         //change sprite rotation
@@ -61,14 +61,14 @@ public class CharacterPart : MonoBehaviour
         Rotation = degrees;
         CharacterPartView.SetRotation(degrees);
     }
-    
+
     public void SetActive(bool isActive)
     {
         //change active to this character part
         IsActive = isActive;
         CharacterPartView.SetActive(isActive);
     }
-    
+
     public void SetActiveToAllParts(bool isActive)
     {
         //Обойти все части characterPart'а и изменить им Active
@@ -89,13 +89,13 @@ public class CharacterPart : MonoBehaviour
 
         visitNode(this);
     }
-    
+
     public void SetColor(ColorType color)
     {
         Color = color;
         CharacterPartView.SetColor(color);
     }
-    
+
     public void SetColorToAllParts(ColorType color)
     {
         //Обойти все части characterPart'а и изменить им Active
@@ -142,7 +142,7 @@ public class CharacterPart : MonoBehaviour
         TryJoin(DirectionType.Left);
         TryJoin(DirectionType.Right);
     }
-    
+
     public void Join(CharacterPart part, bool setActive = true)
     {
         Vector2Int joinPosition = part.Position - Position;
@@ -151,7 +151,7 @@ public class CharacterPart : MonoBehaviour
         SetLinkInDirection(part, joinPosition.ToDirection());
 
         SetActiveToAllParts(setActive);
-        
+
         if (Color != part.Color)
             SetColorToAllParts(part.Color);
     }
@@ -189,7 +189,7 @@ public class CharacterPart : MonoBehaviour
 
         return characterParts.ToArray();
     }
-    
+
     private void TweenCallback()
     {
         Debug.Log("Moved!");
@@ -197,7 +197,6 @@ public class CharacterPart : MonoBehaviour
 
     public void OnMoved(TweenCallback tweenCallback)
     {
-        
     }
 
     public void RotateLinks()
@@ -242,7 +241,7 @@ public class CharacterPart : MonoBehaviour
             {
                 if (Up != null)
                     Up.Down = null;
-                
+
                 Up = null;
                 break;
             }
@@ -250,7 +249,7 @@ public class CharacterPart : MonoBehaviour
             {
                 if (Right != null)
                     Right.Left = null;
-                
+
                 Right = null;
                 break;
             }
@@ -258,7 +257,7 @@ public class CharacterPart : MonoBehaviour
             {
                 if (Down != null)
                     Down.Up = null;
-                
+
                 Down = null;
                 break;
             }
@@ -266,13 +265,13 @@ public class CharacterPart : MonoBehaviour
             {
                 if (Left != null)
                     Left.Right = null;
-                
+
                 Left = null;
                 break;
             }
         }
     }
-    
+
     private void SetLinkInDirection(CharacterPart part, DirectionType direction)
     {
         switch (direction)

@@ -14,18 +14,16 @@ public class CharacterPartView : MonoBehaviour
     private static readonly Color redColor = new Color(1, 0.1322696f, 0);
 
     private Color currentColor;
-    
+
     private ColorType _colorType;
     private AbilityType _abilityType;
     private int _spriteNumber;
     private bool _isActive;
 
-    [SerializeField]
-    private SpriteRenderer _mainSpriteRenderer;
-    
-    [SerializeField]
-    private SpriteRenderer _lightSpriteRenderer;
-    
+    [SerializeField] private SpriteRenderer _mainSpriteRenderer;
+
+    [SerializeField] private SpriteRenderer _lightSpriteRenderer;
+
 
     public void Initialize(CharacterPartData partData)
     {
@@ -39,7 +37,7 @@ public class CharacterPartView : MonoBehaviour
     public void ChangeSprite()
     {
         //Assets/Sprites/CharacterPart/Color/default_1
-        
+
         string color = _colorType.ToString();
         string ability = _abilityType.ToString().ToLower();
 
@@ -69,7 +67,7 @@ public class CharacterPartView : MonoBehaviour
     {
         string pathToMain = $"Sprites/CharacterPart/{ability}/{spriteNumber}";
         string pathToLight = $"Sprites/CharacterPart/{ability}/{spriteNumber}_light";
-        
+
         mainSprite = Resources.Load<Sprite>(pathToMain);
         lightSprite = Resources.Load<Sprite>(pathToLight);
 

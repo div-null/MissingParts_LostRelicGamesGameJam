@@ -53,7 +53,7 @@ public class Character : MonoBehaviour
         Vector2 touchPosition = _playerInputs.CharacterControls.PramaryPosition.ReadValue<Vector2>();
         startPosition = Camera.main.ScreenToWorldPoint(touchPosition);
     }*/
-    
+
     /*private void EndTouchPrimary(InputAction.CallbackContext obj)
     {
         float endTime = (float)obj.time;

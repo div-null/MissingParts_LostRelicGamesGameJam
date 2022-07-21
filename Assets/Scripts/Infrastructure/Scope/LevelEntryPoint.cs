@@ -36,7 +36,7 @@ namespace Infrastructure.Scope
             _ceiling.OnFadeOut += UnlockInputs;
             _audioManager = audioManager;
             _justStarted = true;
-            
+
             RegisterCallback(2, () => Debug.Log("Second level"));
         }
 
@@ -146,8 +146,8 @@ namespace Infrastructure.Scope
             {
                 _justStarted = false;
                 _character.Moved += FirstPlayerInput;
-            } 
-            
+            }
+
             //_character.Detached += _audioManager.PlayDetach;
             //_character.AppliedPullAbility += _audioManager.PlayPullIn;
             //_character.AppliedRotateAbility += _audioManager.PlayRotate;
@@ -169,14 +169,14 @@ namespace Infrastructure.Scope
             _ceiling.FadeIn();
             _ceiling.OnFadeIn += OnReloadLevelTransition;
         }
-        
+
         public void ReloadLevel(InputAction.CallbackContext obj)
         {
             LockInputs();
             _ceiling.FadeIn();
             _ceiling.OnFadeIn += OnReloadLevelTransition;
         }
-        
+
         public void LoadExtraLevel(int level)
         {
             //fix fade in

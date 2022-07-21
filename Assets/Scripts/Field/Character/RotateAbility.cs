@@ -15,7 +15,7 @@ public class RotateAbility : Ability
         TryToRotate();
     }
 
-    
+
     public bool TryToRotate()
     {
         //Up -> Right, Right -> Down, Down -> Left, Left -> Up
@@ -65,7 +65,7 @@ public class RotateAbility : Ability
                 part.SetPosition(value);
                 part.SetRotation();
             }
-            
+
             _characterPart.CharacterPartAttachment.AttachParts();
 
             return true;

@@ -156,7 +156,6 @@ public class CharacterPartAttachment : MonoBehaviour
         if (maxSize > 0)
         {
             return unitedParts[index];
-            
         }
         else
         {

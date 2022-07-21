@@ -40,7 +40,7 @@ public class Field : MonoBehaviour
         {
             if (finishCell.CharacterPart == null)
                 return false;
-            
+
             if (finishCell.CharacterPart.Color != _finishColor || !finishCell.CharacterPart.HasRightShape(visitedParts))
                 return false;
         }
@@ -59,7 +59,7 @@ public class Field : MonoBehaviour
                 Destroy(_cells[i, j].gameObject);
             }
         }
-        
+
         Destroy(this.gameObject);
     }
 

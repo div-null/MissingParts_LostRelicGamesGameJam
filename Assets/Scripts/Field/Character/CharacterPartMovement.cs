@@ -2,7 +2,7 @@
 using Assets.Scripts.Field.Cell;
 using UnityEngine;
 
-public class CharacterPartMovement: MonoBehaviour
+public class CharacterPartMovement : MonoBehaviour
 {
     private CharacterPart _characterPart;
     private Field _field;
@@ -12,7 +12,7 @@ public class CharacterPartMovement: MonoBehaviour
         _field = field;
         _characterPart = characterPart;
     }
-    
+
     public bool CanMove(CharacterPart characterPart, DirectionType direction)
     {
         HashSet<CharacterPart> visited = new HashSet<CharacterPart>();
@@ -22,7 +22,7 @@ public class CharacterPartMovement: MonoBehaviour
             if (part == null) return true;
             if (visited.Contains(part)) return true;
             visited.Add(part);
-            
+
             var destination = part.Position + direction.ToVector();
             if (HasWallInCell(destination)) return false;
 
@@ -41,7 +41,7 @@ public class CharacterPartMovement: MonoBehaviour
             if (part == null) return true;
             if (visited.Contains(part)) return true;
             visited.Add(part);
-            
+
             var destination = part.Position + deltaPosition;
             if (HasWallInCell(destination)) return false;
 
@@ -50,7 +50,7 @@ public class CharacterPartMovement: MonoBehaviour
 
         return visitNode(characterPart);
     }
-    
+
     public bool Move(DirectionType direction)
     {
         if (!CanMove(_characterPart, direction)) return false;
@@ -81,20 +81,20 @@ public class CharacterPartMovement: MonoBehaviour
 
         if (cell == null)
             return true;
-        
+
         if (cell.IsWall())
             return true;
-        
+
         return false;
     }
-    
+
     private bool HasPitInCell(Vector2Int position)
     {
         Cell cell = _field.Get(position);
-        
+
         if (cell != null && cell.IsPit())
             return true;
-        
+
         return false;
     }
 

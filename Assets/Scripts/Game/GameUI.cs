@@ -110,14 +110,7 @@ public class GameUI : MonoBehaviour
 
     public void ClickQuestion()
     {
-        if (TutorialPillsPanel.activeSelf)
-        {
-            TutorialPillsPanel.SetActive(false);
-        }
-        else
-        {
-            TutorialPillsPanel.SetActive(true);
-        }
+        TutorialPillsPanel.SetActive(!TutorialPillsPanel.activeSelf);
     }
 
     public void ClickExtraLevel(int level)

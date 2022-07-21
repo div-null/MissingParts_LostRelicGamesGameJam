@@ -54,7 +54,9 @@ namespace LevelEditor
         public const string Level14 = "Level/Level14";
         public const string Level15 = "Level/Level15";
         public const string Level16 = "Level/Level16";
+
         public const string Level17 = "Level/Level17";
+
         //public const string Level18 = "Level/Level18";
         public const string Level21 = "Level/Level21";
 
@@ -88,14 +90,14 @@ namespace LevelEditor
                 Level.Lvl9 => Level9,
                 Level.Lvl10 => Level10,
                 Level.Lvl11 => Level11,
-                Level.Lvl12=> Level12,
-                Level.Lvl13=> Level13,
-                Level.Lvl14=> Level14,
-                Level.Lvl15=> Level15,
-                Level.Lvl16=> Level16,
-                Level.Lvl17=> Level17,
-                    //Level.Lvl18=> Level18,
-                Level.Lvl21=> Level21,
+                Level.Lvl12 => Level12,
+                Level.Lvl13 => Level13,
+                Level.Lvl14 => Level14,
+                Level.Lvl15 => Level15,
+                Level.Lvl16 => Level16,
+                Level.Lvl17 => Level17,
+                //Level.Lvl18=> Level18,
+                Level.Lvl21 => Level21,
                 _ => throw new ArgumentOutOfRangeException(nameof(level), level, "Level does not exist")
             };
 
