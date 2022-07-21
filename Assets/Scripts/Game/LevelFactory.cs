@@ -32,7 +32,7 @@ namespace Game
             foreach (var part in playerParts)
             {
                 CharacterPart characterPart = CreateCharacterPart(field, part);
-                characterPart.Initialize(new Vector2Int(part.X, part.Y), true, field, part.Rotation, part.Color);
+                characterPart.Initialize(new Vector2Int(part.X, part.Y), true, field, DirectionFromAngle(part.Rotation), part.Color);
 
                 characterPart.CharacterPartAttachment.AttachParts();
                 field.Get(part.X, part.Y).AssignCharacterPart(characterPart);
@@ -77,7 +77,7 @@ namespace Game
             foreach (var playerPart in inactiveParts)
             {
                 CharacterPart newCharacterPart = CreateCharacterPart(field, playerPart);
-                newCharacterPart.Initialize(new Vector2Int(playerPart.X, playerPart.Y), false, field, playerPart.Rotation, playerPart.Color);
+                newCharacterPart.Initialize(new Vector2Int(playerPart.X, playerPart.Y), false, field, DirectionFromAngle(playerPart.Rotation), playerPart.Color);
                 characterParts.Add(newCharacterPart);
             }
 
@@ -112,26 +112,25 @@ namespace Game
         private CharacterPart CreateCharacterPart(Field field, CharacterPartData partData)
         {
             Vector3 partPosition = field.Get(partData.X, partData.Y).gameObject.transform.position - Vector3.forward;
-            CharacterPart characterPart = _resolver.Instantiate(_gameSettings.CharacterPartPrefab,
+            CharacterPartView partView = _resolver.Instantiate(_gameSettings.CharacterPartPrefab,
                 partPosition, Quaternion.identity);
-
-            var partView = characterPart.GetComponent<CharacterPartView>();
 
             if (partData.Ability == AbilityType.Hook)
             {
-                var renderer = characterPart.transform.GetComponentInChildren<SpriteRenderer>();
+                var renderer = partView.transform.GetComponentInChildren<SpriteRenderer>();
                 var hookView = _resolver.Instantiate(_gameSettings.HookPrefab, renderer.transform);
                 hookView.transform.rotation = Quaternion.identity;
             }
 
-            partView.Initialize(partData);
-            characterPart.CharacterPartView = partView;
+            var characterPart = new CharacterPart();
+
+            partView.Initialize(characterPart, partData);
 
             field.Get(partData.X, partData.Y).AssignCharacterPart(characterPart);
-            setupAbilities(partData, field, characterPart);
+            setupAbilities(partView, partData, field, characterPart);
 
-            var characterMovement = setupCharacterMovement(field, characterPart);
-            var characterAttachment = setupCharacterAttachment(field, characterPart);
+            var characterMovement = setupCharacterMovement(partView, characterPart, field);
+            var characterAttachment = setupCharacterAttachment(partView, characterPart, field);
 
             characterPart.CharacterPartMovement = characterMovement;
             characterPart.CharacterPartAttachment = characterAttachment;
@@ -156,30 +155,30 @@ namespace Game
             return finishCells;
         }
 
-        private static CharacterPartAttachment setupCharacterAttachment(Field field, CharacterPart characterPart)
+        private static CharacterPartAttachment setupCharacterAttachment(CharacterPartView characterPartView, CharacterPart characterPart, Field field)
         {
-            var characterAttachment = characterPart.GetOrAddComponent<CharacterPartAttachment>();
+            var characterAttachment = characterPartView.GetOrAddComponent<CharacterPartAttachment>();
             characterAttachment.Initialize(characterPart, field);
             return characterAttachment;
         }
 
-        private static CharacterPartMovement setupCharacterMovement(Field field, CharacterPart characterPart)
+        private static CharacterPartMovement setupCharacterMovement(CharacterPartView characterPartView, CharacterPart characterPart, Field field)
         {
-            var characterMovement = characterPart.GetOrAddComponent<CharacterPartMovement>();
+            var characterMovement = characterPartView.GetOrAddComponent<CharacterPartMovement>();
             characterMovement.Initialize(field, characterPart);
             return characterMovement;
         }
 
-        private void setupAbilities(CharacterPartData partData, Field field, CharacterPart characterPart)
+        private void setupAbilities(CharacterPartView characterPartView, CharacterPartData partData, Field field, CharacterPart characterPart)
         {
             if (partData.Ability == AbilityType.Hook)
             {
-                var pullAbility = characterPart.GetOrAddComponent<PullAbility>();
-                pullAbility.Initialize(characterPart, field, directionFromAngle(partData.Rotation), _audioManager);
+                var pullAbility = characterPartView.GetOrAddComponent<PullAbility>();
+                pullAbility.Initialize(characterPart, field, DirectionFromAngle(partData.Rotation), _audioManager);
             }
             else if (partData.Ability == AbilityType.Rotation)
             {
-                var rotateAbility = characterPart.GetOrAddComponent<RotateAbility>();
+                var rotateAbility = characterPartView.GetOrAddComponent<RotateAbility>();
                 rotateAbility.Initialize(characterPart, field);
             }
         }
@@ -190,7 +189,7 @@ namespace Game
                 new Vector3(level.MapWidth / 2f - 0.5f, level.MapHeight / 2f - 0.5f, -10);
         }
 
-        private static DirectionType directionFromAngle(int partRotation)
+        private static DirectionType DirectionFromAngle(int partRotation)
         {
             return partRotation switch
             {

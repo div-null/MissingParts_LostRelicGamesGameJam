@@ -5,7 +5,6 @@ using UniRx;
 using UnityEngine;
 using UnityEngine.Assertions;
 
-[RequireComponent(typeof(CharacterPartView))]
 public class CharacterPart
 {
     public readonly ReactiveCommand Deleted = new();

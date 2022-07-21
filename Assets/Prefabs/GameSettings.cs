@@ -11,7 +11,7 @@ public class GameSettings : ScriptableObject
     public Cell EmptyCellPrefab;
     public Cell PitCellPrefab;
     public Cell FinishCellPrefab;
-    public CharacterPart CharacterPartPrefab;
+    public CharacterPartView CharacterPartPrefab;
     public Field FieldPrefab;
     public Character CharacterPrefab;
     public GameLifetimeScope GameLifetimeScope;
