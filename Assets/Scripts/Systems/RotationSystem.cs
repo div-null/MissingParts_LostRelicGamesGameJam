@@ -6,7 +6,12 @@ namespace Systems
 {
     public class RotationSystem
     {
-        private Field _field;
+        private readonly Field _field;
+
+        public RotationSystem(Field field)
+        {
+            _field = field;
+        }
 
         public bool TryToRotate(CharacterPart characterPart)
         {
@@ -16,33 +21,13 @@ namespace Systems
 
             bool canRotate(CharacterPart movingPart, Vector2Int rotationCenter)
             {
-                if (movingPart == null) return true;
-                if (visited.Contains(movingPart)) return true;
-
+                if (movingPart == null || visited.Contains(movingPart)) return true;
                 visited.Add(movingPart);
-                //d = p2 - p1
-                //x1 + dy, y1 - dx
-                Vector2Int relativeCoordinates = movingPart.Position - rotationCenter;
 
-                Vector2Int newRelativePosition = new Vector2Int(relativeCoordinates.y, -relativeCoordinates.x);
-                Vector2Int newPosition = newRelativePosition + rotationCenter;
-
+                Vector2Int newPosition = RotatePoint(movingPart.Position, rotationCenter);
                 partsWithNewPositions.Add(movingPart, newPosition);
-                Cell cell = _field.Get(newPosition);
 
-                if (cell == null)
-                {
-                    return false;
-                }
-                else if (cell != null)
-                {
-                    if (cell.IsWall())
-                        return false;
-                    else if (cell.CharacterPart != null && !cell.CharacterPart.IsActive)
-                        return false;
-                }
-
-                //TODO: Check for walls that located near the part
+                if (CellBlocked(newPosition)) return false;
 
                 return canRotate(movingPart.Left, rotationCenter) &&
                        canRotate(movingPart.Right, rotationCenter) &&
@@ -50,22 +35,39 @@ namespace Systems
                        canRotate(movingPart.Down, rotationCenter);
             }
 
-            if (canRotate(characterPart, characterPart.Position))
-            {
-                foreach (var (part, value) in partsWithNewPositions)
-                {
-                    part.SetPosition(value);
-                    part.Rotate();
-                }
-
-                characterPart.CharacterPartAttachment.AttachParts();
-
-                return true;
-            }
-            else
-            {
+            if (!canRotate(characterPart, characterPart.Position))
                 return false;
+
+            foreach (var (part, value) in partsWithNewPositions)
+            {
+                part.SetPosition(value);
+                part.Rotate();
             }
+
+            characterPart.CharacterPartAttachment.AttachParts();
+
+            return true;
+        }
+
+        private bool CellBlocked(Vector2Int newPosition)
+        {
+            if (!_field.TryGet(newPosition, out Cell cell))
+                return true;
+
+            if (cell.IsWall() || cell.CharacterPart is {IsActive: false})
+                return true;
+
+            return false;
+        }
+
+        private static Vector2Int RotatePoint(Vector2Int point, Vector2Int rotationCenter)
+        {
+            //d = p2 - p1
+            //x1 + dy, y1 - dx
+            Vector2Int relativeCoordinates = point - rotationCenter;
+            Vector2Int newRelativePosition = new Vector2Int(relativeCoordinates.y, -relativeCoordinates.x);
+            Vector2Int newPosition = newRelativePosition + rotationCenter;
+            return newPosition;
         }
     }
 }

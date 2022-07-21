@@ -5,7 +5,12 @@ namespace Systems
 {
     public class AttachmentSystem
     {
-        private Field _field;
+        private readonly Field _field;
+
+        public AttachmentSystem(Field field)
+        {
+            _field = field;
+        }
 
         public void AttachParts(CharacterPart characterPart)
         {
