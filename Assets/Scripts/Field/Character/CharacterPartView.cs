@@ -67,16 +67,13 @@ public class CharacterPartView : MonoBehaviour
 
     private bool TryToLoadSprite(string ability, int spriteNumber, out Sprite mainSprite, out Sprite lightSprite)
     {
-        string pathToMain = $"Sprites/CharacterPart/{ability}/{_spriteNumber}";
-        string pathToLight = $"Sprites/CharacterPart/{ability}/{_spriteNumber}_light";
+        string pathToMain = $"Sprites/CharacterPart/{ability}/{spriteNumber}";
+        string pathToLight = $"Sprites/CharacterPart/{ability}/{spriteNumber}_light";
         
         mainSprite = Resources.Load<Sprite>(pathToMain);
         lightSprite = Resources.Load<Sprite>(pathToLight);
 
-        if (mainSprite == null || lightSprite == null)
-            return false;
-        else
-            return true;
+        return mainSprite != null && lightSprite != null;
     }
 
     public void SetActive(bool isActive)
