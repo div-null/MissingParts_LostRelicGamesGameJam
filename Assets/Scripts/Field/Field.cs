@@ -69,5 +69,16 @@ public class Field : MonoBehaviour
         return _cells[x, y];
     }
 
-    //TODO: Join all CharacterParts to each other at start like how it implement in Character.cs in TryAttachCells
+    public bool TryGet(int x, int y, out Cell cell)
+    {
+        cell = Get(x, y);
+        return cell != null;
+    }
+
+    public bool TryGet(Vector2Int coordinates, out Cell cell)
+    {
+        cell = Get(coordinates);
+        return cell != null;
+    }
+
 }

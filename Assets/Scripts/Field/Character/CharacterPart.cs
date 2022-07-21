@@ -49,7 +49,6 @@ public class CharacterPart
 
     
     private Field _field;
-    public CharacterPartMovement CharacterPartMovement;
     public CharacterPartAttachment CharacterPartAttachment;
 
 

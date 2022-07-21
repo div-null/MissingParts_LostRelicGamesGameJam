@@ -141,10 +141,8 @@ namespace Game
             field.Get(partData.X, partData.Y).AssignCharacterPart(characterPart);
             setupAbilities(partView, partData, field, characterPart);
 
-            var characterMovement = setupCharacterMovement(partView, characterPart, field);
             var characterAttachment = setupCharacterAttachment(partView, characterPart, field);
 
-            characterPart.CharacterPartMovement = characterMovement;
             characterPart.CharacterPartAttachment = characterAttachment;
             return partView;
         }
@@ -172,13 +170,6 @@ namespace Game
             var characterAttachment = characterPartView.GetOrAddComponent<CharacterPartAttachment>();
             characterAttachment.Initialize(characterPart, field);
             return characterAttachment;
-        }
-
-        private static CharacterPartMovement setupCharacterMovement(CharacterPartView characterPartView, CharacterPart characterPart, Field field)
-        {
-            var characterMovement = characterPartView.GetOrAddComponent<CharacterPartMovement>();
-            characterMovement.Initialize(field, characterPart);
-            return characterMovement;
         }
 
         private void setupAbilities(CharacterPartView characterPartView, CharacterPartData partData, Field field, CharacterPart characterPart)

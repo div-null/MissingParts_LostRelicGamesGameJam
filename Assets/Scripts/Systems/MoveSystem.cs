@@ -15,21 +15,8 @@ namespace Systems
 
         public bool CanMove(CharacterPart characterPart, DirectionType direction)
         {
-            HashSet<CharacterPart> visited = new HashSet<CharacterPart>();
-
-            bool visitNode(CharacterPart part)
-            {
-                if (part == null) return true;
-                if (visited.Contains(part)) return true;
-                visited.Add(part);
-
-                var destination = part.Position + direction.ToVector2Int();
-                if (HasWallInCell(destination)) return false;
-
-                return visitNode(part.Left) && visitNode(part.Right) && visitNode(part.Up) && visitNode(part.Down);
-            }
-
-            return visitNode(characterPart);
+            var vector2Int = direction.ToVector2Int();
+            return CanMove(characterPart, vector2Int);
         }
 
         public bool CanMove(CharacterPart characterPart, Vector2Int deltaPosition)
@@ -43,7 +30,7 @@ namespace Systems
                 visited.Add(part);
 
                 var destination = part.Position + deltaPosition;
-                if (HasWallInCell(destination)) return false;
+                if (HasWallIn(destination)) return false;
 
                 return visitNode(part.Left) && visitNode(part.Right) && visitNode(part.Up) && visitNode(part.Down);
             }
@@ -62,6 +49,7 @@ namespace Systems
                 if (part == null) return;
                 if (visited.Contains(part)) return;
                 visited.Add(part);
+
                 var destination = part.Position + direction.ToVector2Int();
                 part.SetPosition(destination);
 
@@ -75,40 +63,22 @@ namespace Systems
             return true;
         }
 
-        private bool HasWallInCell(Vector2Int position)
+        private bool HasWallIn(Vector2Int position)
         {
-            Cell cell = _field.Get(position);
-
-            if (cell == null)
-                return true;
-
-            if (cell.IsWall())
-                return true;
+            if (_field.TryGet(position, out Cell cell))
+                return cell.IsWall();
 
             return false;
         }
 
-        private bool HasPitInCell(Vector2Int position)
+
+        public bool CanPartMove(CharacterPart characterPart, DirectionType direction)
         {
-            Cell cell = _field.Get(position);
-
-            if (cell != null && cell.IsPit())
-                return true;
-
-            return false;
+            Vector2Int destination = characterPart.Position + direction.ToVector2Int();
+            return !HasWallIn(destination);
         }
 
-        public bool CanThisMove(CharacterPart characterPart, DirectionType direction)
-        {
-            Vector2Int directionVector = direction.ToVector2Int();
-            Cell cell = _field.Get(characterPart.Position + directionVector);
-            if (cell.IsWall())
-                return false;
-            else
-                return true;
-        }
-
-        public void MoveThis(CharacterPart characterPart, DirectionType direction)
+        public void MovePart(CharacterPart characterPart, DirectionType direction)
         {
             var destination = characterPart.Position + direction.ToVector2Int();
             characterPart.SetPosition(destination);
