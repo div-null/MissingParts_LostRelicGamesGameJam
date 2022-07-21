@@ -49,8 +49,6 @@ public class CharacterPart
 
     
     private Field _field;
-    public CharacterPartAttachment CharacterPartAttachment;
-
 
     public CharacterPart()
     {
