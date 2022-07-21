@@ -222,8 +222,9 @@ namespace Infrastructure.Scope
             _character.AppliedPullAbility -= _field.CheckForFinish;
             _character.AppliedRotateAbility -= _field.CheckForFinish;
             _field.Finished -= LevelFinished;
-            _field.DestroyField();
-            _character.DestroyCharacter();
+            
+            _factory.CleanUp();
+            _character.Destroy();
         }
 
 

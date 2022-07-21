@@ -48,19 +48,13 @@ public class Field : MonoBehaviour
         return true;
     }
 
-    public void DestroyField()
+    public void Destroy()
     {
         for (int j = 0; j < _cells.GetLength(1); j++)
-        {
-            for (int i = 0; i < _cells.GetLength(0); i++)
-            {
-                if (_cells[i, j].CharacterPart != null)
-                    Destroy(_cells[i, j].CharacterPart.gameObject);
-                Destroy(_cells[i, j].gameObject);
-            }
-        }
+        for (int i = 0; i < _cells.GetLength(0); i++)
+            Destroy(_cells[i, j].gameObject);
 
-        Destroy(this.gameObject);
+        Destroy(gameObject);
     }
 
     public Cell Get(Vector2Int coordinates)

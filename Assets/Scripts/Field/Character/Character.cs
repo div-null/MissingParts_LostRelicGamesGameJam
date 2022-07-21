@@ -90,7 +90,7 @@ public class Character : MonoBehaviour
         }
     }*/
 
-    public void DestroyCharacter()
+    public void Destroy()
     {
         _mainPart = null;
         Destroy(this.gameObject);

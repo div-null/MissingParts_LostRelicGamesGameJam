@@ -11,20 +11,19 @@ public class CharacterPartView : MonoBehaviour
     private static readonly Color blueColor = new Color(0, 0.6480749f, 1);
     private static readonly Color redColor = new Color(1, 0.1322696f, 0);
 
-    private Color currentColor;
+    public CharacterPart Part { get; private set; }
 
+    private Color _currentColor;
     private AbilityType _abilityType;
     private int _spriteNumber;
 
     [SerializeField] private SpriteRenderer _mainSpriteRenderer;
-
     [SerializeField] private SpriteRenderer _lightSpriteRenderer;
-    private CharacterPart _characterPart;
 
 
     public void Initialize(CharacterPart characterPart, CharacterPartData partData)
     {
-        _characterPart = characterPart;
+        Part = characterPart;
         characterPart.ColorChanged.Subscribe(OnColorChanged).AddTo(this);
         characterPart.IsActiveChanged.Subscribe(OnActivate).AddTo(this);
         characterPart.PositionChanged.Subscribe(OnMove).AddTo(this);
@@ -46,7 +45,7 @@ public class CharacterPartView : MonoBehaviour
 
     private void OnActivate(bool isActive)
     {
-        Color color = isActive ? activeColor * currentColor : inactiveColor * currentColor;
+        Color color = isActive ? activeColor * _currentColor : inactiveColor * _currentColor;
         _lightSpriteRenderer.DOColor(color, 0.2f);
     }
 
@@ -62,22 +61,22 @@ public class CharacterPartView : MonoBehaviour
         {
             case ColorType.Blue:
             {
-                currentColor = blueColor;
+                _currentColor = blueColor;
                 break;
             }
             case ColorType.Green:
             {
-                currentColor = greenColor;
+                _currentColor = greenColor;
                 break;
             }
             case ColorType.Red:
             {
-                currentColor = redColor;
+                _currentColor = redColor;
                 break;
             }
         }
 
-        _lightSpriteRenderer.DOColor(currentColor, 0.2f);
+        _lightSpriteRenderer.DOColor(_currentColor, 0.2f);
     }
 
     private void OnDelete()
@@ -92,7 +91,7 @@ public class CharacterPartView : MonoBehaviour
     {
         //Assets/Sprites/CharacterPart/Color/default_1
 
-        string color = _characterPart.Color.ToString();
+        string color = Part.Color.ToString();
         string ability = _abilityType.ToString().ToLower();
 
         Sprite mainSprite;

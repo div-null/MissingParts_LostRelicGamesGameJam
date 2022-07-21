@@ -7,6 +7,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
+using Object = UnityEngine.Object;
 
 namespace Game
 {
@@ -15,6 +16,9 @@ namespace Game
         private IObjectResolver _resolver;
         private GameSettings _gameSettings;
         private AudioManager _audioManager;
+        private List<CharacterPartView> _cachedParts = new();
+        private Field _field;
+        private Character _character;
 
         public LevelFactory(IObjectResolver resolver, GameSettings gameSettings, AudioManager audioManager)
         {
@@ -26,31 +30,33 @@ namespace Game
         public Character CreateCharacter(GameLevel level, Field field)
         {
             List<CharacterPart> parts = new List<CharacterPart>();
-            Character character = _resolver.Instantiate(_gameSettings.CharacterPrefab);
-            character.Initialize(field);
+            _character = _resolver.Instantiate(_gameSettings.CharacterPrefab);
+            _character.Initialize(field);
             var playerParts = level.PlayerParts.Where(part => part.IsActive);
-            foreach (var part in playerParts)
+            foreach (var partData in playerParts)
             {
-                CharacterPart characterPart = CreateCharacterPart(field, part);
-                characterPart.Initialize(new Vector2Int(part.X, part.Y), true, field, DirectionFromAngle(part.Rotation), part.Color);
+                CharacterPartView characterPart = CreateCharacterPart(field, partData);
+                CharacterPart part = characterPart.Part;
+                // characterPart.Initialize(new Vector2Int(part.X, part.Y), true, field, DirectionFromAngle(part.Rotation), part.Color);
 
-                characterPart.CharacterPartAttachment.AttachParts();
-                field.Get(part.X, part.Y).AssignCharacterPart(characterPart);
-                parts.Add(characterPart);
+                part.CharacterPartAttachment.AttachParts();
+                field.Get(partData.X, partData.Y).AssignCharacterPart(part);
+
+                parts.Add(part);
+                _cachedParts.Add(characterPart);
             }
 
-            character.AddParts(parts);
-            return character;
+            _character.AddParts(parts);
+            return _character;
         }
 
         public Field CreateField(GameLevel level)
         {
             var cells = new Cell[level.MapWidth, level.MapHeight];
-            var characterParts = new List<CharacterPart>();
 
             DirectionType[,] bordersMap = level.GetCellsBorders();
-            Field field = _resolver.Instantiate(_gameSettings.FieldPrefab);
-            field.SetCells(cells);
+            _field = _resolver.Instantiate(_gameSettings.FieldPrefab);
+            _field.SetCells(cells);
             SetupCamera(level);
 
             for (int j = 0; j < level.MapHeight; j++)
@@ -60,7 +66,7 @@ namespace Game
                     CellContainer cellData = level.Get(i, j);
                     DirectionType borders = bordersMap[i, j];
                     Vector2Int cellPosition = new Vector2Int(i, j);
-                    Cell newCell = CreateCell(i, j, field.transform, cellData);
+                    Cell newCell = CreateCell(i, j, _field.transform, cellData);
 
                     if (cellData.Type == CellType.Wall || cellData.Type == CellType.Pit)
                     {
@@ -76,22 +82,28 @@ namespace Game
             var inactiveParts = level.PlayerParts.Where(part => !part.IsActive);
             foreach (var playerPart in inactiveParts)
             {
-                CharacterPart newCharacterPart = CreateCharacterPart(field, playerPart);
-                newCharacterPart.Initialize(new Vector2Int(playerPart.X, playerPart.Y), false, field, DirectionFromAngle(playerPart.Rotation), playerPart.Color);
-                characterParts.Add(newCharacterPart);
-            }
+                CharacterPartView partView = CreateCharacterPart(_field, playerPart);
+                CharacterPart part = partView.Part;
+                // characterPart.Initialize(new Vector2Int(playerPart.X, playerPart.Y), false, _field, DirectionFromAngle(playerPart.Rotation), playerPart.Color);
 
-            foreach (var part in characterParts)
-            {
                 part.CharacterPartAttachment.AttachParts();
                 cells[part.Position.x, part.Position.y].AssignCharacterPart(part);
+                _cachedParts.Add(partView);
             }
 
-
             List<Cell> finishCells = GetFinishCells(cells);
-            field.Setup(finishCells, level.FinishColor);
+            _field.Setup(finishCells, level.FinishColor);
 
-            return field;
+            return _field;
+        }
+
+        public void CleanUp()
+        {
+            _field.Destroy();
+            _character.Destroy();
+            
+            for (int i = 0; i < _cachedParts.Count; i++)
+                Object.Destroy(_cachedParts[i]);
         }
 
 
@@ -109,7 +121,7 @@ namespace Game
             return cell;
         }
 
-        private CharacterPart CreateCharacterPart(Field field, CharacterPartData partData)
+        private CharacterPartView CreateCharacterPart(Field field, CharacterPartData partData)
         {
             Vector3 partPosition = field.Get(partData.X, partData.Y).gameObject.transform.position - Vector3.forward;
             CharacterPartView partView = _resolver.Instantiate(_gameSettings.CharacterPartPrefab,
@@ -134,7 +146,7 @@ namespace Game
 
             characterPart.CharacterPartMovement = characterMovement;
             characterPart.CharacterPartAttachment = characterAttachment;
-            return characterPart;
+            return partView;
         }
 
         private List<Cell> GetFinishCells(Cell[,] cells)
