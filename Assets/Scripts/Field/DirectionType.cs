@@ -58,7 +58,18 @@ public static class DirectionExtensions
     }
 
 
-    public static Vector2Int ToVector(this DirectionType direction)
+    public static int Degrees(this DirectionType direction)
+    {
+        return direction switch
+        {
+            DirectionType.Up => 0,
+            DirectionType.Right => 90,
+            DirectionType.Down => 180,
+            DirectionType.Left => 270
+        };
+    }
+
+    public static Vector2Int ToVector2Int(this DirectionType direction)
     {
         return direction switch
         {
@@ -67,11 +78,6 @@ public static class DirectionExtensions
             DirectionType.Up => Vector2Int.up,
             DirectionType.Down => Vector2Int.down
         };
-    }
-
-    public static Vector2Int ToVector(this Vector3 direction)
-    {
-        return new Vector2Int((int) direction.x, (int) direction.y);
     }
 
     public static DirectionType ToDirection(this Vector2Int direction)
@@ -91,6 +97,7 @@ public static class DirectionExtensions
         }
     }
 
+    [Obsolete]
     public static DirectionType ToDirection(this int degrees)
     {
         return degrees switch
@@ -102,6 +109,7 @@ public static class DirectionExtensions
         };
     }
 
+    [Obsolete]
     public static DirectionType ToDirection(this Vector2 direction)
     {
         if (direction == Vector2.left)
@@ -114,11 +122,12 @@ public static class DirectionExtensions
             return DirectionType.Down;
         else
         {
-            Debug.LogWarning($"Wrong direction: {direction}");
-            return DirectionType.Down;
+            Debug.LogError($"Wrong direction: {direction}");
+            return DirectionType.None;
         }
     }
 
+    [Obsolete]
     public static DirectionType ToDirection(this Vector3 direction)
     {
         if (direction == Vector3.left)
@@ -132,29 +141,19 @@ public static class DirectionExtensions
         else
         {
             Debug.LogError("Wrong direction");
-            return DirectionType.Down;
+            return DirectionType.None;
         }
-    }
-
-    public static DirectionType GetOppositeDirection(this DirectionType direction)
-    {
-        return direction switch
-        {
-            DirectionType.Right => DirectionType.Left,
-            DirectionType.Left => DirectionType.Right,
-            DirectionType.Up => DirectionType.Down,
-            DirectionType.Down => DirectionType.Up
-        };
     }
 
     public static DirectionType[] GetPerpendicularDirections(this DirectionType direction)
     {
         return direction switch
         {
-            DirectionType.Right => new DirectionType[] {DirectionType.Up, DirectionType.Down},
-            DirectionType.Left => new DirectionType[] {DirectionType.Up, DirectionType.Down},
-            DirectionType.Up => new DirectionType[] {DirectionType.Left, DirectionType.Right},
-            DirectionType.Down => new DirectionType[] {DirectionType.Left, DirectionType.Right}
+            DirectionType.Right => new[] {DirectionType.Up, DirectionType.Down},
+            DirectionType.Left => new[] {DirectionType.Up, DirectionType.Down},
+            DirectionType.Up => new[] {DirectionType.Left, DirectionType.Right},
+            DirectionType.Down => new[] {DirectionType.Left, DirectionType.Right},
+            _ => throw new ArgumentOutOfRangeException(nameof(direction), direction, "Not allowed")
         };
     }
 }

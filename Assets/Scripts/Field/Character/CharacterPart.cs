@@ -1,40 +1,74 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using Assets.Scripts.Field.Cell;
-using DG.Tweening;
+using UniRx;
 using UnityEngine;
 using UnityEngine.Assertions;
-using UnityEngine.Serialization;
-using static DG.Tweening.DOTween;
 
 [RequireComponent(typeof(CharacterPartView))]
-public class CharacterPart : MonoBehaviour
+public class CharacterPart
 {
+    public readonly ReactiveCommand Deleted = new();
+    public readonly IObservable<ColorType> ColorChanged;
+    public readonly IObservable<Vector2Int> PositionChanged;
+    public readonly IObservable<DirectionType> LookChanged;
+    public readonly IObservable<bool> IsActiveChanged;
+    
+    public ColorType Color
+    {
+        get => _color.Value;
+        set => _color.Value = value;
+    }
+
+    public Vector2Int Position
+    {
+        get => _position.Value;
+        set => _position.Value = value;
+    }
+
+    public DirectionType Look
+    {
+        get => _look.Value;
+        set => _look.Value = value;
+    }
+
+    public bool IsActive
+    {
+        get => _isActive.Value;
+        set => _isActive.Value = value;
+    }
+
     public CharacterPart Right;
     public CharacterPart Left;
     public CharacterPart Up;
     public CharacterPart Down;
 
-    public ColorType Color;
-    public Vector2Int Position;
-    public int Rotation;
+    private readonly ReactiveProperty<ColorType> _color = new();
+    private readonly ReactiveProperty<Vector2Int> _position = new();
+    private readonly ReactiveProperty<DirectionType> _look = new();
+    private readonly ReactiveProperty<bool> _isActive = new();
 
-    public bool IsActive;
+    
     private Field _field;
-
     public CharacterPartMovement CharacterPartMovement;
     public CharacterPartAttachment CharacterPartAttachment;
 
-    public CharacterPartView CharacterPartView;
 
-    public void Initialize(Vector2Int position, bool isActive, Field field, int rotation, ColorType color)
+    public CharacterPart()
     {
-        Position = position;
-        SetRotation(rotation);
-        SetActive(isActive);
-        Color = color;
+        ColorChanged = _color.AsObservable();
+        LookChanged = _look.AsObservable();
+        PositionChanged = _position.AsObservable();
+        IsActiveChanged = _isActive.AsObservable();
+    }
+    
+    public void Initialize(Vector2Int position, bool isActive, Field field, DirectionType lookDirection, ColorType color)
+    {
         _field = field;
+        Position = position;
+        Color = color;
+        Look = lookDirection;
+        IsActive = isActive;
     }
 
     public void SetPosition(Vector2Int destination)
@@ -43,30 +77,13 @@ public class CharacterPart : MonoBehaviour
         _field.Get(destination).AssignCharacterPart(this);
 
         Position = destination;
-        //TODO: set transform
-        Vector3 newPosition = _field.Get(destination).gameObject.transform.position - Vector3.forward;
-        this.transform.DOMove(newPosition, 0.1f).SetEase(Ease.Flash).onComplete += TweenCallback;
     }
 
-    public void SetRotation()
+    public void Rotate()
     {
         //change sprite rotation
         RotateLinks();
-        SetRotation((Rotation + 90) % 360);
-    }
-
-    public void SetRotation(int degrees)
-    {
-        //change sprite rotation
-        Rotation = degrees;
-        CharacterPartView.SetRotation(degrees);
-    }
-
-    public void SetActive(bool isActive)
-    {
-        //change active to this character part
-        IsActive = isActive;
-        CharacterPartView.SetActive(isActive);
+        Look = Look.RotateRight();
     }
 
     public void SetActiveToAllParts(bool isActive)
@@ -79,7 +96,7 @@ public class CharacterPart : MonoBehaviour
             if (part == null) return;
             if (visited.Contains(part)) return;
             visited.Add(part);
-            part.SetActive(isActive);
+            part.IsActive = isActive;
 
             visitNode(part.Down);
             visitNode(part.Up);
@@ -88,12 +105,6 @@ public class CharacterPart : MonoBehaviour
         }
 
         visitNode(this);
-    }
-
-    public void SetColor(ColorType color)
-    {
-        Color = color;
-        CharacterPartView.SetColor(color);
     }
 
     public void SetColorToAllParts(ColorType color)
@@ -106,7 +117,7 @@ public class CharacterPart : MonoBehaviour
             if (part == null) return;
             if (visited.Contains(part)) return;
             visited.Add(part);
-            part.SetColor(color);
+            part.Color = color;
 
             visitNode(part.Down);
             visitNode(part.Up);
@@ -123,7 +134,7 @@ public class CharacterPart : MonoBehaviour
 
     public void TryJoin(DirectionType direction)
     {
-        var checkPosition = Position + direction.ToVector();
+        var checkPosition = Position + direction.ToVector2Int();
         var characterPart = _field.Get(checkPosition)?.CharacterPart;
         if (characterPart != null)
         {
@@ -156,6 +167,22 @@ public class CharacterPart : MonoBehaviour
             SetColorToAllParts(part.Color);
     }
 
+    public void Delete()
+    {
+        _field.Get(Position).RemoveCharacterPart(this);
+        RemoveLinks();
+        Deleted.Execute();
+        Debug.Log("destroying part");
+    }
+
+    public void RemoveLinks()
+    {
+        RemoveLinkInDirection(DirectionType.Up);
+        RemoveLinkInDirection(DirectionType.Right);
+        RemoveLinkInDirection(DirectionType.Down);
+        RemoveLinkInDirection(DirectionType.Left);
+    }
+
     public CharacterPart GetPartFromDirection(DirectionType direction)
     {
         return direction switch
@@ -163,43 +190,12 @@ public class CharacterPart : MonoBehaviour
             DirectionType.Right => Right,
             DirectionType.Left => Left,
             DirectionType.Up => Up,
-            DirectionType.Down => Down
+            DirectionType.Down => Down,
+            _ => throw new ArgumentOutOfRangeException(nameof(direction), direction, "Can't map invalid direction to CharacterPart")
         };
     }
 
-    public CharacterPart GetPartFromDirection(float degrees)
-    {
-        int direction = (int) (degrees % 90);
-        return direction switch
-        {
-            0 => Up,
-            1 => Left,
-            2 => Down,
-            3 => Right
-        };
-    }
-
-    public CharacterPart[] GetPartsFromDirections()
-    {
-        List<CharacterPart> characterParts = new List<CharacterPart>();
-        if (Up != null) characterParts.Add(Up);
-        if (Right != null) characterParts.Add(Right);
-        if (Down != null) characterParts.Add(Down);
-        if (Left != null) characterParts.Add(Left);
-
-        return characterParts.ToArray();
-    }
-
-    private void TweenCallback()
-    {
-        Debug.Log("Moved!");
-    }
-
-    public void OnMoved(TweenCallback tweenCallback)
-    {
-    }
-
-    public void RotateLinks()
+    private void RotateLinks()
     {
         CharacterPart temp = Up;
         Up = Left;
@@ -208,10 +204,8 @@ public class CharacterPart : MonoBehaviour
         Right = temp;
     }
 
-    public bool HasPartInDirection(DirectionType direction)
-    {
-        return GetPartFromDirection(direction) != null;
-    }
+    public bool HasPartInDirection(DirectionType direction) =>
+        GetPartFromDirection(direction) != null;
 
     public bool HasRightShape(HashSet<CharacterPart> visitedParts)
     {
@@ -233,7 +227,7 @@ public class CharacterPart : MonoBehaviour
         return visitNode(this);
     }
 
-    public void RemoveLinkInDirection(DirectionType direction)
+    private void RemoveLinkInDirection(DirectionType direction)
     {
         switch (direction)
         {
@@ -261,7 +255,7 @@ public class CharacterPart : MonoBehaviour
                 Down = null;
                 break;
             }
-            default:
+            case DirectionType.Left:
             {
                 if (Left != null)
                     Left.Right = null;
@@ -295,31 +289,12 @@ public class CharacterPart : MonoBehaviour
 
                 break;
             }
-            default:
+            case DirectionType.Down:
             {
                 Down = part;
                 part.Up = this;
                 break;
             }
         }
-    }
-
-    public void Delete()
-    {
-        _field.Get(Position).RemoveCharacterPart(this);
-        RemoveLinks();
-        Quaternion quaternion = Quaternion.Euler(0, 0, -180);
-        transform.DORotate(quaternion.eulerAngles, 0.25f, RotateMode.Fast).SetLoops(3).SetEase(Ease.Linear);
-        transform.DOScale(0.01f, 0.5f).SetEase(Ease.Linear);
-        Destroy(this.gameObject, 0.6f);
-        Debug.Log("destroying part");
-    }
-
-    public void RemoveLinks()
-    {
-        RemoveLinkInDirection(DirectionType.Up);
-        RemoveLinkInDirection(DirectionType.Right);
-        RemoveLinkInDirection(DirectionType.Down);
-        RemoveLinkInDirection(DirectionType.Left);
     }
 }

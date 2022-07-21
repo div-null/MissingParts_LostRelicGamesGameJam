@@ -1,9 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using DG.Tweening;
 using LevelEditor;
+using UniRx;
 using UnityEngine;
-using static DG.Tweening.DOTween;
 
 public class CharacterPartView : MonoBehaviour
 {
@@ -15,30 +13,86 @@ public class CharacterPartView : MonoBehaviour
 
     private Color currentColor;
 
-    private ColorType _colorType;
     private AbilityType _abilityType;
     private int _spriteNumber;
-    private bool _isActive;
 
     [SerializeField] private SpriteRenderer _mainSpriteRenderer;
 
     [SerializeField] private SpriteRenderer _lightSpriteRenderer;
+    private CharacterPart _characterPart;
 
 
-    public void Initialize(CharacterPartData partData)
+    public void Initialize(CharacterPart characterPart, CharacterPartData partData)
     {
-        SetColor(partData.Color);
+        _characterPart = characterPart;
+        characterPart.ColorChanged.Subscribe(OnColorChanged).AddTo(this);
+        characterPart.IsActiveChanged.Subscribe(OnActivate).AddTo(this);
+        characterPart.PositionChanged.Subscribe(OnMove).AddTo(this);
+        characterPart.LookChanged.Subscribe(OnRotate).AddTo(this);
+        characterPart.Deleted.Subscribe(_ => OnDelete()).AddTo(this);
+
         _abilityType = partData.Ability;
         _spriteNumber = partData.Sprite;
-        SetActive(partData.IsActive);
-        ChangeSprite();
+        LoadSprite();
     }
 
-    public void ChangeSprite()
+    private void OnMove(Vector2Int newPosition)
+    {
+        // ???
+        // Vector3 newPosition = _field.Get(destination).gameObject.transform.position - Vector3.forward;
+        Vector3 endValue = newPosition.ToVector3() + Vector3.back;
+        this.transform.DOMove(endValue, 0.1f).SetEase(Ease.Flash);
+    }
+
+    private void OnActivate(bool isActive)
+    {
+        Color color = isActive ? activeColor * currentColor : inactiveColor * currentColor;
+        _lightSpriteRenderer.DOColor(color, 0.2f);
+    }
+
+    private void OnRotate(DirectionType lookDirection)
+    {
+        Quaternion quaternion = Quaternion.Euler(0, 0, -lookDirection.Degrees());
+        _mainSpriteRenderer.gameObject.transform.DORotate(quaternion.eulerAngles, 0.1f, RotateMode.Fast);
+    }
+
+    private void OnColorChanged(ColorType color)
+    {
+        switch (color)
+        {
+            case ColorType.Blue:
+            {
+                currentColor = blueColor;
+                break;
+            }
+            case ColorType.Green:
+            {
+                currentColor = greenColor;
+                break;
+            }
+            case ColorType.Red:
+            {
+                currentColor = redColor;
+                break;
+            }
+        }
+
+        _lightSpriteRenderer.DOColor(currentColor, 0.2f);
+    }
+
+    private void OnDelete()
+    {
+        Quaternion quaternion = Quaternion.Euler(0, 0, -180);
+        transform.DORotate(quaternion.eulerAngles, 0.25f, RotateMode.Fast).SetLoops(3).SetEase(Ease.Linear);
+        transform.DOScale(0.01f, 0.5f).SetEase(Ease.Linear);
+        Destroy(this.gameObject, 0.6f);
+    }
+
+    private void LoadSprite()
     {
         //Assets/Sprites/CharacterPart/Color/default_1
 
-        string color = _colorType.ToString();
+        string color = _characterPart.Color.ToString();
         string ability = _abilityType.ToString().ToLower();
 
         Sprite mainSprite;
@@ -72,46 +126,5 @@ public class CharacterPartView : MonoBehaviour
         lightSprite = Resources.Load<Sprite>(pathToLight);
 
         return mainSprite != null && lightSprite != null;
-    }
-
-    public void SetActive(bool isActive)
-    {
-        _isActive = isActive;
-        if (isActive)
-            _lightSpriteRenderer.DOColor(activeColor * currentColor, 0.2f);
-        else
-            _lightSpriteRenderer.DOColor(inactiveColor * currentColor, 0.2f);
-    }
-
-    public void SetRotation(int degrees)
-    {
-        Vector2Int lookDirection = degrees.ToDirection().ToVector();
-        Quaternion quaternion = Quaternion.Euler(0, 0, -degrees);
-        //quaternion.
-        _mainSpriteRenderer.gameObject.transform.DORotate(quaternion.eulerAngles, 0.1f, RotateMode.Fast);
-    }
-
-    public void SetColor(ColorType color)
-    {
-        switch (color)
-        {
-            case ColorType.Blue:
-            {
-                currentColor = blueColor;
-                break;
-            }
-            case ColorType.Green:
-            {
-                currentColor = greenColor;
-                break;
-            }
-            default:
-            {
-                currentColor = redColor;
-                break;
-            }
-        }
-
-        _lightSpriteRenderer.DOColor(currentColor, 0.2f);
     }
 }

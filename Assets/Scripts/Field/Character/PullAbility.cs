@@ -1,8 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Field.Cell;
-using Unity.Mathematics;
 using UnityEngine;
 
 public class PullAbility : Ability
@@ -26,7 +24,7 @@ public class PullAbility : Ability
 
     public override void Apply()
     {
-        _lookDirection = _characterPart.Rotation.ToDirection();
+        _lookDirection = _characterPart.Look;
         if (!_characterPart.HasPartInDirection(_lookDirection))
         {
             TryToAttach();
@@ -40,7 +38,7 @@ public class PullAbility : Ability
     private bool TryToAttach()
     {
         CharacterPart foundedCharacterPart = null;
-        Vector2Int vectorDirection = _lookDirection.ToVector();
+        Vector2Int vectorDirection = _lookDirection.ToVector2Int();
         int numberOfSteps;
         for (numberOfSteps = 1; numberOfSteps < _range; numberOfSteps++)
         {
@@ -142,7 +140,7 @@ public class PullAbility : Ability
     private bool TryToDetach()
     {
         CharacterPart detachablePart = _characterPart.GetPartFromDirection(_lookDirection);
-        Vector2Int oppositeDirection = -_lookDirection.ToVector();
+        Vector2Int oppositeDirection = -_lookDirection.ToVector2Int();
         List<CharacterPart> pulledParts = GetPulledCharacterParts(detachablePart, _lookDirection);
         if (CanPulledPartsMove(pulledParts))
         {

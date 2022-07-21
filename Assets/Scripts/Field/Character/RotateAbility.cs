@@ -63,7 +63,7 @@ public class RotateAbility : Ability
             foreach (var (part, value) in partsWithNewPositions)
             {
                 part.SetPosition(value);
-                part.SetRotation();
+                part.Rotate();
             }
 
             _characterPart.CharacterPartAttachment.AttachParts();

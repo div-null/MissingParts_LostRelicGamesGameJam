@@ -23,7 +23,7 @@ public class CharacterPartMovement : MonoBehaviour
             if (visited.Contains(part)) return true;
             visited.Add(part);
 
-            var destination = part.Position + direction.ToVector();
+            var destination = part.Position + direction.ToVector2Int();
             if (HasWallInCell(destination)) return false;
 
             return visitNode(part.Left) && visitNode(part.Right) && visitNode(part.Up) && visitNode(part.Down);
@@ -62,7 +62,7 @@ public class CharacterPartMovement : MonoBehaviour
             if (part == null) return;
             if (visited.Contains(part)) return;
             visited.Add(part);
-            var destination = part.Position + direction.ToVector();
+            var destination = part.Position + direction.ToVector2Int();
             part.SetPosition(destination);
 
             visitNode(part.Left);
@@ -100,7 +100,7 @@ public class CharacterPartMovement : MonoBehaviour
 
     public bool CanThisMove(DirectionType direction)
     {
-        Vector2Int directionVector = direction.ToVector();
+        Vector2Int directionVector = direction.ToVector2Int();
         Cell cell = _field.Get(_characterPart.Position + directionVector);
         if (cell.IsWall())
             return false;
@@ -110,7 +110,7 @@ public class CharacterPartMovement : MonoBehaviour
 
     public void MoveThis(DirectionType direction)
     {
-        var destination = _characterPart.Position + direction.ToVector();
+        var destination = _characterPart.Position + direction.ToVector2Int();
         _characterPart.SetPosition(destination);
     }
 }
