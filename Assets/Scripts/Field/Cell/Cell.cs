@@ -7,7 +7,7 @@ namespace Assets.Scripts.Field.Cell
     {
         public Vector2Int Position;
         public CellType CellType;
-        public CharacterPartView CharacterPart;
+        public CharacterPartContainer Container;
 
         [field: SerializeField] public DirectionType BorderDirections { get; private set; }
         public const float CellSize = 1f;
@@ -50,17 +50,17 @@ namespace Assets.Scripts.Field.Cell
             CellType == CellType.Empty;
 
         public bool HasCharacterPart() =>
-            CharacterPart != null;
+            Container != null;
 
-        public void RemoveCharacterPart(CharacterPartView characterPart)
+        public void RemoveCharacterPart(CharacterPart characterPart)
         {
-            if (CharacterPart == characterPart)
-                CharacterPart = null;
+            if (Container.Part == characterPart)
+                Container = null;
         }
 
-        public void AssignCharacterPart(CharacterPartView characterPart)
+        public void AssignCharacterPart(CharacterPartContainer characterPartContainer)
         {
-            CharacterPart = characterPart;
+            Container = characterPartContainer;
         }
     }
 }

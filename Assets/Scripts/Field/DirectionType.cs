@@ -109,7 +109,6 @@ public static class DirectionExtensions
         };
     }
 
-    [Obsolete]
     public static DirectionType ToDirection(this Vector2 direction)
     {
         if (direction == Vector2.left)

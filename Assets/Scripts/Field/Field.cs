@@ -1,8 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using Assets.Scripts.Field.Cell;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Field : MonoBehaviour
@@ -38,10 +36,10 @@ public class Field : MonoBehaviour
         HashSet<CharacterPart> visitedParts = new HashSet<CharacterPart>();
         foreach (var finishCell in _finishCells)
         {
-            if (finishCell.CharacterPart == null)
+            if (finishCell.Container == null)
                 return false;
 
-            if (finishCell.CharacterPart.Color != _finishColor || !finishCell.CharacterPart.HasRightShape(visitedParts))
+            if (finishCell.Container.Part.Color != _finishColor || !finishCell.Container.HasRightShape(visitedParts))
                 return false;
         }
 

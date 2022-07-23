@@ -18,7 +18,7 @@ namespace Systems
             _range = pullRange;
         }
 
-        public void Activate(HookView hookView)
+        public void ActivateHook(HookView hookView)
         {
             CharacterPart characterPart = hookView.Part;
             var lookDirection = characterPart.Look;
@@ -63,27 +63,27 @@ namespace Systems
             DirectionType lookDirection = characterPart.Look;
             DirectionType oppositeDirection = lookDirection.InvertSingle();
 
-            (int numberOfSteps, CharacterPartView foundedCharacterPart) = LookupForPart(characterPart.Position, lookDirection.ToVector2Int());
+            (int numberOfSteps, CharacterPartContainer foundPart) = LookupForPart(characterPart.Position, lookDirection.ToVector2Int());
 
             hookView.RunForward(numberOfSteps - 1);
 
-            if (foundedCharacterPart == null)
+            if (foundPart == null)
                 return false;
 
-            if (!foundedCharacterPart.Part.IsActive)
-                return PullPartAndAttach(characterPart, foundedCharacterPart, oppositeDirection, numberOfSteps);
+            if (!foundPart.Part.IsActive)
+                return PullPartAndAttach(characterPart, foundPart.Part, oppositeDirection, numberOfSteps);
 
-            return PullAttachedPart(characterPart, foundedCharacterPart);
+            return PullAttachedPart(characterPart, foundPart.Part);
         }
 
-        private bool PullAttachedPart(CharacterPart characterPart, CharacterPartView foundedCharacterPart)
+        private bool PullAttachedPart(CharacterPart characterPart, CharacterPart foundedCharacterPart)
         {
             DirectionType lookDirection = characterPart.Look;
             DirectionType oppositeDirection = lookDirection.InvertSingle();
 
-            while (characterPart.GetPartFromDirection(lookDirection) != foundedCharacterPart.Part)
+            while (characterPart.GetPartFromDirection(lookDirection) != foundedCharacterPart)
             {
-                List<CharacterPart> pulledParts = DivideGraphByDirection(characterPart, foundedCharacterPart.Part, lookDirection);
+                List<CharacterPart> pulledParts = DivideGraphByDirection(characterPart, foundedCharacterPart, lookDirection);
 
                 if (!CanEachPartMove(pulledParts, oppositeDirection))
                     return false;
@@ -95,25 +95,25 @@ namespace Systems
                 _attachmentSystem.AttachParts(characterPart);
             }
 
-            return foundedCharacterPart.Part.IsActive;
+            return foundedCharacterPart.IsActive;
         }
 
         //Move foundedCharacterPart several times
-        private bool PullPartAndAttach(CharacterPart characterPart, CharacterPartView foundedCharacterPart, DirectionType direction, int numberOfSteps)
+        private bool PullPartAndAttach(CharacterPart characterPart, CharacterPart foundedCharacterPart, DirectionType direction, int numberOfSteps)
         {
             for (int i = 0; i < numberOfSteps; i++)
             {
-                bool isMoved = _moveSystem.Move(foundedCharacterPart.Part, direction);
+                bool isMoved = _moveSystem.Move(foundedCharacterPart, direction);
                 _attachmentSystem.AttachParts(characterPart);
-                _attachmentSystem.AttachParts(foundedCharacterPart.Part);
+                _attachmentSystem.AttachParts(foundedCharacterPart);
                 if (!isMoved)
-                    return foundedCharacterPart.Part.IsActive;
+                    return foundedCharacterPart.IsActive;
             }
 
             return false;
         }
 
-        private (int, CharacterPartView) LookupForPart(Vector2Int startPosition, Vector2Int vectorDirection)
+        private (int, CharacterPartContainer) LookupForPart(Vector2Int startPosition, Vector2Int vectorDirection)
         {
             for (int numberOfSteps = 1; numberOfSteps < _range; numberOfSteps++)
             {
@@ -122,8 +122,8 @@ namespace Systems
                 if (currentCell == null || currentCell.IsWall())
                     return (-1, null);
 
-                if (currentCell.CharacterPart != null)
-                    return (numberOfSteps, currentCell.CharacterPart);
+                if (currentCell.Container != null)
+                    return (numberOfSteps, currentCell.Container);
             }
 
             return (-1, null);

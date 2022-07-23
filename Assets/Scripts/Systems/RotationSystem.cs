@@ -56,7 +56,7 @@ namespace Systems
             if (!_field.TryGet(newPosition, out Cell cell))
                 return true;
 
-            if (cell.IsWall() || cell.CharacterPart.Part is {IsActive: false})
+            if (cell.IsWall() || cell.Container.Part is {IsActive: false})
                 return true;
 
             return false;

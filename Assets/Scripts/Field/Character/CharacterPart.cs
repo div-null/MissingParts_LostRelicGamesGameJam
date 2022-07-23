@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Assets.Scripts.Field.Cell;
+using LevelEditor;
 using UniRx;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -13,6 +14,8 @@ public class CharacterPart
     public readonly IObservable<DirectionType> LookChanged;
     public readonly IObservable<bool> IsActiveChanged;
     
+    public AbilityType Ability { get; private set; }
+
     public ColorType Color
     {
         get => _color.Value;
@@ -131,7 +134,7 @@ public class CharacterPart
     public void TryJoin(DirectionType direction)
     {
         var checkPosition = Position + direction.ToVector2Int();
-        var characterPart = _field.Get(checkPosition)?.CharacterPart;
+        var characterPart = _field.Get(checkPosition)?.Container;
         if (characterPart != null)
         {
             Join(characterPart, IsActive);
