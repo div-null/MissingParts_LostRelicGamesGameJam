@@ -1,9 +1,5 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using DG.Tweening;
-using DG.Tweening.Core;
-using DG.Tweening.Plugins.Options;
 using UnityEngine;
 
 public class HookView : MonoBehaviour
@@ -18,6 +14,8 @@ public class HookView : MonoBehaviour
     private static readonly Vector2 BasePosition = new Vector3(0, 1, 0);
     private const float ReachBlockLength = 0.44f;
     private const float LengthPerBlock = 3.33f;
+
+    public CharacterPart Part { get; private set; }
 
     // Start is called before the first frame update
     public void RunForward(int numberOfBlocks)

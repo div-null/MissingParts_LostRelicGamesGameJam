@@ -7,9 +7,11 @@ namespace Systems
     public class RotationSystem
     {
         private readonly Field _field;
+        private AttachmentSystem _attachmentSystem;
 
-        public RotationSystem(Field field)
+        public RotationSystem(Field field, AttachmentSystem attachmentSystem)
         {
+            _attachmentSystem = attachmentSystem;
             _field = field;
         }
 
@@ -44,7 +46,7 @@ namespace Systems
                 part.Rotate();
             }
 
-            characterPart.CharacterPartAttachment.AttachParts();
+            _attachmentSystem.AttachParts(characterPart);
 
             return true;
         }
@@ -54,7 +56,7 @@ namespace Systems
             if (!_field.TryGet(newPosition, out Cell cell))
                 return true;
 
-            if (cell.IsWall() || cell.CharacterPart is {IsActive: false})
+            if (cell.IsWall() || cell.CharacterPart.Part is {IsActive: false})
                 return true;
 
             return false;

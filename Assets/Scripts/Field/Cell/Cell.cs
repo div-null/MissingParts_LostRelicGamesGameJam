@@ -7,7 +7,7 @@ namespace Assets.Scripts.Field.Cell
     {
         public Vector2Int Position;
         public CellType CellType;
-        public CharacterPart CharacterPart;
+        public CharacterPartView CharacterPart;
 
         [field: SerializeField] public DirectionType BorderDirections { get; private set; }
         public const float CellSize = 1f;
@@ -37,35 +37,28 @@ namespace Assets.Scripts.Field.Cell
                 Debug.DrawLine(rightSide + topSide + center, rightSide + bottomSide + center, Color.blue, Single.PositiveInfinity);
         }
 
-        public bool IsWall() => 
+        public bool IsWall() =>
             CellType == CellType.Wall;
 
-        public bool IsPit() => 
+        public bool IsPit() =>
             CellType == CellType.Pit;
 
-        public bool IsFinish() => 
+        public bool IsFinish() =>
             CellType == CellType.Finish;
-        
-        public bool IsSurface() => 
+
+        public bool IsSurface() =>
             CellType == CellType.Empty;
 
-        public bool HasCharacterPart()
-        {
-            return CharacterPart != null;
-        }
+        public bool HasCharacterPart() =>
+            CharacterPart != null;
 
-        public bool HasActiveCharacterPart()
-        {
-            return HasCharacterPart() && CharacterPart.IsActive;
-        }
-
-        public void RemoveCharacterPart(CharacterPart characterPart)
+        public void RemoveCharacterPart(CharacterPartView characterPart)
         {
             if (CharacterPart == characterPart)
                 CharacterPart = null;
         }
 
-        public void AssignCharacterPart(CharacterPart characterPart)
+        public void AssignCharacterPart(CharacterPartView characterPart)
         {
             CharacterPart = characterPart;
         }
