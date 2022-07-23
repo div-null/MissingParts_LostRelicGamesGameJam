@@ -1,40 +1,40 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.Mathematics;
+using LevelEditor;
+using Systems;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using VContainer;
 
 public class Character : MonoBehaviour
 {
-    private CharacterPart _mainPart;
-    private ColorType _characterColor;
-    private Field _field;
-    private PlayerInputs _playerInputs;
-
     public event Action Moved;
     public event Action AppliedPullAbility;
     public event Action AppliedRotateAbility;
     public event Action StartMoving;
     public event Action Died;
 
-    private Vector3 startPosition;
-    private float startTime;
+    private CharacterPart _mainPart;
 
-    private float minDistance = 4.5f;
-    private float maxTime = 0.25f;
-    private float directionThreshold = 0.9f;
+    private PlayerInputs _playerInputs;
+    private PullSystem _pullSystem;
+    private RotationSystem _rotationSystem;
+    private AttachmentSystem _attachmentSystem;
+    private MoveSystem _moveSystem;
 
     [Inject]
-    public void Construct(PlayerInputs playerInputs)
+    public void Construct(PlayerInputs playerInputs,
+        MoveSystem moveSystem,
+        AttachmentSystem attachmentSystem,
+        RotationSystem rotationSystem,
+        PullSystem pullSystem)
     {
+        _moveSystem = moveSystem;
+        _attachmentSystem = attachmentSystem;
+        _rotationSystem = rotationSystem;
+        _pullSystem = pullSystem;
         _playerInputs = playerInputs;
-    }
-
-    public void Initialize(Field field)
-    {
-        _field = field;
     }
 
     public void AddParts(List<CharacterPart> parts)
@@ -97,11 +97,12 @@ public class Character : MonoBehaviour
         //may be something else with events
     }
 
-    public void Move(Vector2 vectorDirection)
+    private void Move(DirectionType direction)
     {
         StartMoving?.Invoke();
-        _mainPart.CharacterPartMovement.Move(vectorDirection.ToDirection());
-        var newMainPart = _mainPart.CharacterPartAttachment.DetachParts();
+        _moveSystem.Move(_mainPart, direction);
+        // check for pits
+        var newMainPart = _attachmentSystem.DetachParts(_mainPart);
 
         if (newMainPart == null)
         {
@@ -113,22 +114,10 @@ public class Character : MonoBehaviour
             _mainPart = newMainPart;
         }
 
-        _mainPart.CharacterPartAttachment.AttachParts();
+        _attachmentSystem.AttachParts(_mainPart);
         Moved?.Invoke();
     }
 
-
-    private void Move_performed(InputAction.CallbackContext obj)
-    {
-        Vector2 receivedDirection = obj.ReadValue<Vector2>();
-        if (receivedDirection != Vector2.zero)
-            Move(receivedDirection);
-    }
-
-    private void Select_performed(InputAction.CallbackContext obj)
-    {
-        TryToApplyAbility(Mouse.current.position.ReadValue());
-    }
 
     private void TryToApplyAbility(Vector2 mousePosition)
     {
@@ -138,27 +127,49 @@ public class Character : MonoBehaviour
         {
             Transform objectHit = hit.transform;
             Debug.Log($"hitted something: {objectHit}");
-            Ability ability;
-            if (objectHit.TryGetComponent<Ability>(out ability))
+            if (objectHit.TryGetComponent(out CharacterPartContainer partContainer))
             {
-                CharacterPart characterPart = objectHit.GetComponent<CharacterPart>();
-                if (characterPart.IsActive)
+                if (partContainer.Part.IsActive)
                 {
-                    _mainPart = characterPart;
-                    ability.Apply();
-                    var newMainPart = _mainPart.CharacterPartAttachment.DetachPartsAndUnite(_mainPart);
+                    _mainPart = partContainer.Part;
 
-                    //if (result)
-                    //    Detached.Invoke();
-                    //
-                    _mainPart = newMainPart;
-                    if (ability.GetType() == typeof(PullAbility))
-                        AppliedPullAbility?.Invoke();
-                    else
-                        AppliedRotateAbility?.Invoke();
+                    if (!ApplyAbility(partContainer)) return;
+
+                    _mainPart = _attachmentSystem.DetachPartsAndUnite(_mainPart, _mainPart);
                 }
             }
         }
+    }
+
+    private void Move_performed(InputAction.CallbackContext obj)
+    {
+        Vector2 receivedDirection = obj.ReadValue<Vector2>();
+        if (receivedDirection != Vector2.zero)
+            Move(receivedDirection.ToDirection());
+    }
+
+    private void Select_performed(InputAction.CallbackContext obj)
+    {
+        TryToApplyAbility(Mouse.current.position.ReadValue());
+    }
+
+    private bool ApplyAbility(CharacterPartContainer partContainer)
+    {
+        switch (partContainer.Part.Ability)
+        {
+            case AbilityType.Rotation:
+                _rotationSystem.TryToRotate(partContainer.Part);
+                AppliedRotateAbility?.Invoke();
+                break;
+            case AbilityType.Hook:
+                _pullSystem.ActivateHook(partContainer.HookView);
+                AppliedPullAbility?.Invoke();
+                break;
+            default:
+                return false;
+        }
+
+        return true;
     }
 
     private void OnDestroy()
