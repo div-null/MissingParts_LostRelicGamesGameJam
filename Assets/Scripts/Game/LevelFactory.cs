@@ -92,7 +92,8 @@ namespace Game
             }
 
             List<Cell> finishCells = GetFinishCells(cells);
-            _field.Setup(finishCells, level.FinishColor);
+            foreach (var cell in finishCells)
+                cell.GetComponent<FinishView>().SetColor(level.FinishColor);
 
             return _field;
         }
@@ -101,7 +102,7 @@ namespace Game
         {
             _field.Destroy();
             _character.Destroy();
-            
+
             for (int i = 0; i < _cachedParts.Count; i++)
                 Object.Destroy(_cachedParts[i]);
         }

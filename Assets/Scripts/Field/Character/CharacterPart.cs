@@ -173,26 +173,6 @@ public class CharacterPart
     public bool HasPartInDirection(DirectionType direction) =>
         GetPartFromDirection(direction) != null;
 
-    public bool HasRightShape(HashSet<CharacterPart> visitedParts)
-    {
-        bool visitNode(CharacterPart part)
-        {
-            if (part == null) return true;
-            if (visitedParts.Contains(part)) return true;
-            visitedParts.Add(part);
-
-            Cell cell = _field.Get(part.Position);
-            if (cell != null && !cell.IsFinish())
-            {
-                return false;
-            }
-
-            return visitNode(part.Down) && visitNode(part.Up) && visitNode(part.Right) && visitNode(part.Left);
-        }
-
-        return visitNode(this);
-    }
-
     private void RotateLinks()
     {
         CharacterPart temp = Up;

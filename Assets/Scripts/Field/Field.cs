@@ -6,59 +6,15 @@ using UnityEngine;
 public class Field : MonoBehaviour
 {
     private Cell[,] _cells;
-    private List<Cell> _finishCells;
-    private ColorType _finishColor;
-    public event Action Finished;
+
 
     public void SetCells(Cell[,] cells)
     {
         _cells = cells;
     }
 
-    public void Setup(List<Cell> finishCells, ColorType finishColor)
-    {
-        _finishCells = finishCells;
-        _finishColor = finishColor;
-        foreach (var finishCell in finishCells)
-        {
-            finishCell.GetComponent<FinishView>().SetColor(_finishColor);
-        }
-    }
-
-    public void CheckForFinish()
-    {
-        if (IsFinished())
-            Finished?.Invoke();
-    }
-
-    public bool IsFinished()
-    {
-        HashSet<CharacterPart> visitedParts = new HashSet<CharacterPart>();
-        foreach (var finishCell in _finishCells)
-        {
-            if (finishCell.Container == null)
-                return false;
-
-            if (finishCell.Container.Part.Color != _finishColor || !finishCell.Container.HasRightShape(visitedParts))
-                return false;
-        }
-
-        return true;
-    }
-
-    public void Destroy()
-    {
-        for (int j = 0; j < _cells.GetLength(1); j++)
-        for (int i = 0; i < _cells.GetLength(0); i++)
-            Destroy(_cells[i, j].gameObject);
-
-        Destroy(gameObject);
-    }
-
-    public Cell Get(Vector2Int coordinates)
-    {
-        return Get(coordinates.x, coordinates.y);
-    }
+    public Cell Get(Vector2Int coordinates) =>
+        Get(coordinates.x, coordinates.y);
 
     public Cell Get(int x, int y)
     {
@@ -79,4 +35,12 @@ public class Field : MonoBehaviour
         return cell != null;
     }
 
+    public void Destroy()
+    {
+        for (int j = 0; j < _cells.GetLength(1); j++)
+        for (int i = 0; i < _cells.GetLength(0); i++)
+            Destroy(_cells[i, j].gameObject);
+
+        Destroy(gameObject);
+    }
 }
