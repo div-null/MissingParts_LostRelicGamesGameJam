@@ -51,8 +51,6 @@ public class CharacterPart
     private readonly ReactiveProperty<bool> _isActive = new();
 
     
-    private Field _field;
-
     public CharacterPart()
     {
         ColorChanged = _color.AsObservable();
@@ -61,21 +59,12 @@ public class CharacterPart
         IsActiveChanged = _isActive.AsObservable();
     }
     
-    public void Initialize(Vector2Int position, bool isActive, Field field, DirectionType lookDirection, ColorType color)
+    public void Initialize(Vector2Int position, bool isActive, DirectionType lookDirection, ColorType color)
     {
-        _field = field;
         Position = position;
         Color = color;
         Look = lookDirection;
         IsActive = isActive;
-    }
-
-    public void SetPosition(Vector2Int destination)
-    {
-        _field.Get(Position).RemoveCharacterPart(this);
-        _field.Get(destination).AssignCharacterPart(this);
-
-        Position = destination;
     }
 
     public void Rotate()
@@ -137,7 +126,7 @@ public class CharacterPart
         var characterPart = _field.Get(checkPosition)?.Container;
         if (characterPart != null)
         {
-            Join(characterPart, IsActive);
+            Join(characterPart.Part, IsActive);
         }
         else
         {
@@ -151,19 +140,6 @@ public class CharacterPart
         TryJoin(DirectionType.Up);
         TryJoin(DirectionType.Left);
         TryJoin(DirectionType.Right);
-    }
-
-    public void Join(CharacterPart part, bool setActive = true)
-    {
-        Vector2Int joinPosition = part.Position - Position;
-        Assert.IsTrue(joinPosition.magnitude == 1);
-
-        SetLinkInDirection(part, joinPosition.ToDirection());
-
-        SetActiveToAllParts(setActive);
-
-        if (Color != part.Color)
-            SetColorToAllParts(part.Color);
     }
 
     public void Delete()
@@ -194,15 +170,6 @@ public class CharacterPart
         };
     }
 
-    private void RotateLinks()
-    {
-        CharacterPart temp = Up;
-        Up = Left;
-        Left = Down;
-        Down = Right;
-        Right = temp;
-    }
-
     public bool HasPartInDirection(DirectionType direction) =>
         GetPartFromDirection(direction) != null;
 
@@ -224,6 +191,28 @@ public class CharacterPart
         }
 
         return visitNode(this);
+    }
+
+    private void RotateLinks()
+    {
+        CharacterPart temp = Up;
+        Up = Left;
+        Left = Down;
+        Down = Right;
+        Right = temp;
+    }
+
+    private void Join(CharacterPart part, bool setActive = true)
+    {
+        Vector2Int joinPosition = part.Position - Position;
+        Assert.IsTrue(joinPosition.magnitude == 1);
+
+        SetLinkInDirection(part, joinPosition.ToDirection());
+
+        SetActiveToAllParts(setActive);
+
+        if (Color != part.Color)
+            SetColorToAllParts(part.Color);
     }
 
     private void RemoveLinkInDirection(DirectionType direction)

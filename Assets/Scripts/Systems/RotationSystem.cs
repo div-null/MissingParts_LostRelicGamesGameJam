@@ -7,10 +7,12 @@ namespace Systems
     public class RotationSystem
     {
         private readonly Field _field;
-        private AttachmentSystem _attachmentSystem;
+        private readonly AttachmentSystem _attachmentSystem;
+        private MoveSystem _moveSystem;
 
-        public RotationSystem(Field field, AttachmentSystem attachmentSystem)
+        public RotationSystem(Field field,MoveSystem moveSystem, AttachmentSystem attachmentSystem)
         {
+            _moveSystem = moveSystem;
             _attachmentSystem = attachmentSystem;
             _field = field;
         }
@@ -40,9 +42,9 @@ namespace Systems
             if (!canRotate(characterPart, characterPart.Position))
                 return false;
 
-            foreach (var (part, value) in partsWithNewPositions)
+            foreach ((CharacterPart part, Vector2Int position) in partsWithNewPositions)
             {
-                part.SetPosition(value);
+                _moveSystem.MovePart(part, position);
                 part.Rotate();
             }
 

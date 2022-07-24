@@ -52,9 +52,9 @@ namespace Assets.Scripts.Field.Cell
         public bool HasCharacterPart() =>
             Container != null;
 
-        public void RemoveCharacterPart(CharacterPart characterPart)
+        public void RemoveCharacterPart(CharacterPartContainer characterPart)
         {
-            if (Container.Part == characterPart)
+            if (Container == characterPart)
                 Container = null;
         }
 

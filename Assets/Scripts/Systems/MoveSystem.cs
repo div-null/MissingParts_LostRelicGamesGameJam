@@ -50,8 +50,7 @@ namespace Systems
                 if (visited.Contains(part)) return;
                 visited.Add(part);
 
-                var destination = part.Position + direction.ToVector2Int();
-                part.SetPosition(destination);
+                MovePart(part, direction);
 
                 visitNode(part.Left);
                 visitNode(part.Right);
@@ -63,14 +62,14 @@ namespace Systems
             return true;
         }
 
-        private bool HasWallIn(Vector2Int position)
+        public void MovePart(CharacterPart characterPart, DirectionType direction)
         {
-            if (_field.TryGet(position, out Cell cell))
-                return cell.IsWall();
-
-            return false;
+            var destination = characterPart.Position + direction.ToVector2Int();
+            MovePart(characterPart, destination);
         }
 
+        public void MovePart(CharacterPart characterPart, Vector2Int destination) =>
+            SetPosition(characterPart, destination);
 
         public bool CanPartMove(CharacterPart characterPart, DirectionType direction)
         {
@@ -78,10 +77,20 @@ namespace Systems
             return !HasWallIn(destination);
         }
 
-        public void MovePart(CharacterPart characterPart, DirectionType direction)
+        private void SetPosition(CharacterPart part, Vector2Int destination)
         {
-            var destination = characterPart.Position + direction.ToVector2Int();
-            characterPart.SetPosition(destination);
+            CharacterPartContainer partContainer = _field.Get(part.Position).Container;
+            _field.Get(part.Position).RemoveCharacterPart(partContainer);
+            _field.Get(destination).AssignCharacterPart(partContainer);
+            part.Position = destination;
+        }
+
+        private bool HasWallIn(Vector2Int position)
+        {
+            if (_field.TryGet(position, out Cell cell))
+                return cell.IsWall();
+
+            return false;
         }
     }
 }
