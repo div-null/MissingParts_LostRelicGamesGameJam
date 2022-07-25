@@ -1,6 +1,8 @@
 ﻿using System;
 using Game;
 using LevelEditor;
+using Systems;
+using UniRx;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using VContainer.Unity;
@@ -22,10 +24,18 @@ namespace Infrastructure.Scope
         private Character _character;
         private AudioManager _audioManager;
 
-        private bool _justStarted;
+        private FinishSystem _finishSystem;
+        private CompositeDisposable _disposable;
+        private IObservable<Unit> _firstInput;
 
 
-        public LevelEntryPoint(LevelFactory factory, LevelLoader levelLoader, PlayerInputs playerInputs, GameUI gameUI, Ceiling ceiling, AudioManager audioManager)
+        public LevelEntryPoint(LevelFactory factory,
+            LevelLoader levelLoader,
+            PlayerInputs playerInputs,
+            GameUI gameUI,
+            Ceiling ceiling,
+            AudioManager audioManager,
+            FinishSystem finishSystem)
         {
             _playerInputs = playerInputs;
             _gameUI = gameUI;
@@ -35,22 +45,14 @@ namespace Infrastructure.Scope
             _currentLevel = 0;
             _ceiling.OnFadeOut += UnlockInputs;
             _audioManager = audioManager;
-            _justStarted = true;
-
-            RegisterCallback(2, () => Debug.Log("Second level"));
-        }
-
-        private void RegisterCallback(int value, Action callback)
-        {
-            NextLevel += v =>
-            {
-                if (v == value)
-                    callback();
-            };
+            _finishSystem = finishSystem;
         }
 
         public void Start()
         {
+            _firstInput = Observable.FromEvent(h => _character.Moved += h, h => _character.Moved -= h).Single();
+            _firstInput.Subscribe(_ => FirstPlayerInput());
+
             _gameUI.RestartClicked += ReloadLevel;
             _gameUI.ChooseExtraLevel += LoadExtraLevel;
             LoadNextLevel();
@@ -64,90 +66,33 @@ namespace Infrastructure.Scope
             _playerInputs.CharacterControls.Restart.performed += ReloadLevel;
         }
 
-        public void LoadLevel()
+        private void LoadLevel()
         {
-            Debug.Log($"Loading Level {_currentLevel}");
-            GameLevel level;
-            switch (_currentLevel)
+            GameLevel? level = SelectNextLevel();
+
+            if (level == null)
             {
-                case 1:
-                    level = _levelLoader.LoadLevel(LevelLoader.Level.Lvl1);
-                    break;
-                case 2:
-                    level = _levelLoader.LoadLevel(LevelLoader.Level.Lvl2);
-                    break;
-                case 3:
-                    level = _levelLoader.LoadLevel(LevelLoader.Level.Lvl3);
-                    break;
-                case 4:
-                    level = _levelLoader.LoadLevel(LevelLoader.Level.Lvl4);
-                    break;
-                case 5:
-                    level = _levelLoader.LoadLevel(LevelLoader.Level.Lvl5);
-                    break;
-                case 6:
-                    level = _levelLoader.LoadLevel(LevelLoader.Level.Lvl6);
-                    break;
-                case 7:
-                    level = _levelLoader.LoadLevel(LevelLoader.Level.Lvl7);
-                    break;
-                case 8:
-                    level = _levelLoader.LoadLevel(LevelLoader.Level.Lvl8);
-                    break;
-                case 9:
-                    level = _levelLoader.LoadLevel(LevelLoader.Level.Lvl9);
-                    break;
-                case 10:
-                    level = _levelLoader.LoadLevel(LevelLoader.Level.Lvl10);
-                    break;
-                case 11:
-                    level = _levelLoader.LoadLevel(LevelLoader.Level.Lvl11);
-                    break;
-                case 12:
-                    level = _levelLoader.LoadLevel(LevelLoader.Level.Lvl12);
-                    break;
-                case 13:
-                    level = _levelLoader.LoadLevel(LevelLoader.Level.Lvl13);
-                    break;
-                case 14:
-                    level = _levelLoader.LoadLevel(LevelLoader.Level.Lvl14);
-                    break;
-                case 15:
-                    level = _levelLoader.LoadLevel(LevelLoader.Level.Lvl15);
-                    break;
-                case 16:
-                    level = _levelLoader.LoadLevel(LevelLoader.Level.Lvl16);
-                    break;
-                case 17:
-                    level = _levelLoader.LoadLevel(LevelLoader.Level.Lvl17);
-                    break;
-                //case 18:
-                //    level = _levelLoader.LoadLevel(LevelLoader.Level.Lvl18);
-                //    break;
-                case 21:
-                    level = _levelLoader.LoadLevel(LevelLoader.Level.Lvl21);
-                    break;
-                default:
-                    EndOfTheGame();
-                    return;
+                EndOfTheGame();
+                return;
             }
 
             _field = _factory.CreateField(level);
             _character = _factory.CreateCharacter(level, _field);
-            _character.Moved += _field.CheckForFinish;
-            _character.AppliedPullAbility += _field.CheckForFinish;
-            _character.AppliedRotateAbility += _field.CheckForFinish;
-            _field.Finished += LevelFinished;
+
+            IObservable<Unit> characterUpdated = Observable.Concat(
+                Observable.FromEvent(h => _character.Moved += h, h => _character.Moved -= h),
+                Observable.FromEvent(h => _character.AppliedPullAbility += h, h => _character.AppliedPullAbility -= h),
+                Observable.FromEvent(h => _character.AppliedRotateAbility += h, h => _character.AppliedRotateAbility -= h)
+            );
+
+            _disposable = new CompositeDisposable();
+
+            characterUpdated.Subscribe(_ => _finishSystem.CheckForFinish()).AddTo(_disposable);
+            _finishSystem.Finished += LevelFinished;
             _character.Died += ReloadLevel;
             NextLevel += _gameUI.ToNextLevel;
+
             _character.Moved += _audioManager.PlayMove;
-
-            if (_justStarted)
-            {
-                _justStarted = false;
-                _character.Moved += FirstPlayerInput;
-            }
-
             //_character.Detached += _audioManager.PlayDetach;
             //_character.AppliedPullAbility += _audioManager.PlayPullIn;
             //_character.AppliedRotateAbility += _audioManager.PlayRotate;
@@ -156,28 +101,28 @@ namespace Infrastructure.Scope
         }
 
 
-        public void LoadNextLevel()
+        private void LoadNextLevel()
         {
             _currentLevel++;
             NextLevel?.Invoke(_currentLevel);
             LoadLevel();
         }
 
-        public void ReloadLevel()
+        private void ReloadLevel()
         {
             LockInputs();
             _ceiling.FadeIn();
             _ceiling.OnFadeIn += OnReloadLevelTransition;
         }
 
-        public void ReloadLevel(InputAction.CallbackContext obj)
+        private void ReloadLevel(InputAction.CallbackContext obj)
         {
             LockInputs();
             _ceiling.FadeIn();
             _ceiling.OnFadeIn += OnReloadLevelTransition;
         }
 
-        public void LoadExtraLevel(int level)
+        private void LoadExtraLevel(int level)
         {
             //fix fade in
             LockInputs();
@@ -218,11 +163,9 @@ namespace Infrastructure.Scope
 
         private void DestroyLevel()
         {
-            _character.Moved -= _field.CheckForFinish;
-            _character.AppliedPullAbility -= _field.CheckForFinish;
-            _character.AppliedRotateAbility -= _field.CheckForFinish;
-            _field.Finished -= LevelFinished;
-            
+            _finishSystem.Finished -= LevelFinished;
+            _disposable.Dispose();
+
             _factory.CleanUp();
             _character.Destroy();
         }
@@ -243,6 +186,34 @@ namespace Infrastructure.Scope
         private void EndOfTheGame()
         {
             _gameUI.ShowCredits();
+        }
+
+        private GameLevel? SelectNextLevel()
+        {
+            Debug.Log($"Loading Level {_currentLevel}");
+            return _currentLevel switch
+            {
+                1 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl1),
+                2 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl2),
+                3 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl3),
+                4 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl4),
+                5 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl5),
+                6 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl6),
+                7 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl7),
+                8 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl8),
+                9 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl9),
+                10 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl10),
+                11 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl11),
+                12 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl12),
+                13 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl13),
+                14 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl14),
+                15 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl15),
+                16 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl16),
+                17 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl17),
+                // 18 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl18);
+                21 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl21),
+                _ => null
+            };
         }
     }
 }

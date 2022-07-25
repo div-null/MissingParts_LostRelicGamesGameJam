@@ -63,38 +63,25 @@ public class GameUI : MonoBehaviour
     {
         LevelNumber.text = $"Level {levelNumber}/{17}";
 
-        switch (levelNumber)
-        {
-            case 2:
-                UnlockTutorial(1);
-                break;
-            case 3:
-                UnlockTutorial(2);
-                break;
-            case 6:
-                UnlockTutorial(3);
-                break;
-            case 7:
-                UnlockTutorial(4);
-                break;
-            case 9:
-                UnlockTutorial(5);
-                break;
-            case 11:
-                UnlockTutorial(6);
-                break;
-            case 12:
-                UnlockTutorial(7);
-                break;
-            case 13:
-                UnlockTutorial(8);
-                break;
-            default:
-                break;
-        }
+        int tutorialNum =
+            levelNumber switch
+            {
+                2 => 1,
+                3 => 2,
+                6 => 3,
+                7 => 4,
+                9 => 5,
+                11 => 6,
+                12 => 7,
+                13 => 8,
+                _ => 0
+            };
+
+        if (tutorialNum != 0)
+            UnlockTutorial(tutorialNum);
     }
 
-    public void UnlockTutorial(int tutorialNumber)
+    private void UnlockTutorial(int tutorialNumber)
     {
         if (tutorialNumber >= Tutorials.Length) tutorialNumber = Tutorials.Length;
         OpenTutorial(tutorialNumber);
