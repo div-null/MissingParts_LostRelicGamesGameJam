@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Assets.Scripts.Field.Cell;
+using Unity.VisualScripting;
 
 namespace Systems
 {
@@ -24,7 +26,12 @@ namespace Systems
                 if (finishCell.Container == null)
                     return false;
 
-                if (finishCell.Container.Part.Color != _finishColor || !HasRightShape(finishCell.Container.Part, visitedParts))
+                CharacterPart characterPart = finishCell.Container.Part;
+
+                if (characterPart.Color != _finishColor)
+                    return false;
+                
+                if (!visitedParts.Contains(characterPart) && !HasRightShape(characterPart, visitedParts))
                     return false;
             }
 
@@ -33,22 +40,12 @@ namespace Systems
 
         private bool HasRightShape(CharacterPart characterPart, HashSet<CharacterPart> visitedParts)
         {
-            bool visitNode(CharacterPart part)
-            {
-                if (part == null) return true;
-                if (visitedParts.Contains(part)) return true;
-                visitedParts.Add(part);
-
-                if (_field.TryGet(part.Position, out Cell cell) && !cell.IsFinish())
-                    return false;
-
-                return visitNode(part.Down)
-                       && visitNode(part.Up)
-                       && visitNode(part.Right)
-                       && visitNode(part.Left);
-            }
-
-            return visitNode(characterPart);
+            List<CharacterPart> parts = characterPart.ToList();
+            visitedParts.AddRange(parts);
+            return parts.All(InsideFinish);
         }
+
+        private bool InsideFinish(CharacterPart part) =>
+            _field.TryGet(part.Position, out Cell cell) && cell.IsFinish();
     }
 }
