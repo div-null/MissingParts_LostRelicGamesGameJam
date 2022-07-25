@@ -40,10 +40,10 @@ public class CharacterPart : IEnumerable<CharacterPart>
         set => _isActive.Value = value;
     }
 
-    public CharacterPart Right { get; private set; }
-    public CharacterPart Left { get; private set; }
-    public CharacterPart Up { get; private set; }
-    public CharacterPart Down { get; private set; }
+    public CharacterPart? Right { get; private set; }
+    public CharacterPart? Left { get; private set; }
+    public CharacterPart? Up { get; private set; }
+    public CharacterPart? Down { get; private set; }
 
     private readonly ReactiveProperty<ColorType> _color = new();
     private readonly ReactiveProperty<Vector2Int> _position = new();
@@ -80,7 +80,7 @@ public class CharacterPart : IEnumerable<CharacterPart>
         //Обойти все части characterPart'а и изменить им Active
         HashSet<CharacterPart> visited = new HashSet<CharacterPart>();
 
-        void visitNode(CharacterPart part)
+        void visitNode(CharacterPart? part)
         {
             if (part == null) return;
             if (visited.Contains(part)) return;
@@ -101,7 +101,7 @@ public class CharacterPart : IEnumerable<CharacterPart>
         //Обойти все части characterPart'а и изменить им Active
         HashSet<CharacterPart> visited = new HashSet<CharacterPart>();
 
-        void visitNode(CharacterPart part)
+        void visitNode(CharacterPart? part)
         {
             if (part == null) return;
             if (visited.Contains(part)) return;
@@ -152,7 +152,7 @@ public class CharacterPart : IEnumerable<CharacterPart>
 
     private void RotateLinks()
     {
-        CharacterPart temp = Up;
+        CharacterPart? temp = Up;
         Up = Left;
         Left = Down;
         Down = Right;
@@ -278,10 +278,10 @@ public class CharacterPart : IEnumerable<CharacterPart>
         }
 
         CharacterPart? AnyNeighbourNode(CharacterPart part) =>
-            (!returned.Contains(part.Left) ? part.Left : null) ??
-            (!returned.Contains(part.Up) ? part.Up : null) ??
-            (!returned.Contains(part.Right) ? part.Right : null) ??
-            (!returned.Contains(part.Down) ? part.Down : null);
+            (part.Left != null && !returned.Contains(part.Left) ? part.Left : null) ??
+            (part.Up != null && !returned.Contains(part.Up) ? part.Up : null) ??
+            (part.Right != null && !returned.Contains(part.Right) ? part.Right : null) ??
+            (part.Down != null && !returned.Contains(part.Down) ? part.Down : null);
     }
 
     IEnumerator IEnumerable.GetEnumerator() =>
