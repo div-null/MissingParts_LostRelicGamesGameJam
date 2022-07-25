@@ -16,6 +16,8 @@ namespace Systems
             foreach (CharacterPart part in graph)
                 if (part.IsLeaf())
                     UpdatePartLinks(part);
+            
+            Debug.Log("Part links updated");
         }
 
 
@@ -28,8 +30,8 @@ namespace Systems
                 {
                     if (cell.Container != null)
                         p.Join(cell.Container.Part, p.IsActive);
-                    else
-                        p.RemoveLinkInDirection(direction);
+                    // else
+                    //     p.RemoveLinkInDirection(direction);
                 }
             }
 

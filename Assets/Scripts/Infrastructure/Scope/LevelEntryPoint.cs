@@ -46,12 +46,11 @@ namespace Infrastructure.Scope
 
         public void Start()
         {
-            _firstInput = Observable.FromEvent(h => _character.Moved += h, h => _character.Moved -= h).Single();
-            _firstInput.Subscribe(_ => FirstPlayerInput());
-
             _gameUI.RestartClicked += ReloadLevel;
             _gameUI.ChooseExtraLevel += LoadExtraLevel;
             LoadNextLevel();
+            _firstInput = Observable.FromEvent(h => _character.Moved += h, h => _character.Moved -= h).First();
+            _firstInput.Subscribe(_ => FirstPlayerInput());
             _ceiling.FadeOut();
         }
 
@@ -79,7 +78,7 @@ namespace Infrastructure.Scope
             _character.Died += ReloadLevel;
             NextLevel += _gameUI.ToNextLevel;
 
-            _character.Moved += _audioManager.PlayMove;
+            // _character.Moved += _audioManager.PlayMove;
             //_character.Detached += _audioManager.PlayDetach;
             //_character.AppliedPullAbility += _audioManager.PlayPullIn;
             //_character.AppliedRotateAbility += _audioManager.PlayRotate;

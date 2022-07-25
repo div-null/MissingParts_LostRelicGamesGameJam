@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Assets.Scripts.Field.Cell;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace Systems
 {
@@ -44,7 +45,7 @@ namespace Systems
 
             HashSet<CharacterPart> visited = new HashSet<CharacterPart>();
 
-            void visitNode(CharacterPart part)
+            void visitNode(CharacterPart? part)
             {
                 if (part == null) return;
                 if (visited.Contains(part)) return;
@@ -59,6 +60,7 @@ namespace Systems
             }
 
             visitNode(characterPart);
+            Debug.Log("Parts moved");
             return true;
         }
 
@@ -79,9 +81,7 @@ namespace Systems
 
         private void SetPosition(CharacterPart part, Vector2Int destination)
         {
-            CharacterPartContainer partContainer = _field.Get(part.Position).Container;
-            _field.Get(part.Position).RemoveCharacterPart(partContainer);
-            _field.Get(destination).AssignCharacterPart(partContainer);
+            _field.Replace(part, destination);
             part.Position = destination;
         }
 

@@ -22,6 +22,7 @@ namespace Game
         private AttachmentSystem? _attachmentSystem;
         private PitSystem _pitSystem;
         private FinishSystem _finishSystem;
+        private MoveSystem _moveSystem;
 
         public LevelFactory(IObjectResolver resolver, GameSettings gameSettings, AudioManager audioManager)
         {
@@ -39,7 +40,6 @@ namespace Game
                 CharacterPartContainer partContainer = CreateCharacterPart(field, partData);
 
                 _attachmentSystem.UpdateLinks(partContainer.Part);
-                field.Get(partData.X, partData.Y).AssignCharacterPart(partContainer);
 
                 parts.Add(partContainer.Part);
                 _cachedParts.Add(partContainer);
@@ -79,18 +79,19 @@ namespace Game
 
                     if (newCell.CellType == CellType.Finish)
                         finishCells.Add(newCell);
-                    
+
                     cells[i, j] = newCell;
                 }
             }
-            
+
             _attachmentSystem = new AttachmentSystem(_field);
             _pitSystem = new PitSystem(_field, _attachmentSystem);
             _finishSystem = new FinishSystem(_field, finishCells, level.FinishColor);
-            
+            _moveSystem = new MoveSystem(_field);
+
             foreach (var cell in finishCells)
                 cell.GetComponent<FinishView>().SetColor(level.FinishColor);
-            
+
 
             var inactiveParts = level.PlayerParts.Where(part => !part.IsActive);
             foreach (var playerPart in inactiveParts)
@@ -99,10 +100,9 @@ namespace Game
                 CharacterPart part = partContainer.Part;
 
                 _attachmentSystem.UpdateLinks(part);
-                cells[part.Position.x, part.Position.y].AssignCharacterPart(partContainer);
                 _cachedParts.Add(partContainer);
             }
-            
+
             return _field;
         }
 
@@ -133,9 +133,9 @@ namespace Game
         private CharacterPartContainer CreateCharacterPart(Field field, CharacterPartData partData)
         {
             Vector3 partPosition = field.Get(partData.X, partData.Y).gameObject.transform.position - Vector3.forward;
+            var position = new Vector2Int(partData.X, partData.Y);
 
             CharacterPartContainer partContainer = _resolver.Instantiate(_gameSettings.CharacterPartPrefab, partPosition, Quaternion.identity);
-            field.Get(partData.X, partData.Y).AssignCharacterPart(partContainer);
 
             if (partData.Ability == AbilityType.Hook)
             {
@@ -146,11 +146,14 @@ namespace Game
             }
 
             partContainer.Part = new CharacterPart(
-                new Vector2Int(partData.X, partData.Y),
+                position,
                 partData.IsActive,
                 DirectionFromAngle(partData.Rotation),
                 partData.Color,
                 partData.Ability);
+            
+            field.Attach(partContainer, position);
+            // _moveSystem.MovePart(partContainer.Part, position);
 
             partContainer.PartView.Initialize(partContainer.Part, partData.Sprite);
 

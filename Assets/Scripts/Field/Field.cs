@@ -6,7 +6,7 @@ using UnityEngine;
 public class Field : MonoBehaviour
 {
     private Cell[,] _cells;
-
+    private Dictionary<CharacterPart, CharacterPartContainer> _containers = new();
 
     public void SetCells(Cell[,] cells)
     {
@@ -33,6 +33,20 @@ public class Field : MonoBehaviour
     {
         cell = Get(coordinates);
         return cell != null;
+    }
+
+    public void Attach(CharacterPartContainer container, Vector2Int position)
+    {
+        if (!_containers.ContainsKey(container.Part))
+            _containers.Add(container.Part, container);
+
+        Get(position).AssignCharacterPart(container);
+    }
+
+    public void Replace(CharacterPart part, Vector2Int newPosition)
+    {
+        Get(part.Position).RemoveCharacterPart(part);
+        Get(newPosition).AssignCharacterPart(_containers[part]);
     }
 
     public void Destroy()
