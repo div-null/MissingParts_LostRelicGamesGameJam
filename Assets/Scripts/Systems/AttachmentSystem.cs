@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Assets.Scripts.Field.Cell;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Systems
 {
@@ -27,12 +24,13 @@ namespace Systems
             void UpdateLink(CharacterPart p, DirectionType direction)
             {
                 Vector2Int checkPosition = p.Position + direction.ToVector2Int();
-                CharacterPart characterPart = _field.Get(checkPosition)?.Container.Part;
-
-                if (characterPart != null)
-                    p.Join(characterPart, p.IsActive);
-                else
-                    p.RemoveLinkInDirection(direction);
+                if (_field.TryGet(checkPosition, out var cell))
+                {
+                    if (cell.Container != null)
+                        p.Join(cell.Container.Part, p.IsActive);
+                    else
+                        p.RemoveLinkInDirection(direction);
+                }
             }
 
             UpdateLink(part, DirectionType.Down);

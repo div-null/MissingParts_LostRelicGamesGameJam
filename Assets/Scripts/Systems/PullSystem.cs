@@ -65,7 +65,7 @@ namespace Systems
         private bool TryToAttach(CharacterPart characterPart, HookView hookView)
         {
             DirectionType lookDirection = characterPart.Look;
-            DirectionType oppositeDirection = lookDirection.InvertSingle();
+            DirectionType oppositeDirection = lookDirection.Invert();
 
             (int numberOfSteps, CharacterPartContainer foundPart) = LookupForPart(characterPart.Position, lookDirection.ToVector2Int());
 
@@ -83,7 +83,7 @@ namespace Systems
         private bool PullAttachedPart(CharacterPart characterPart, CharacterPart foundedCharacterPart)
         {
             DirectionType lookDirection = characterPart.Look;
-            DirectionType oppositeDirection = lookDirection.InvertSingle();
+            DirectionType oppositeDirection = lookDirection.Invert();
 
             while (characterPart.GetPartFromDirection(lookDirection) != foundedCharacterPart)
             {
@@ -136,7 +136,7 @@ namespace Systems
         private bool TryToDetach(CharacterPart hookPart, HookView hookView)
         {
             DirectionType lookDirection = hookPart.Look;
-            DirectionType oppositeDirection = lookDirection.InvertSingle();
+            DirectionType oppositeDirection = lookDirection.Invert();
             CharacterPart detachablePart = hookPart.GetPartFromDirection(lookDirection);
 
             List<CharacterPart> pulledParts = DivideGraphByDirection(hookPart, detachablePart, lookDirection);

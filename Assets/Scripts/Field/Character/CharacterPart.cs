@@ -134,7 +134,7 @@ public class CharacterPart : IEnumerable<CharacterPart>
         RemoveLinkInDirection(DirectionType.Left);
     }
 
-    public CharacterPart GetPartFromDirection(DirectionType direction)
+    public CharacterPart? GetPartFromDirection(DirectionType direction)
     {
         return direction switch
         {
@@ -173,10 +173,11 @@ public class CharacterPart : IEnumerable<CharacterPart>
 
     public void RemoveLinkInDirection(DirectionType direction)
     {
-        CharacterPart removedPart = this.GetPartFromDirection(direction);
+        CharacterPart? removedPart = this.GetPartFromDirection(direction);
+        if (removedPart == null) return;
 
         RemoveLink(this, direction);
-        RemoveLink(removedPart, direction.InvertSingle());
+        RemoveLink(removedPart, direction.Invert());
     }
 
     private void SetLinkInDirection(CharacterPart part, DirectionType direction)

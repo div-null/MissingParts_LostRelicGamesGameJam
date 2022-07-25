@@ -69,7 +69,7 @@ public class TileView : MonoBehaviour
         void CheckCorner(DirectionType currentTile, DirectionType firstTile, DirectionType secondTile, DirectionType firstDirection, DirectionType secondDirection)
         {
             DirectionType cornerDirection = firstDirection | secondDirection;
-            if (!currentTile.HasFlag(firstDirection) && !currentTile.HasFlag(secondDirection) && firstTile != secondTile.Invert() )
+            if (!currentTile.HasFlag(firstDirection) && !currentTile.HasFlag(secondDirection) && firstTile != secondTile.Negate() )
             {
                 // rich shape
                 if (firstTile.HasFlagEq(secondDirection) && secondTile.HasFlagEq(firstDirection))

@@ -58,7 +58,6 @@ namespace Infrastructure.Scope
         private void FirstPlayerInput()
         {
             _gameUI.HideMenu();
-            _character.Moved -= FirstPlayerInput;
             _playerInputs.CharacterControls.Restart.performed += ReloadLevel;
         }
 

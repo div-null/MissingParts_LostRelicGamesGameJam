@@ -30,28 +30,30 @@ public static class DirectionExtensions
 
     public static DirectionType RotateRight(this DirectionType direction)
     {
-        switch (direction)
+        return direction switch
         {
-            case DirectionType.Up | DirectionType.Right:
-                return DirectionType.Right | DirectionType.Down;
-            case DirectionType.Up | DirectionType.Left:
-                return DirectionType.Up | DirectionType.Right;
-            case DirectionType.Down | DirectionType.Left:
-                return DirectionType.Up | DirectionType.Left;
-            case DirectionType.Down | DirectionType.Right:
-                return DirectionType.Down | DirectionType.Left;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(direction), "Not allowed");
-        }
+            DirectionType.Up => DirectionType.Right,
+            DirectionType.Right => DirectionType.Down,
+            DirectionType.Down => DirectionType.Left,
+            DirectionType.Left => DirectionType.Up,
+            DirectionType.Up | DirectionType.Right => DirectionType.Right | DirectionType.Down,
+            DirectionType.Up | DirectionType.Left => DirectionType.Up | DirectionType.Right,
+            DirectionType.Down | DirectionType.Left => DirectionType.Up | DirectionType.Left,
+            DirectionType.Down | DirectionType.Right => DirectionType.Down | DirectionType.Left,
+            _ => throw new ArgumentOutOfRangeException(nameof(direction), "Not allowed")
+        };
     }
 
-    public static DirectionType InvertSingle(this DirectionType direction)
+    public static DirectionType Invert(this DirectionType direction) =>
+        direction.RotateRight().RotateRight();
+
+    public static DirectionType NegateSingle(this DirectionType direction)
     {
         var directionTypes = directions.Except(direction.GetFlags()).Intersect(directions).ToList();
         return directionTypes.Single();
     }
 
-    public static DirectionType Invert(this DirectionType direction)
+    public static DirectionType Negate(this DirectionType direction)
     {
         var directionTypes = directions.Except(direction.GetFlags()).Intersect(directions).ToList();
         return directionTypes.Aggregate(DirectionType.None, (acc, cur) => acc | cur);

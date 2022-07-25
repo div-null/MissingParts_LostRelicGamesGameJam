@@ -4,7 +4,6 @@ using System.Linq;
 using Assets.Scripts.Field.Cell;
 using LevelEditor;
 using Systems;
-using Unity.VisualScripting;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
@@ -76,10 +75,11 @@ namespace Game
                         tileView.DrawBorders(borders, cellPosition, bordersMap, level.Get);
                     }
 
-                    if (cells[i, j].CellType == CellType.Finish)
-                        finishCells.Add(cells[i, j]);
-
                     newCell.Initialize(cellPosition, cellData.Type, borders);
+
+                    if (newCell.CellType == CellType.Finish)
+                        finishCells.Add(newCell);
+                    
                     cells[i, j] = newCell;
                 }
             }
