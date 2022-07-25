@@ -9,14 +9,17 @@ namespace Systems
     {
         private readonly Field _field;
         private readonly int _range;
-        private MoveSystem _moveSystem;
-        private AttachmentSystem _attachmentSystem;
-        private PitSystem _pitSystem;
+        private readonly MoveSystem _moveSystem;
+        private readonly AttachmentSystem _attachmentSystem;
+        private readonly PitSystem _pitSystem;
 
-        public PullSystem(Field field, int pullRange)
+        public PullSystem(Field field, int pullRange, MoveSystem moveSystem, AttachmentSystem attachmentSystem, PitSystem pitSystem)
         {
             _field = field;
             _range = pullRange;
+            _moveSystem = moveSystem;
+            _attachmentSystem = attachmentSystem;
+            _pitSystem = pitSystem;
         }
 
         public void ActivateHook(HookView hookView)

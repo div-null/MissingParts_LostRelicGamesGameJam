@@ -8,7 +8,7 @@ namespace Systems
     {
         private readonly Field _field;
         private readonly AttachmentSystem _attachmentSystem;
-        private MoveSystem _moveSystem;
+        private readonly MoveSystem _moveSystem;
 
         public RotationSystem(Field field,MoveSystem moveSystem, AttachmentSystem attachmentSystem)
         {

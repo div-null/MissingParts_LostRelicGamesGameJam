@@ -6,9 +6,14 @@ namespace Systems
 {
     public class PitSystem
     {
-        private Field _field;
+        private readonly Field _field;
+        private readonly AttachmentSystem _attachmentSystem;
 
-        private AttachmentSystem _attachmentSystem;
+        public PitSystem(Field field, AttachmentSystem attachmentSystem)
+        {
+            _field = field;
+            _attachmentSystem = attachmentSystem;
+        }
 
         //unused
         public void CheckForPits(CharacterPart characterPart)
