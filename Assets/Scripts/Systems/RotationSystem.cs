@@ -48,7 +48,7 @@ namespace Systems
                 part.Rotate();
             }
 
-            _attachmentSystem.AttachParts(characterPart);
+            _attachmentSystem.UpdateLinks(characterPart);
 
             return true;
         }

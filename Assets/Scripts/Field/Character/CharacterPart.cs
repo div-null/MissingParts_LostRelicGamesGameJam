@@ -119,32 +119,8 @@ public class CharacterPart
     public bool IsLeaf() =>
         Right == null || Left == null || Up == null || Down == null;
 
-
-    public void TryJoin(DirectionType direction)
-    {
-        var checkPosition = Position + direction.ToVector2Int();
-        var characterPart = _field.Get(checkPosition)?.Container;
-        if (characterPart != null)
-        {
-            Join(characterPart.Part, IsActive);
-        }
-        else
-        {
-            RemoveLinkInDirection(direction);
-        }
-    }
-
-    public void TryJoinAllDirections()
-    {
-        TryJoin(DirectionType.Down);
-        TryJoin(DirectionType.Up);
-        TryJoin(DirectionType.Left);
-        TryJoin(DirectionType.Right);
-    }
-
     public void Delete()
     {
-        _field.Get(Position).RemoveCharacterPart(this);
         RemoveLinks();
         Deleted.Execute();
         Debug.Log("destroying part");
@@ -182,7 +158,7 @@ public class CharacterPart
         Right = temp;
     }
 
-    private void Join(CharacterPart part, bool setActive = true)
+    public void Join(CharacterPart part, bool setActive = true)
     {
         Vector2Int joinPosition = part.Position - Position;
         Assert.IsTrue(joinPosition.magnitude == 1);
@@ -195,7 +171,7 @@ public class CharacterPart
             SetColorToAllParts(part.Color);
     }
 
-    private void RemoveLinkInDirection(DirectionType direction)
+    public void RemoveLinkInDirection(DirectionType direction)
     {
         switch (direction)
         {

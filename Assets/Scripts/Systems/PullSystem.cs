@@ -11,6 +11,7 @@ namespace Systems
         private readonly int _range;
         private MoveSystem _moveSystem;
         private AttachmentSystem _attachmentSystem;
+        private PitSystem _pitSystem;
 
         public PullSystem(Field field, int pullRange)
         {
@@ -92,7 +93,7 @@ namespace Systems
                     _moveSystem.MovePart(part, oppositeDirection);
                 // part.CharacterPartMovement.MoveThis(oppositeDirection);
 
-                _attachmentSystem.AttachParts(characterPart);
+                _attachmentSystem.UpdateLinks(characterPart);
             }
 
             return foundedCharacterPart.IsActive;
@@ -104,8 +105,8 @@ namespace Systems
             for (int i = 0; i < numberOfSteps; i++)
             {
                 bool isMoved = _moveSystem.Move(foundedCharacterPart, direction);
-                _attachmentSystem.AttachParts(characterPart);
-                _attachmentSystem.AttachParts(foundedCharacterPart);
+                _attachmentSystem.UpdateLinks(characterPart);
+                _attachmentSystem.UpdateLinks(foundedCharacterPart);
                 if (!isMoved)
                     return foundedCharacterPart.IsActive;
             }
@@ -164,7 +165,7 @@ namespace Systems
                 detachedGraph.SetActiveToAllParts(false);
 
             sourceGraph.SetActiveToAllParts(true);
-            _attachmentSystem.DetachParts(detachedGraph);
+            _pitSystem.PreserveMaxPart(detachedGraph);
         }
 
         private void MovePulledParts(List<CharacterPart> pulledParts, DirectionType lookDirection)
@@ -173,7 +174,7 @@ namespace Systems
                 _moveSystem.MovePart(part, lookDirection);
 
             foreach (var part in pulledParts)
-                part.TryJoinAllDirections();
+                _attachmentSystem.UpdatePartLinks(part);
 
             //Ошибка
             //_characterPart.CharacterPartAttachment.AttachParts();

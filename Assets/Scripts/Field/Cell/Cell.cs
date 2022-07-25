@@ -57,6 +57,13 @@ namespace Assets.Scripts.Field.Cell
             if (Container == characterPart)
                 Container = null;
         }
+        
+        public void RemoveCharacterPart(CharacterPart characterPart)
+        {
+            if (Container.Part == characterPart)
+                Container = null;
+        }
+        
 
         public void AssignCharacterPart(CharacterPartContainer characterPartContainer)
         {

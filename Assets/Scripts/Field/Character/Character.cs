@@ -22,6 +22,7 @@ public class Character : MonoBehaviour
     private RotationSystem _rotationSystem;
     private AttachmentSystem _attachmentSystem;
     private MoveSystem _moveSystem;
+    private PitSystem _pitSystem;
 
     [Inject]
     public void Construct(PlayerInputs playerInputs,
@@ -102,7 +103,7 @@ public class Character : MonoBehaviour
         StartMoving?.Invoke();
         _moveSystem.Move(_mainPart, direction);
         // check for pits
-        var newMainPart = _attachmentSystem.DetachParts(_mainPart);
+        var newMainPart = _pitSystem.PreserveMaxPart(_mainPart);
 
         if (newMainPart == null)
         {
@@ -114,7 +115,7 @@ public class Character : MonoBehaviour
             _mainPart = newMainPart;
         }
 
-        _attachmentSystem.AttachParts(_mainPart);
+        _attachmentSystem.UpdateLinks(_mainPart);
         Moved?.Invoke();
     }
 
@@ -131,11 +132,11 @@ public class Character : MonoBehaviour
             {
                 if (partContainer.Part.IsActive)
                 {
-                    _mainPart = partContainer.Part;
+                    // _mainPart = partContainer.Part;
 
                     if (!ApplyAbility(partContainer)) return;
 
-                    _mainPart = _attachmentSystem.DetachPartsAndUnite(_mainPart, _mainPart);
+                    _mainPart = _pitSystem.PreserveConnectedPart(_mainPart, partContainer.Part);
                 }
             }
         }
