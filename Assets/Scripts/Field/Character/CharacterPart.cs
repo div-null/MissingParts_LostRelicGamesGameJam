@@ -1,12 +1,14 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Assets.Scripts.Field.Cell;
+using JetBrains.Annotations;
 using LevelEditor;
 using UniRx;
 using UnityEngine;
 using UnityEngine.Assertions;
 
-public class CharacterPart
+public class CharacterPart : IEnumerable<CharacterPart>
 {
     public readonly ReactiveCommand Deleted = new();
     public readonly IObservable<ColorType> ColorChanged;
@@ -237,4 +239,50 @@ public class CharacterPart
             }
         }
     }
+
+    public IEnumerator<CharacterPart> GetEnumerator()
+    {
+        HashSet<CharacterPart> returned = new();
+        HashSet<CharacterPart> visited = new();
+
+
+        CharacterPart? nextValue = NextRecursive(this);
+
+        while (true)
+        {
+            yield return nextValue!;
+
+            visited.Clear();
+            nextValue = AnyNeighbourNode(nextValue!) ?? NextRecursive(nextValue!);
+            if (nextValue != null)
+                returned.Add(nextValue);
+            else
+                yield break;
+        }
+
+
+        CharacterPart? NextRecursive(CharacterPart? part)
+        {
+            if (part == null) return null;
+            if (visited.Contains(part)) return null;
+            visited.Add(part);
+
+            if (!returned.Contains(part))
+                return part;
+
+            return NextRecursive(part.Left)
+                   ?? NextRecursive(part.Right)
+                   ?? NextRecursive(part.Up)
+                   ?? NextRecursive(part.Down);
+        }
+
+        CharacterPart? AnyNeighbourNode(CharacterPart part) =>
+            (!returned.Contains(part.Left) ? part.Left : null) ??
+            (!returned.Contains(part.Up) ? part.Up : null) ??
+            (!returned.Contains(part.Right) ? part.Right : null) ??
+            (!returned.Contains(part.Down) ? part.Down : null);
+    }
+
+    IEnumerator IEnumerable.GetEnumerator() =>
+        GetEnumerator();
 }
