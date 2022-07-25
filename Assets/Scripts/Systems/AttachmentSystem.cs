@@ -14,26 +14,11 @@ namespace Systems
             _field = field;
         }
 
-        public void UpdateLinks(CharacterPart characterPart)
+        public void UpdateLinks(CharacterPart graph)
         {
-            HashSet<CharacterPart> visited = new HashSet<CharacterPart>();
-
-            void visitNode(CharacterPart part)
-            {
-                if (part == null) return;
-                if (visited.Contains(part)) return;
-                visited.Add(part);
-
-                visitNode(part.Left);
-                visitNode(part.Right);
-                visitNode(part.Up);
-                visitNode(part.Down);
-
+            foreach (CharacterPart part in graph)
                 if (part.IsLeaf())
                     UpdatePartLinks(part);
-            }
-
-            visitNode(characterPart);
         }
 
 
