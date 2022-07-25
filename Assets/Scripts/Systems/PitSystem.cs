@@ -15,31 +15,10 @@ namespace Systems
             _attachmentSystem = attachmentSystem;
         }
 
-        //unused
-        public void CheckForPits(CharacterPart characterPart)
-        {
-            HashSet<CharacterPart> visited = new HashSet<CharacterPart>();
-
-            void visitNode(CharacterPart part)
-            {
-                if (part == null) return;
-                if (visited.Contains(part)) return;
-                visited.Add(part);
-
-                //if (HasPitInCell(part.Position))
-                //    _characterPart.PutAway();
-
-                visitNode(part.Left);
-                visitNode(part.Right);
-                visitNode(part.Up);
-                visitNode(part.Down);
-            }
-
-            visitNode(characterPart);
-        }
-
         public CharacterPart PreserveMaxPart(CharacterPart target)
         {
+            if (!CheckForPits(target)) return target;
+
             List<CharacterPart> remainingGraphs = RemoveFallenParts(target);
 
             //Choose max size chain as main character
@@ -63,6 +42,7 @@ namespace Systems
 
         public CharacterPart PreserveConnectedPart(CharacterPart target, CharacterPart newHead)
         {
+            if (!CheckForPits(target)) return target;
             List<CharacterPart> remainingGraphs = RemoveFallenParts(target);
 
             //Choose max size chain as main character
@@ -79,6 +59,17 @@ namespace Systems
 
             mainPart.SetActiveToAllParts(true);
             return mainPart;
+        }
+
+        private bool CheckForPits(CharacterPart characterPart)
+        {
+            foreach (CharacterPart part in characterPart)
+            {
+                if (_field.Get(part.Position).IsPit())
+                    return true;
+            }
+
+            return false;
         }
 
         private List<CharacterPart> RemoveFallenParts(CharacterPart target)
