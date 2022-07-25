@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Assets.Scripts.Field.Cell;
 using UnityEngine;
 
@@ -10,7 +11,7 @@ namespace Systems
         private readonly AttachmentSystem _attachmentSystem;
         private readonly MoveSystem _moveSystem;
 
-        public RotationSystem(Field field,MoveSystem moveSystem, AttachmentSystem attachmentSystem)
+        public RotationSystem(Field field, MoveSystem moveSystem, AttachmentSystem attachmentSystem)
         {
             _moveSystem = moveSystem;
             _attachmentSystem = attachmentSystem;
@@ -20,27 +21,14 @@ namespace Systems
         public bool TryToRotate(CharacterPart characterPart)
         {
             //Up -> Right, Right -> Down, Down -> Left, Left -> Up
-            HashSet<CharacterPart> visited = new HashSet<CharacterPart>();
             Dictionary<CharacterPart, Vector2Int> partsWithNewPositions = new Dictionary<CharacterPart, Vector2Int>();
-
-            bool canRotate(CharacterPart movingPart, Vector2Int rotationCenter)
+            Vector2Int rotationCenter = characterPart.Position;
+            foreach (CharacterPart part in characterPart)
             {
-                if (movingPart == null || visited.Contains(movingPart)) return true;
-                visited.Add(movingPart);
-
-                Vector2Int newPosition = RotatePoint(movingPart.Position, rotationCenter);
-                partsWithNewPositions.Add(movingPart, newPosition);
-
+                Vector2Int newPosition = RotatePoint(part.Position, rotationCenter);
                 if (CellBlocked(newPosition)) return false;
-
-                return canRotate(movingPart.Left, rotationCenter) &&
-                       canRotate(movingPart.Right, rotationCenter) &&
-                       canRotate(movingPart.Up, rotationCenter) &&
-                       canRotate(movingPart.Down, rotationCenter);
+                partsWithNewPositions.Add(part, newPosition);
             }
-
-            if (!canRotate(characterPart, characterPart.Position))
-                return false;
 
             foreach ((CharacterPart part, Vector2Int position) in partsWithNewPositions)
             {
