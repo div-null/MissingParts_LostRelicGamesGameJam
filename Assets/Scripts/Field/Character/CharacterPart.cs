@@ -1,8 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Assets.Scripts.Field.Cell;
-using JetBrains.Annotations;
 using LevelEditor;
 using UniRx;
 using UnityEngine;
@@ -52,6 +50,7 @@ public class CharacterPart : IEnumerable<CharacterPart>
     private readonly ReactiveProperty<DirectionType> _look = new();
     private readonly ReactiveProperty<bool> _isActive = new();
 
+    private Guid _id = Guid.NewGuid();
 
     public CharacterPart(Vector2Int position, bool isActive, DirectionType lookDirection, ColorType color, AbilityType ability)
     {
@@ -65,6 +64,8 @@ public class CharacterPart : IEnumerable<CharacterPart>
         LookChanged = _look.AsObservable();
         PositionChanged = _position.AsObservable();
         IsActiveChanged = _isActive.AsObservable();
+
+        PositionChanged.Subscribe(pos => Debug.Log($"[{_id}] Position = {pos}"));
     }
 
     public void Rotate()
@@ -161,7 +162,7 @@ public class CharacterPart : IEnumerable<CharacterPart>
     public void Join(CharacterPart part, bool setActive = true)
     {
         Vector2Int joinPosition = part.Position - Position;
-        Assert.IsTrue(joinPosition.magnitude == 1);
+        Assert.IsTrue(joinPosition.magnitude == 1, joinPosition.ToString());
 
         SetLinkInDirection(part, joinPosition.ToDirection());
 
@@ -246,6 +247,7 @@ public class CharacterPart : IEnumerable<CharacterPart>
 
 
         CharacterPart? nextValue = NextRecursive(this);
+        returned.Add(this);
 
         while (true)
         {
