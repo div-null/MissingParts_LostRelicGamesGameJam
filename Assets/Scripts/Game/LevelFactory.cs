@@ -139,14 +139,6 @@ namespace Game
 
             CharacterPartContainer partContainer = _resolver.Instantiate(_gameSettings.CharacterPartPrefab, partPosition, Quaternion.identity);
 
-            if (partData.Ability == AbilityType.Hook)
-            {
-                var renderer = partContainer.transform.GetComponentInChildren<SpriteRenderer>();
-                HookView hookView = _resolver.Instantiate(_gameSettings.HookPrefab, renderer.transform);
-                hookView.transform.rotation = Quaternion.identity;
-                partContainer.HookView = hookView;
-            }
-
             partContainer.Part = new CharacterPart(
                 position,
                 partData.IsActive,
@@ -155,7 +147,14 @@ namespace Game
                 partData.Ability);
 
             field.Attach(partContainer, position);
-            // _moveSystem.MovePart(partContainer.Part, position);
+            
+            if (partData.Ability == AbilityType.Hook)
+            {
+                var renderer = partContainer.transform.GetComponentInChildren<SpriteRenderer>();
+                HookView hookView = _resolver.Instantiate(_gameSettings.HookPrefab, renderer.transform);
+                hookView.Initialize(partContainer.Part);
+                partContainer.HookView = hookView;
+            }
 
             partContainer.PartView.Initialize(partContainer.Part, partData.Sprite);
 

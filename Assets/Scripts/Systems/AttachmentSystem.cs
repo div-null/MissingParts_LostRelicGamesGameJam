@@ -30,8 +30,8 @@ namespace Systems
                 {
                     if (cell.Container != null)
                         p.Join(cell.Container.Part, p.IsActive);
-                    // else
-                    //     p.RemoveLinkInDirection(direction);
+                    else
+                        p.RemoveLinkInDirection(direction);
                 }
             }
 

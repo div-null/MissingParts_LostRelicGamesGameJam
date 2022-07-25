@@ -17,6 +17,12 @@ public class HookView : MonoBehaviour
 
     public CharacterPart Part { get; private set; }
 
+    public void Initialize(CharacterPart part)
+    {
+        Part = part;
+        transform.rotation = Quaternion.identity;
+    }
+
     // Start is called before the first frame update
     public void RunForward(int numberOfBlocks)
     {
