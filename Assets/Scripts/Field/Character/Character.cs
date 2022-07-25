@@ -1,13 +1,11 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using LevelEditor;
 using Systems;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using VContainer;
 
-public class Character : MonoBehaviour
+public class Character : IDisposable
 {
     public event Action Moved;
     public event Action AppliedPullAbility;
@@ -16,32 +14,30 @@ public class Character : MonoBehaviour
     public event Action Died;
 
     private CharacterPart _mainPart;
-
     private PlayerInputs _playerInputs;
     private PullSystem _pullSystem;
     private RotationSystem _rotationSystem;
     private AttachmentSystem _attachmentSystem;
     private MoveSystem _moveSystem;
     private PitSystem _pitSystem;
+    private FinishSystem _finishSystem;
 
-    [Inject]
-    public void Construct(PlayerInputs playerInputs,
-        MoveSystem moveSystem,
-        AttachmentSystem attachmentSystem,
-        RotationSystem rotationSystem,
-        PullSystem pullSystem)
+    public Character(CharacterPart mainPart,
+        PlayerInputs playerInputs,
+        Field field,
+        PitSystem pitSystem, 
+        FinishSystem finishSystem)
     {
-        _moveSystem = moveSystem;
-        _attachmentSystem = attachmentSystem;
-        _rotationSystem = rotationSystem;
-        _pullSystem = pullSystem;
+        _mainPart = mainPart;
         _playerInputs = playerInputs;
-    }
 
-    public void AddParts(List<CharacterPart> parts)
-    {
-        // Взяли первый элемент
-        _mainPart = parts.First();
+        _pitSystem = pitSystem;
+        _finishSystem = finishSystem;
+        _moveSystem = new MoveSystem(field);
+        _attachmentSystem = new AttachmentSystem(field);
+        _pullSystem = new PullSystem(field, 4, _moveSystem, _attachmentSystem, pitSystem);
+        _rotationSystem = new RotationSystem(field, _moveSystem, _attachmentSystem);
+        
         _playerInputs.CharacterControls.Movement.performed += Move_performed;
         _playerInputs.CharacterControls.Select.performed += Select_performed;
         /*_playerInputs.CharacterControls.PrimaryContact.started += StartTouchPrimary;
@@ -90,13 +86,6 @@ public class Character : MonoBehaviour
             Debug.Log($"no {Vector3.Distance(startPosition, endPosition)} > {minDistance} && {deltaTime} < {maxTime}");
         }
     }*/
-
-    public void Destroy()
-    {
-        _mainPart = null;
-        Destroy(this.gameObject);
-        //may be something else with events
-    }
 
     private void Move(DirectionType direction)
     {
@@ -173,7 +162,7 @@ public class Character : MonoBehaviour
         return true;
     }
 
-    private void OnDestroy()
+    public void Dispose()
     {
         _playerInputs.CharacterControls.Movement.performed -= Move_performed;
         _playerInputs.CharacterControls.Select.performed -= Select_performed;

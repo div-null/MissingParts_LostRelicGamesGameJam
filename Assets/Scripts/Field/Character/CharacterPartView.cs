@@ -21,7 +21,7 @@ public class CharacterPartView : MonoBehaviour
     [SerializeField] private SpriteRenderer _lightSpriteRenderer;
 
 
-    public void Initialize(CharacterPart characterPart, CharacterPartData partData)
+    public void Initialize(CharacterPart characterPart, int spriteNumber)
     {
         Part = characterPart;
         characterPart.ColorChanged.Subscribe(OnColorChanged).AddTo(this);
@@ -30,8 +30,8 @@ public class CharacterPartView : MonoBehaviour
         characterPart.LookChanged.Subscribe(OnRotate).AddTo(this);
         characterPart.Deleted.Subscribe(_ => OnDelete()).AddTo(this);
 
-        _abilityType = partData.Ability;
-        _spriteNumber = partData.Sprite;
+        _abilityType = characterPart.Ability;
+        _spriteNumber = spriteNumber;
         LoadSprite();
     }
 

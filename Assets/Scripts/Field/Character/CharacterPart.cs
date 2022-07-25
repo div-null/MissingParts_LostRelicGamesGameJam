@@ -53,20 +53,18 @@ public class CharacterPart : IEnumerable<CharacterPart>
     private readonly ReactiveProperty<bool> _isActive = new();
 
 
-    public CharacterPart()
+    public CharacterPart(Vector2Int position, bool isActive, DirectionType lookDirection, ColorType color, AbilityType ability)
     {
+        Position = position;
+        IsActive = isActive;
+        Look = lookDirection;
+        Color = color;
+        Ability = ability;
+
         ColorChanged = _color.AsObservable();
         LookChanged = _look.AsObservable();
         PositionChanged = _position.AsObservable();
         IsActiveChanged = _isActive.AsObservable();
-    }
-
-    public void Initialize(Vector2Int position, bool isActive, DirectionType lookDirection, ColorType color)
-    {
-        Position = position;
-        Color = color;
-        Look = lookDirection;
-        IsActive = isActive;
     }
 
     public void Rotate()
