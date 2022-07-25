@@ -112,7 +112,9 @@ namespace Game
             _character.Dispose();
 
             for (int i = 0; i < _cachedParts.Count; i++)
-                Object.Destroy(_cachedParts[i]);
+                Object.Destroy(_cachedParts[i].gameObject);
+
+            _cachedParts.Clear();
         }
 
 
@@ -151,7 +153,7 @@ namespace Game
                 DirectionFromAngle(partData.Rotation),
                 partData.Color,
                 partData.Ability);
-            
+
             field.Attach(partContainer, position);
             // _moveSystem.MovePart(partContainer.Part, position);
 

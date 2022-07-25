@@ -23,7 +23,6 @@ namespace Infrastructure.Scope
         private Character _character;
         private AudioManager _audioManager;
 
-        private CompositeDisposable _disposable;
         private IObservable<Unit> _firstInput;
 
 
@@ -150,8 +149,6 @@ namespace Infrastructure.Scope
         private void DestroyLevel()
         {
             _character.Finished -= LevelFinished;
-            _disposable.Dispose();
-
             _factory.CleanUp();
         }
 
