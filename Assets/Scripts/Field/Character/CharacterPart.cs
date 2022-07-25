@@ -13,7 +13,7 @@ public class CharacterPart
     public readonly IObservable<Vector2Int> PositionChanged;
     public readonly IObservable<DirectionType> LookChanged;
     public readonly IObservable<bool> IsActiveChanged;
-    
+
     public AbilityType Ability { get; private set; }
 
     public ColorType Color
@@ -40,17 +40,17 @@ public class CharacterPart
         set => _isActive.Value = value;
     }
 
-    public CharacterPart Right;
-    public CharacterPart Left;
-    public CharacterPart Up;
-    public CharacterPart Down;
+    public CharacterPart Right { get; private set; }
+    public CharacterPart Left { get; private set; }
+    public CharacterPart Up { get; private set; }
+    public CharacterPart Down { get; private set; }
 
     private readonly ReactiveProperty<ColorType> _color = new();
     private readonly ReactiveProperty<Vector2Int> _position = new();
     private readonly ReactiveProperty<DirectionType> _look = new();
     private readonly ReactiveProperty<bool> _isActive = new();
 
-    
+
     public CharacterPart()
     {
         ColorChanged = _color.AsObservable();
@@ -58,7 +58,7 @@ public class CharacterPart
         PositionChanged = _position.AsObservable();
         IsActiveChanged = _isActive.AsObservable();
     }
-    
+
     public void Initialize(Vector2Int position, bool isActive, DirectionType lookDirection, ColorType color)
     {
         Position = position;
@@ -173,41 +173,10 @@ public class CharacterPart
 
     public void RemoveLinkInDirection(DirectionType direction)
     {
-        switch (direction)
-        {
-            case DirectionType.Up:
-            {
-                if (Up != null)
-                    Up.Down = null;
+        CharacterPart removedPart = this.GetPartFromDirection(direction);
 
-                Up = null;
-                break;
-            }
-            case DirectionType.Right:
-            {
-                if (Right != null)
-                    Right.Left = null;
-
-                Right = null;
-                break;
-            }
-            case DirectionType.Down:
-            {
-                if (Down != null)
-                    Down.Up = null;
-
-                Down = null;
-                break;
-            }
-            case DirectionType.Left:
-            {
-                if (Left != null)
-                    Left.Right = null;
-
-                Left = null;
-                break;
-            }
-        }
+        RemoveLink(this, direction);
+        RemoveLink(removedPart, direction.InvertSingle());
     }
 
     private void SetLinkInDirection(CharacterPart part, DirectionType direction)
@@ -237,6 +206,33 @@ public class CharacterPart
             {
                 Down = part;
                 part.Up = this;
+                break;
+            }
+        }
+    }
+
+    private static void RemoveLink(CharacterPart part, DirectionType direction)
+    {
+        switch (direction)
+        {
+            case DirectionType.Up:
+            {
+                part.Up = null;
+                break;
+            }
+            case DirectionType.Right:
+            {
+                part.Right = null;
+                break;
+            }
+            case DirectionType.Down:
+            {
+                part.Down = null;
+                break;
+            }
+            case DirectionType.Left:
+            {
+                part.Left = null;
                 break;
             }
         }
