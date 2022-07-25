@@ -1,9 +1,9 @@
 using System;
 using LevelEditor;
 using Systems;
+using UniRx;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using VContainer;
 
 public class Character : IDisposable
 {
@@ -12,6 +12,7 @@ public class Character : IDisposable
     public event Action AppliedRotateAbility;
     public event Action StartMoving;
     public event Action Died;
+    public event Action Finished;
 
     private CharacterPart _mainPart;
     private PlayerInputs _playerInputs;
@@ -21,11 +22,13 @@ public class Character : IDisposable
     private MoveSystem _moveSystem;
     private PitSystem _pitSystem;
     private FinishSystem _finishSystem;
+    private IObservable<Unit> _characterUpdated;
+    private readonly CompositeDisposable _disposable;
 
     public Character(CharacterPart mainPart,
         PlayerInputs playerInputs,
         Field field,
-        PitSystem pitSystem, 
+        PitSystem pitSystem,
         FinishSystem finishSystem)
     {
         _mainPart = mainPart;
@@ -37,12 +40,23 @@ public class Character : IDisposable
         _attachmentSystem = new AttachmentSystem(field);
         _pullSystem = new PullSystem(field, 4, _moveSystem, _attachmentSystem, pitSystem);
         _rotationSystem = new RotationSystem(field, _moveSystem, _attachmentSystem);
-        
+
         _playerInputs.CharacterControls.Movement.performed += Move_performed;
         _playerInputs.CharacterControls.Select.performed += Select_performed;
+
+        _characterUpdated = Observable.Concat(
+            Observable.FromEvent(h => Moved += h, h => Moved -= h),
+            Observable.FromEvent(h => AppliedPullAbility += h, h => AppliedPullAbility -= h),
+            Observable.FromEvent(h => AppliedRotateAbility += h, h => AppliedRotateAbility -= h)
+        );
+
+        _disposable = new CompositeDisposable();
+        _characterUpdated.Subscribe(_ => CheckFinished()).AddTo(_disposable);
+
         /*_playerInputs.CharacterControls.PrimaryContact.started += StartTouchPrimary;
         _playerInputs.CharacterControls.PrimaryContact.canceled += EndTouchPrimary;*/
     }
+
 
     /*private void StartTouchPrimary(InputAction.CallbackContext obj)
     {
@@ -162,9 +176,16 @@ public class Character : IDisposable
         return true;
     }
 
+    private void CheckFinished()
+    {
+        if (_finishSystem.CheckFinished())
+            Finished?.Invoke();
+    }
+
     public void Dispose()
     {
         _playerInputs.CharacterControls.Movement.performed -= Move_performed;
         _playerInputs.CharacterControls.Select.performed -= Select_performed;
+        _disposable.Dispose();
     }
 }

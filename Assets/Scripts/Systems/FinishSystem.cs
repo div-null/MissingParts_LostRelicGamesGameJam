@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Assets.Scripts.Field.Cell;
 
 namespace Systems
 {
     public class FinishSystem
     {
-        public event Action Finished;
-
         private readonly List<Cell> _finishCells;
         private readonly ColorType _finishColor;
         private readonly Field _field;
@@ -19,13 +16,7 @@ namespace Systems
             _finishColor = finishColor;
         }
 
-        public void CheckForFinish()
-        {
-            if (CheckFinished())
-                Finished?.Invoke();
-        }
-
-        private bool CheckFinished()
+        public bool CheckFinished()
         {
             HashSet<CharacterPart> visitedParts = new HashSet<CharacterPart>();
             foreach (var finishCell in _finishCells)

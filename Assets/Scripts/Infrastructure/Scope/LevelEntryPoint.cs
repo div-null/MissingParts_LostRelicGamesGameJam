@@ -1,7 +1,6 @@
 ﻿using System;
 using Game;
 using LevelEditor;
-using Systems;
 using UniRx;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -24,7 +23,6 @@ namespace Infrastructure.Scope
         private Character _character;
         private AudioManager _audioManager;
 
-        private FinishSystem _finishSystem;
         private CompositeDisposable _disposable;
         private IObservable<Unit> _firstInput;
 
@@ -34,8 +32,7 @@ namespace Infrastructure.Scope
             PlayerInputs playerInputs,
             GameUI gameUI,
             Ceiling ceiling,
-            AudioManager audioManager,
-            FinishSystem finishSystem)
+            AudioManager audioManager)
         {
             _playerInputs = playerInputs;
             _gameUI = gameUI;
@@ -45,7 +42,6 @@ namespace Infrastructure.Scope
             _currentLevel = 0;
             _ceiling.OnFadeOut += UnlockInputs;
             _audioManager = audioManager;
-            _finishSystem = finishSystem;
         }
 
         public void Start()
@@ -79,16 +75,8 @@ namespace Infrastructure.Scope
             _field = _factory.CreateField(level);
             _character = _factory.CreateCharacter(level, _field);
 
-            IObservable<Unit> characterUpdated = Observable.Concat(
-                Observable.FromEvent(h => _character.Moved += h, h => _character.Moved -= h),
-                Observable.FromEvent(h => _character.AppliedPullAbility += h, h => _character.AppliedPullAbility -= h),
-                Observable.FromEvent(h => _character.AppliedRotateAbility += h, h => _character.AppliedRotateAbility -= h)
-            );
 
-            _disposable = new CompositeDisposable();
-
-            characterUpdated.Subscribe(_ => _finishSystem.CheckForFinish()).AddTo(_disposable);
-            _finishSystem.Finished += LevelFinished;
+            _character.Finished += LevelFinished;
             _character.Died += ReloadLevel;
             NextLevel += _gameUI.ToNextLevel;
 
@@ -163,11 +151,10 @@ namespace Infrastructure.Scope
 
         private void DestroyLevel()
         {
-            _finishSystem.Finished -= LevelFinished;
+            _character.Finished -= LevelFinished;
             _disposable.Dispose();
 
             _factory.CleanUp();
-            _character.Destroy();
         }
 
 
