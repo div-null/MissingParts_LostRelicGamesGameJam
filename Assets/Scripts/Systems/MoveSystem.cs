@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Assets.Scripts.Field.Cell;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -22,44 +23,16 @@ namespace Systems
 
         public bool CanMove(CharacterPart characterPart, Vector2Int deltaPosition)
         {
-            HashSet<CharacterPart> visited = new HashSet<CharacterPart>();
-
-            bool visitNode(CharacterPart part)
-            {
-                if (part == null) return true;
-                if (visited.Contains(part)) return true;
-                visited.Add(part);
-
-                var destination = part.Position + deltaPosition;
-                if (HasWallIn(destination)) return false;
-
-                return visitNode(part.Left) && visitNode(part.Right) && visitNode(part.Up) && visitNode(part.Down);
-            }
-
-            return visitNode(characterPart);
+            return characterPart.All(part => !HasWallIn(part.Position + deltaPosition));
         }
 
         public bool Move(CharacterPart characterPart, DirectionType direction)
         {
             if (!CanMove(characterPart, direction)) return false;
 
-            HashSet<CharacterPart> visited = new HashSet<CharacterPart>();
-
-            void visitNode(CharacterPart? part)
-            {
-                if (part == null) return;
-                if (visited.Contains(part)) return;
-                visited.Add(part);
-
+            foreach (CharacterPart part in characterPart) 
                 MovePart(part, direction);
 
-                visitNode(part.Left);
-                visitNode(part.Right);
-                visitNode(part.Up);
-                visitNode(part.Down);
-            }
-
-            visitNode(characterPart);
             Debug.Log("Parts moved");
             return true;
         }
