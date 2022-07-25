@@ -77,44 +77,14 @@ public class CharacterPart : IEnumerable<CharacterPart>
 
     public void SetActiveToAllParts(bool isActive)
     {
-        //Обойти все части characterPart'а и изменить им Active
-        HashSet<CharacterPart> visited = new HashSet<CharacterPart>();
-
-        void visitNode(CharacterPart? part)
-        {
-            if (part == null) return;
-            if (visited.Contains(part)) return;
-            visited.Add(part);
+        foreach (CharacterPart part in this)
             part.IsActive = isActive;
-
-            visitNode(part.Down);
-            visitNode(part.Up);
-            visitNode(part.Right);
-            visitNode(part.Left);
-        }
-
-        visitNode(this);
     }
 
     public void SetColorToAllParts(ColorType color)
     {
-        //Обойти все части characterPart'а и изменить им Active
-        HashSet<CharacterPart> visited = new HashSet<CharacterPart>();
-
-        void visitNode(CharacterPart? part)
-        {
-            if (part == null) return;
-            if (visited.Contains(part)) return;
-            visited.Add(part);
+        foreach (CharacterPart part in this)
             part.Color = color;
-
-            visitNode(part.Down);
-            visitNode(part.Up);
-            visitNode(part.Right);
-            visitNode(part.Left);
-        }
-
-        visitNode(this);
     }
 
     public bool IsLeaf() =>
