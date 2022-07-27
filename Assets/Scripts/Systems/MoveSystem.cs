@@ -15,22 +15,22 @@ namespace Systems
             _field = field;
         }
 
-        public bool CanMove(CharacterPart characterPart, DirectionType direction)
+        public bool CanMove(CharacterPart graph, DirectionType direction)
         {
             var vector2Int = direction.ToVector2Int();
-            return CanMove(characterPart, vector2Int);
+            return CanMove(graph, vector2Int);
         }
 
-        public bool CanMove(CharacterPart characterPart, Vector2Int deltaPosition)
+        public bool CanMove(CharacterPart graph, Vector2Int deltaPosition)
         {
-            return characterPart.All(part => !HasWallIn(part.Position + deltaPosition));
+            return graph.All(part => !HasWallIn(part.Position + deltaPosition));
         }
 
-        public bool Move(CharacterPart characterPart, DirectionType direction)
+        public bool Move(CharacterPart graph, DirectionType direction)
         {
-            if (!CanMove(characterPart, direction)) return false;
+            if (!CanMove(graph, direction)) return false;
 
-            foreach (CharacterPart part in characterPart) 
+            foreach (CharacterPart part in graph) 
                 MovePart(part, direction);
 
             Debug.Log("Parts moved");

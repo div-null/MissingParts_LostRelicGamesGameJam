@@ -15,7 +15,7 @@ namespace Systems
             _attachmentSystem = attachmentSystem;
         }
 
-        public CharacterPart PreserveMaxPart(CharacterPart target)
+        public CharacterPart PreserveMaxPart(CharacterPart graph)
         {
             if (!CheckForPits(target)) return target;
 
@@ -40,7 +40,7 @@ namespace Systems
             return maxSize > 0 ? remainingGraphs[index] : null;
         }
 
-        public CharacterPart PreserveConnectedPart(CharacterPart target, CharacterPart newHead)
+        public CharacterPart PreserveConnectedPart(CharacterPart graph, CharacterPart newHead)
         {
             if (!CheckForPits(target)) return target;
             List<CharacterPart> remainingGraphs = RemoveFallenParts(target);

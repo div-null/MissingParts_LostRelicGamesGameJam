@@ -18,12 +18,12 @@ namespace Systems
             _field = field;
         }
 
-        public bool TryToRotate(CharacterPart characterPart)
+        public bool TryToRotate(CharacterPart graph)
         {
             //Up -> Right, Right -> Down, Down -> Left, Left -> Up
             Dictionary<CharacterPart, Vector2Int> partsWithNewPositions = new Dictionary<CharacterPart, Vector2Int>();
-            Vector2Int rotationCenter = characterPart.Position;
-            foreach (CharacterPart part in characterPart)
+            Vector2Int rotationCenter = graph.Position;
+            foreach (CharacterPart part in graph)
             {
                 Vector2Int newPosition = RotatePoint(part.Position, rotationCenter);
                 if (CellBlocked(newPosition)) return false;
@@ -36,7 +36,7 @@ namespace Systems
                 part.Rotate();
             }
 
-            _attachmentSystem.UpdateLinks(characterPart);
+            _attachmentSystem.UpdateLinks(graph);
 
             return true;
         }
