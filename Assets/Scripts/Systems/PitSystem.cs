@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Field.Cell;
+using Unity.VisualScripting;
 
 namespace Systems
 {
@@ -17,9 +19,11 @@ namespace Systems
 
         public CharacterPart PreserveMaxPart(CharacterPart graph)
         {
-            if (!CheckForPits(target)) return target;
-
-            List<CharacterPart> remainingGraphs = RemoveFallenParts(target);
+            if (!TryRemoveFallenParts(graph, out List<CharacterPart> remainingGraphs))
+                return graph;
+            
+            if (remainingGraphs.Count == 0)
+                return null;
 
             //Choose max size chain as main character
             (int maxSize, int index) = GetBiggestGraph(remainingGraphs);
@@ -42,9 +46,12 @@ namespace Systems
 
         public CharacterPart PreserveConnectedPart(CharacterPart graph, CharacterPart newHead)
         {
-            if (!CheckForPits(target)) return target;
-            List<CharacterPart> remainingGraphs = RemoveFallenParts(target);
+            if (!TryRemoveFallenParts(graph, out List<CharacterPart> remainingGraphs))
+                return graph;
 
+            if (remainingGraphs.Count == 0)
+                return null;
+            
             //Choose max size chain as main character
             CharacterPart mainPart = FindUnitedWithPart(remainingGraphs, newHead);
 
@@ -72,14 +79,18 @@ namespace Systems
             return false;
         }
 
-        private List<CharacterPart> RemoveFallenParts(CharacterPart target)
+        private bool TryRemoveFallenParts(CharacterPart target, out List<CharacterPart> graphs)
         {
             //Find all parts in pits
             //Remove their links with other parts
             //Create lists for remaining parts and deleting parts
-            List<CharacterPart> remainingParts = GetRemainingAndDeletingParts(target, out List<CharacterPart> deletingParts);
+            if (!GetRemainingAndDeletingParts(target.ToList(), out List<CharacterPart> remainingParts, out List<CharacterPart> deletingParts))
+            {
+                graphs = new List<CharacterPart>() {target};
+                return false;
+            }
 
-            //delete deleting parts
+            //delete parts
             foreach (var part in deletingParts)
             {
                 _field.Get(part.Position).RemoveCharacterPart(part);
@@ -87,44 +98,43 @@ namespace Systems
             }
 
             if (remainingParts.Count == 0)
-                return remainingParts;
+            {
+                graphs = new List<CharacterPart>();
+                return true;
+            }
 
-            return GetIsolatedGroups(remainingParts);
+            graphs = GetIsolatedGroups(remainingParts);
+            return true;
         }
 
         private CharacterPart FindUnitedWithPart(List<CharacterPart> unitedParts, CharacterPart characterPart) =>
-            unitedParts.FirstOrDefault(part => FindPart(part, characterPart));
+            unitedParts.FirstOrDefault(graph => graph.Contains(characterPart));
 
-        private List<CharacterPart> GetRemainingAndDeletingParts(CharacterPart characterPart, out List<CharacterPart> deletingParts)
+        /// <summary>
+        /// Gets the remaining and deleting parts of graph
+        /// </summary>
+        /// <param name="activeParts"></param>
+        /// <param name="remainingParts"></param>
+        /// <param name="deletingParts"></param>
+        /// <returns>Has deleting parts</returns>
+        private bool GetRemainingAndDeletingParts(List<CharacterPart> activeParts, out List<CharacterPart> remainingParts, out List<CharacterPart> deletingParts)
         {
-            HashSet<CharacterPart> visited = new HashSet<CharacterPart>();
-            List<CharacterPart> remaining = new List<CharacterPart>();
-            List<CharacterPart> deleting = new List<CharacterPart>();
+            deletingParts = new List<CharacterPart>();
+            remainingParts = new List<CharacterPart>();
 
-            void Separate(CharacterPart part)
+            foreach (CharacterPart part in activeParts)
             {
-                if (part == null) return;
-                if (visited.Contains(part)) return;
-                visited.Add(part);
-
-                Separate(part.Down);
-                Separate(part.Up);
-                Separate(part.Right);
-                Separate(part.Left);
-
                 Cell cell = _field.Get(part.Position);
                 if (cell.IsPit())
                 {
-                    deleting.Add(part);
+                    deletingParts.Add(part);
                     part.RemoveLinks();
                 }
                 else
-                    remaining.Add(part);
+                    remainingParts.Add(part);
             }
 
-            Separate(characterPart);
-            deletingParts = deleting;
-            return remaining;
+            return deletingParts.Any();
         }
 
         private (int size, int index) GetBiggestGraph(List<CharacterPart> unitedParts)
@@ -133,7 +143,7 @@ namespace Systems
             int index = -1;
             for (int i = 0; i < unitedParts.Count; i++)
             {
-                int currentSize = CountGraphSize(unitedParts[i]);
+                int currentSize = unitedParts[i].Count();
                 if (currentSize > maxSize)
                 {
                     maxSize = currentSize;
@@ -144,7 +154,6 @@ namespace Systems
             return (maxSize, index);
         }
 
-
         /// <summary>
         /// Returns list of isolated groups of character parts
         /// </summary>
@@ -154,67 +163,15 @@ namespace Systems
         {
             HashSet<CharacterPart> visited = new HashSet<CharacterPart>();
             List<CharacterPart> groups = new List<CharacterPart>();
-            foreach (var p in parts)
+            foreach (var graph in parts)
             {
-                if (!visited.Contains(p))
-                    groups.Add(p);
+                if (!visited.Contains(graph))
+                    groups.Add(graph);
 
-                void visitNodes(CharacterPart part)
-                {
-                    if (part == null) return;
-                    if (visited.Contains(part)) return;
-                    visited.Add(part);
-
-                    visitNodes(part.Down);
-                    visitNodes(part.Up);
-                    visitNodes(part.Right);
-                    visitNodes(part.Left);
-                }
-
-                visitNodes(p);
+                visited.AddRange(graph);
             }
 
             return groups;
-        }
-
-        private int CountGraphSize(CharacterPart characterPart)
-        {
-            HashSet<CharacterPart> visited = new HashSet<CharacterPart>();
-
-            void visitNode(CharacterPart part)
-            {
-                if (part == null) return;
-                if (visited.Contains(part)) return;
-                visited.Add(part);
-
-                visitNode(part.Down);
-                visitNode(part.Up);
-                visitNode(part.Right);
-                visitNode(part.Left);
-            }
-
-            visitNode(characterPart);
-            return visited.Count;
-        }
-
-        private bool FindPart(CharacterPart united, CharacterPart characterPart)
-        {
-            HashSet<CharacterPart> visited = new HashSet<CharacterPart>();
-
-            bool visitNode(CharacterPart part)
-            {
-                if (part == null) return false;
-                if (visited.Contains(part)) return false;
-                visited.Add(part);
-
-                if (part == characterPart)
-                    return true;
-                else
-                    return visitNode(part.Down) || visitNode(part.Up) || visitNode(part.Right) || visitNode(part.Left);
-            }
-
-
-            return visitNode(united);
         }
     }
 }
