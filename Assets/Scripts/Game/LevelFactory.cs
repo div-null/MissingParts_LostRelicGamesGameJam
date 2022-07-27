@@ -111,8 +111,9 @@ namespace Game
             _field.Destroy();
             _character.Dispose();
 
-            for (int i = 0; i < _cachedParts.Count; i++)
-                Object.Destroy(_cachedParts[i].gameObject);
+            foreach (CharacterPartContainer part in _cachedParts)
+                if (part != null && part.gameObject != null)
+                    Object.Destroy(part.gameObject);
 
             _cachedParts.Clear();
         }
@@ -147,7 +148,7 @@ namespace Game
                 partData.Ability);
 
             field.Attach(partContainer, position);
-            
+
             if (partData.Ability == AbilityType.Hook)
             {
                 var renderer = partContainer.transform.GetComponentInChildren<SpriteRenderer>();
