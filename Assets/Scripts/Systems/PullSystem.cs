@@ -69,10 +69,13 @@ namespace Systems
 
             (int numberOfSteps, CharacterPartContainer foundPart) = LookupForPart(characterPart.Position, lookDirection.ToVector2Int());
 
-            hookView.RunForward(numberOfSteps - 1);
-
             if (foundPart == null)
+            {
+                hookView.RunForward(numberOfBlocks: 1);
                 return false;
+            }
+
+            hookView.RunForward(numberOfBlocks: numberOfSteps - 1);
 
             if (!foundPart.Part.IsActive)
                 return PullPartAndAttach(characterPart, foundPart.Part, oppositeDirection, numberOfSteps);
@@ -119,7 +122,7 @@ namespace Systems
 
         private (int, CharacterPartContainer) LookupForPart(Vector2Int startPosition, Vector2Int vectorDirection)
         {
-            for (int numberOfSteps = 1; numberOfSteps < _range; numberOfSteps++)
+            for (int numberOfSteps = 1; numberOfSteps <= _range; numberOfSteps++)
             {
                 Cell currentCell = _field.Get(startPosition + vectorDirection * numberOfSteps);
 
