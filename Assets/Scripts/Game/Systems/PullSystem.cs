@@ -139,15 +139,14 @@ namespace Game.Systems
         private bool TryToDetach(CharacterPart hookPart, HookView hookView)
         {
             DirectionType lookDirection = hookPart.Look;
-            DirectionType oppositeDirection = lookDirection.Invert();
             CharacterPart detachablePart = hookPart.GetPartFromDirection(lookDirection);
 
-            List<CharacterPart> pulledParts = DivideGraphByDirection(hookPart, detachablePart, lookDirection);
-            if (CanEachPartMove(pulledParts, oppositeDirection))
+            List<CharacterPart> detachedParts = DivideGraphByDirection(hookPart, detachablePart, lookDirection);
+            if (CanEachPartMove(detachedParts, lookDirection))
             {
                 hookView.RunForward(1);
-                MovePulledParts(pulledParts, lookDirection);
-                DetachGraph(hookPart, pulledParts.First());
+                MoveDetachedParts(detachedParts, lookDirection);
+                DetachGraph(hookPart, detachedParts.First());
 
                 return true;
             }
@@ -164,26 +163,23 @@ namespace Game.Systems
 
         private void DetachGraph(CharacterPart sourceGraph, CharacterPart detachedGraph)
         {
-            //check for pits
-            //turn detach parts inactive
-            //turn mainParts active
             if (!CanReachSource(sourceGraph, detachedGraph, new List<CharacterPart>()))
                 detachedGraph.SetActiveToAllParts(false);
 
-            sourceGraph.SetActiveToAllParts(true);
+            // check pits for detached parts
             _pitSystem.PreserveMaxPart(detachedGraph);
+            
+            _attachmentSystem.UpdateLinks(sourceGraph);
+            sourceGraph.SetActiveToAllParts(true);
         }
 
-        private void MovePulledParts(List<CharacterPart> pulledParts, DirectionType lookDirection)
+        private void MoveDetachedParts(List<CharacterPart> pulledParts, DirectionType lookDirection)
         {
             foreach (var part in pulledParts)
                 _moveSystem.MovePart(part, lookDirection);
 
             foreach (var part in pulledParts)
                 _attachmentSystem.UpdatePartLinks(part);
-
-            //Ошибка
-            //_characterPart.CharacterPartAttachment.AttachParts();
         }
 
         private bool CanEachPartMove(List<CharacterPart> parts, DirectionType moveDirection) =>

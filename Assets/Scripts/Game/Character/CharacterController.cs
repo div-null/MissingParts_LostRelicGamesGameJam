@@ -108,6 +108,9 @@ namespace Game.Character
         private void Move(DirectionType direction)
         {
             StartMoving?.Invoke();
+            if (!_mainPart.IsActive)
+                Debug.LogError("Controlling disabled part");
+
             if (!_moveSystem.Move(_mainPart, direction))
                 return;
 
@@ -123,9 +126,9 @@ namespace Game.Character
             {
                 _mainPart = newMainPart;
             }
-            
+
             _attachmentSystem.UpdateLinks(_mainPart);
-            
+
             if (pitDetected)
                 PartDestroyed?.Invoke();
 
@@ -173,6 +176,7 @@ namespace Game.Character
 
         private bool ApplyAbility(CharacterPartContainer partContainer)
         {
+            _mainPart = partContainer.Part;
             switch (partContainer.Part.Ability)
             {
                 case AbilityType.Rotation:
@@ -183,6 +187,7 @@ namespace Game.Character
                 case AbilityType.Hook:
                     if (_pullSystem.ActivateHook(partContainer.HookView))
                         AppliedPullAbility?.Invoke();
+
                     return true;
 
                 default:
