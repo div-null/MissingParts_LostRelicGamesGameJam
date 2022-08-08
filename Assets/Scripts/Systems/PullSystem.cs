@@ -78,7 +78,7 @@ namespace Systems
             hookView.RunForward(numberOfBlocks: numberOfSteps - 1);
 
             if (!foundPart.Part.IsActive)
-                return PullPartAndAttach(characterPart, foundPart.Part, oppositeDirection, numberOfSteps);
+                return PullPartAndAttach(characterPart, foundPart.Part, oppositeDirection, numberOfSteps - 1);
 
             return PullAttachedPart(characterPart, foundPart.Part);
         }
