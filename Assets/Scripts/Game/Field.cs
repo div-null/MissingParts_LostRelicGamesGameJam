@@ -1,10 +1,12 @@
+using System;
 using System.Collections.Generic;
 using Game.Character;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Game
 {
-    public class Field : MonoBehaviour
+    public class Field : IDisposable
     {
         private Cell.Cell[,] _cells;
         private Dictionary<CharacterPart, CharacterPartContainer> _containers = new();
@@ -50,13 +52,11 @@ namespace Game
             Get(newPosition).AssignCharacterPart(_containers[part]);
         }
 
-        public void Destroy()
+        public void Dispose()
         {
             for (int j = 0; j < _cells.GetLength(1); j++)
             for (int i = 0; i < _cells.GetLength(0); i++)
-                Destroy(_cells[i, j].gameObject);
-
-            Destroy(gameObject);
+                Object.Destroy(_cells[i, j].gameObject);
         }
     }
 }
