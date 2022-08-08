@@ -44,7 +44,7 @@ public class Character : IDisposable
         _playerInputs.CharacterControls.Movement.performed += Move_performed;
         _playerInputs.CharacterControls.Select.performed += Select_performed;
 
-        _characterUpdated = Observable.Concat(
+        _characterUpdated = Observable.Merge(
             Observable.FromEvent(h => Moved += h, h => Moved -= h),
             Observable.FromEvent(h => AppliedPullAbility += h, h => AppliedPullAbility -= h),
             Observable.FromEvent(h => AppliedRotateAbility += h, h => AppliedRotateAbility -= h)
@@ -162,8 +162,8 @@ public class Character : IDisposable
         switch (partContainer.Part.Ability)
         {
             case AbilityType.Rotation:
-                _rotationSystem.TryToRotate(partContainer.Part);
-                AppliedRotateAbility?.Invoke();
+                if (_rotationSystem.TryToRotate(partContainer.Part))
+                    AppliedRotateAbility?.Invoke();
                 break;
             case AbilityType.Hook:
                 _pullSystem.ActivateHook(partContainer.HookView);
