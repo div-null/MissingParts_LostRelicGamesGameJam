@@ -22,15 +22,15 @@ namespace Systems
             _pitSystem = pitSystem;
         }
 
-        public void ActivateHook(HookView hookView)
+        public bool ActivateHook(HookView hookView)
         {
             CharacterPart characterPart = hookView.Part;
             var lookDirection = characterPart.Look;
 
             if (!characterPart.HasPartInDirection(lookDirection))
-                TryToAttach(characterPart, hookView);
+                return TryToAttach(characterPart, hookView);
             else
-                TryToDetach(characterPart, hookView);
+                return TryToDetach(characterPart, hookView);
         }
 
 

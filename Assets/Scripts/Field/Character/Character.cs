@@ -104,7 +104,9 @@ public class Character : IDisposable
     private void Move(DirectionType direction)
     {
         StartMoving?.Invoke();
-        _moveSystem.Move(_mainPart, direction);
+        if (!_moveSystem.Move(_mainPart, direction))
+            return;
+
         // check for pits
         var newMainPart = _pitSystem.PreserveMaxPart(_mainPart);
 
@@ -164,16 +166,16 @@ public class Character : IDisposable
             case AbilityType.Rotation:
                 if (_rotationSystem.TryToRotate(partContainer.Part))
                     AppliedRotateAbility?.Invoke();
-                break;
+                return true;
+
             case AbilityType.Hook:
-                _pullSystem.ActivateHook(partContainer.HookView);
-                AppliedPullAbility?.Invoke();
-                break;
+                if (_pullSystem.ActivateHook(partContainer.HookView))
+                    AppliedPullAbility?.Invoke();
+                return true;
+
             default:
                 return false;
         }
-
-        return true;
     }
 
     private void CheckFinished()
