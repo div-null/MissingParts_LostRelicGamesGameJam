@@ -8,6 +8,7 @@ using LevelEditor;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
+using CharacterController = Game.Character.CharacterController;
 using Object = UnityEngine.Object;
 
 namespace Game
@@ -47,7 +48,7 @@ namespace Game
             }
 
 
-            _character = new Character.CharacterController(parts.First(), _resolver.Resolve<PlayerInputs>(), field, _pitSystem, _finishSystem);
+            _character = new CharacterController(parts.First(), _resolver.Resolve<PlayerInputs>(), field, _pitSystem, _finishSystem);
             return _character;
         }
 
