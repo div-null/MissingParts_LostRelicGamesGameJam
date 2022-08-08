@@ -1,4 +1,5 @@
 using System;
+using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,8 +7,8 @@ namespace UI
 {
     public class Ceiling : MonoBehaviour
     {
-        public event Action OnFadeOut;
-        public event Action OnFadeIn;
+        public ReactiveCommand OnFadeOut = new ReactiveCommand();
+        public ReactiveCommand OnFadeIn = new ReactiveCommand();
 
         [SerializeField] private Animator animator;
 
@@ -30,13 +31,13 @@ namespace UI
 
         private void FadeInStopped()
         {
-            OnFadeIn?.Invoke();
+            OnFadeIn.Execute();
         }
 
         private void FadeOutStopped()
         {
             image.enabled = false;
-            OnFadeOut?.Invoke();
+            OnFadeOut.Execute();
         }
     }
 }
