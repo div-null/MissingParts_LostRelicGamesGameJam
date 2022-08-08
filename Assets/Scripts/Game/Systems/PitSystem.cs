@@ -16,13 +16,13 @@ namespace Game.Systems
             _attachmentSystem = attachmentSystem;
         }
 
-        public CharacterPart PreserveMaxPart(CharacterPart graph)
+        public (CharacterPart newHead, bool pitDetected) PreserveMaxPart(CharacterPart graph)
         {
             if (!TryRemoveFallenParts(graph, out List<CharacterPart> remainingGraphs))
-                return graph;
-            
+                return (graph, false);
+
             if (remainingGraphs.Count == 0)
-                return null;
+                return (null, true);
 
             //Choose max size chain as main character
             (int maxSize, int index) = GetBiggestGraph(remainingGraphs);
@@ -40,17 +40,17 @@ namespace Game.Systems
                 }
             }
 
-            return maxSize > 0 ? remainingGraphs[index] : null;
+            return maxSize > 0 ? (remainingGraphs[index], true) : (null, true);
         }
 
-        public CharacterPart PreserveConnectedPart(CharacterPart graph, CharacterPart newHead)
+        public (CharacterPart newHead, bool pitDetected) PreserveConnectedPart(CharacterPart graph, CharacterPart newHead)
         {
             if (!TryRemoveFallenParts(graph, out List<CharacterPart> remainingGraphs))
-                return graph;
+                return (graph, false);
 
             if (remainingGraphs.Count == 0)
-                return null;
-            
+                return (null, true);
+
             //Choose max size chain as main character
             CharacterPart mainPart = FindUnitedWithPart(remainingGraphs, newHead);
 
@@ -64,7 +64,7 @@ namespace Game.Systems
             }
 
             mainPart.SetActiveToAllParts(true);
-            return mainPart;
+            return (mainPart, true);
         }
 
         private bool CheckForPits(CharacterPart characterPart)
@@ -135,6 +135,7 @@ namespace Game.Systems
 
             return deletingParts.Any();
         }
+
 
         private (int size, int index) GetBiggestGraph(List<CharacterPart> unitedParts)
         {

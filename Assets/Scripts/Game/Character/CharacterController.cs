@@ -13,6 +13,7 @@ namespace Game.Character
         public event Action AppliedPullAbility;
         public event Action AppliedRotateAbility;
         public event Action StartMoving;
+        private event Action PartDestroyed;
         public event Action Died;
         public event Action Finished;
 
@@ -49,7 +50,8 @@ namespace Game.Character
             _characterUpdated = Observable.Merge(
                 Observable.FromEvent(h => Moved += h, h => Moved -= h),
                 Observable.FromEvent(h => AppliedPullAbility += h, h => AppliedPullAbility -= h),
-                Observable.FromEvent(h => AppliedRotateAbility += h, h => AppliedRotateAbility -= h)
+                Observable.FromEvent(h => AppliedRotateAbility += h, h => AppliedRotateAbility -= h),
+                Observable.FromEvent(h => PartDestroyed += h, h => PartDestroyed -= h)
             );
 
             _disposable = new CompositeDisposable();
@@ -110,7 +112,7 @@ namespace Game.Character
                 return;
 
             // check for pits
-            var newMainPart = _pitSystem.PreserveMaxPart(_mainPart);
+            (CharacterPart newMainPart, bool pitDetected) = _pitSystem.PreserveMaxPart(_mainPart);
 
             if (newMainPart == null)
             {
@@ -121,8 +123,12 @@ namespace Game.Character
             {
                 _mainPart = newMainPart;
             }
-
+            
             _attachmentSystem.UpdateLinks(_mainPart);
+            
+            if (pitDetected)
+                PartDestroyed?.Invoke();
+
             Moved?.Invoke();
         }
 
@@ -143,7 +149,11 @@ namespace Game.Character
 
                         if (!ApplyAbility(partContainer)) return;
 
-                        _mainPart = _pitSystem.PreserveConnectedPart(_mainPart, partContainer.Part);
+                        (CharacterPart newHead, bool pitDetected) = _pitSystem.PreserveConnectedPart(_mainPart, partContainer.Part);
+                        _mainPart = newHead;
+
+                        if (pitDetected)
+                            PartDestroyed?.Invoke();
                     }
                 }
             }
