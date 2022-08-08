@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Assets.Scripts.Field.Cell;
+using Game.Character;
 using UnityEngine;
 
-namespace Systems
+namespace Game.Systems
 {
     public class PullSystem
     {
@@ -124,7 +124,7 @@ namespace Systems
         {
             for (int numberOfSteps = 1; numberOfSteps <= _range; numberOfSteps++)
             {
-                Cell currentCell = _field.Get(startPosition + vectorDirection * numberOfSteps);
+                Cell.Cell currentCell = _field.Get(startPosition + vectorDirection * numberOfSteps);
 
                 if (currentCell == null || currentCell.IsWall())
                     return (-1, null);

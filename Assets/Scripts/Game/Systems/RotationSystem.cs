@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using Assets.Scripts.Field.Cell;
+using Game.Character;
 using UnityEngine;
 
-namespace Systems
+namespace Game.Systems
 {
     public class RotationSystem
     {
@@ -43,7 +42,7 @@ namespace Systems
 
         private bool CellBlocked(Vector2Int newPosition)
         {
-            if (!_field.TryGet(newPosition, out Cell cell))
+            if (!_field.TryGet(newPosition, out Cell.Cell cell))
                 return true;
 
             if (cell.IsWall() || cell.Container is {Part: {IsActive: false}})

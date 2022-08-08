@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+﻿using Game.Character;
+using UnityEngine;
 
-namespace Systems
+namespace Game.Systems
 {
     public class AttachmentSystem
     {

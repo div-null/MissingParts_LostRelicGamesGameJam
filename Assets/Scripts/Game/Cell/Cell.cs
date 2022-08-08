@@ -1,7 +1,7 @@
-using System;
+using Game.Character;
 using UnityEngine;
 
-namespace Assets.Scripts.Field.Cell
+namespace Game.Cell
 {
     public class Cell : MonoBehaviour
     {

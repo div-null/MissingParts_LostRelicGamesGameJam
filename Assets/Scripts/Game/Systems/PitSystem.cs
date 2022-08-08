@@ -1,10 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using Assets.Scripts.Field.Cell;
+using Game.Character;
 using Unity.VisualScripting;
 
-namespace Systems
+namespace Game.Systems
 {
     public class PitSystem
     {
@@ -124,7 +123,7 @@ namespace Systems
 
             foreach (CharacterPart part in activeParts)
             {
-                Cell cell = _field.Get(part.Position);
+                Cell.Cell cell = _field.Get(part.Position);
                 if (cell.IsPit())
                 {
                     deletingParts.Add(part);

@@ -1,8 +1,4 @@
-using UnityEditor;
-using UnityEditor.UIElements;
-using UnityEngine.UIElements;
-
-namespace Level.Editor
+namespace LevelEditor.Editor
 {
     // [CustomEditor(typeof(GameLevel))]
     // public class GameLevelEditor : UnityEditor.Editor

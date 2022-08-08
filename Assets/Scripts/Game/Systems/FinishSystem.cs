@@ -1,17 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Assets.Scripts.Field.Cell;
+using Game.Character;
 using Unity.VisualScripting;
 
-namespace Systems
+namespace Game.Systems
 {
     public class FinishSystem
     {
-        private readonly List<Cell> _finishCells;
+        private readonly List<Cell.Cell> _finishCells;
         private readonly ColorType _finishColor;
         private readonly Field _field;
 
-        public FinishSystem(Field field, List<Cell> finishCells, ColorType finishColor)
+        public FinishSystem(Field field, List<Cell.Cell> finishCells, ColorType finishColor)
         {
             _field = field;
             _finishCells = finishCells;
@@ -46,6 +46,6 @@ namespace Systems
         }
 
         private bool InsideFinish(CharacterPart part) =>
-            _field.TryGet(part.Position, out Cell cell) && cell.IsFinish();
+            _field.TryGet(part.Position, out Cell.Cell cell) && cell.IsFinish();
     }
 }

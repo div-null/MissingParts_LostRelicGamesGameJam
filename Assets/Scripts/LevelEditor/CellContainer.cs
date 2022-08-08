@@ -1,5 +1,5 @@
 using System;
-using Assets.Scripts.Field.Cell;
+using Game.Cell;
 using UnityEngine.Animations;
 
 namespace LevelEditor

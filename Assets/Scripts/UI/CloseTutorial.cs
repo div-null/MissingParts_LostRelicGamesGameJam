@@ -1,13 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class CloseTutorial : MonoBehaviour
+namespace UI
 {
-    public void CloseWindow()
+    public class CloseTutorial : MonoBehaviour
     {
-        transform.parent.gameObject.SetActive(false);
-    } 
+        public void CloseWindow()
+        {
+            transform.parent.gameObject.SetActive(false);
+        } 
+    }
 }

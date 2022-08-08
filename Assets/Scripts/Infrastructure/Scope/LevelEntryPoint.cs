@@ -1,10 +1,13 @@
 ﻿using System;
 using Game;
+using Game.Character;
 using LevelEditor;
+using UI;
 using UniRx;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using VContainer.Unity;
+using CharacterController = Game.Character.CharacterController;
 
 namespace Infrastructure.Scope
 {
@@ -20,7 +23,7 @@ namespace Infrastructure.Scope
         private readonly PlayerInputs _playerInputs;
         private int _currentLevel;
         private Field _field;
-        private Character _character;
+        private CharacterController _character;
         private AudioManager _audioManager;
 
         private IObservable<Unit> _firstInput;

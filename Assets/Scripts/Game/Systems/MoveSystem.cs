@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Assets.Scripts.Field.Cell;
+﻿using System.Linq;
+using Game.Character;
 using UnityEngine;
-using UnityEngine.Assertions;
 
-namespace Systems
+namespace Game.Systems
 {
     public class MoveSystem
     {
@@ -60,7 +58,7 @@ namespace Systems
 
         private bool HasWallIn(Vector2Int position)
         {
-            if (_field.TryGet(position, out Cell cell))
+            if (_field.TryGet(position, out Cell.Cell cell))
                 return cell.IsWall();
 
             return false;

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Assets.Scripts.Field.Cell
+namespace Game.Cell
 {
     [Serializable]
     public enum CellType

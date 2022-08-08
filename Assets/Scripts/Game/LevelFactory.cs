@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Assets.Scripts.Field.Cell;
+using Game.Cell;
+using Game.Character;
+using Game.Systems;
 using LevelEditor;
-using Systems;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
@@ -18,7 +19,7 @@ namespace Game
         private AudioManager _audioManager;
         private List<CharacterPartContainer> _cachedParts = new();
         private Field _field;
-        private Character _character;
+        private Character.CharacterController _character;
         private AttachmentSystem? _attachmentSystem;
         private PitSystem _pitSystem;
         private FinishSystem _finishSystem;
@@ -31,7 +32,7 @@ namespace Game
             _resolver = resolver;
         }
 
-        public Character CreateCharacter(GameLevel level, Field field)
+        public Character.CharacterController CreateCharacter(GameLevel level, Field field)
         {
             List<CharacterPart> parts = new List<CharacterPart>();
             var playerParts = level.PlayerParts.Where(part => part.IsActive);
@@ -46,14 +47,14 @@ namespace Game
             }
 
 
-            _character = new Character(parts.First(), _resolver.Resolve<PlayerInputs>(), field, _pitSystem, _finishSystem);
+            _character = new Character.CharacterController(parts.First(), _resolver.Resolve<PlayerInputs>(), field, _pitSystem, _finishSystem);
             return _character;
         }
 
         public Field CreateField(GameLevel level)
         {
-            var cells = new Cell[level.MapWidth, level.MapHeight];
-            var finishCells = new List<Cell>();
+            var cells = new Cell.Cell[level.MapWidth, level.MapHeight];
+            var finishCells = new List<Cell.Cell>();
 
             DirectionType[,] bordersMap = level.GetCellsBorders();
             _field = _resolver.Instantiate(_gameSettings.FieldPrefab);
@@ -67,7 +68,7 @@ namespace Game
                     CellContainer cellData = level.Get(i, j);
                     DirectionType borders = bordersMap[i, j];
                     Vector2Int cellPosition = new Vector2Int(i, j);
-                    Cell newCell = CreateCell(i, j, _field.transform, cellData);
+                    Cell.Cell newCell = CreateCell(i, j, _field.transform, cellData);
 
                     if (cellData.Type == CellType.Wall || cellData.Type == CellType.Pit)
                     {
@@ -119,10 +120,10 @@ namespace Game
         }
 
 
-        private Cell CreateCell(int x, int y, Transform parent, CellContainer cellContainer)
+        private Cell.Cell CreateCell(int x, int y, Transform parent, CellContainer cellContainer)
         {
             Vector3 cellPosition = new Vector3(x, y, -1);
-            Cell cell = cellContainer.Type switch
+            Cell.Cell cell = cellContainer.Type switch
             {
                 CellType.Wall => _resolver.Instantiate(_gameSettings.WallCellPrefab, cellPosition, Quaternion.identity, parent),
                 CellType.Empty => _resolver.Instantiate(_gameSettings.EmptyCellPrefab, cellPosition, Quaternion.identity, parent),
