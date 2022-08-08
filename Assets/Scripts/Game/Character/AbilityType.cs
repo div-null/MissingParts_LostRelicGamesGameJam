@@ -1,6 +1,6 @@
 using System;
 
-namespace LevelEditor
+namespace Game.Character
 {
     /// <summary>
     /// Определяет тип клетки игрока
