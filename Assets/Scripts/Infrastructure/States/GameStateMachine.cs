@@ -13,7 +13,7 @@ namespace Infrastructure.States
         {
             _states = states.ToDictionary(state => state.GetType(), state => state);
         }
-        
+
         public void Enter<TState>() where TState : class, IState
         {
             var state = ChangeState<TState>();

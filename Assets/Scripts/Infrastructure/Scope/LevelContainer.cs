@@ -1,5 +1,6 @@
 using Game;
 using LevelEditor;
+using UI;
 using VContainer;
 using VContainer.Unity;
 
@@ -15,10 +16,7 @@ namespace Infrastructure.Scope
             builder.RegisterComponentInHierarchy<GameUI>();
             builder.RegisterComponentInHierarchy<AudioManager>();
             builder.RegisterComponentInHierarchy<Ceiling>();
-            builder.RegisterBuildCallback(resolver=>
-            {
-                resolver.Resolve<PlayerInputs>().Enable();
-            });
+            builder.RegisterBuildCallback(resolver => { resolver.Resolve<PlayerInputs>().Enable(); });
         }
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using Game.Character;
 
 namespace LevelEditor
 {

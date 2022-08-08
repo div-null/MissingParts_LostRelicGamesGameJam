@@ -1,4 +1,6 @@
 using System;
+using Game;
+using Game.Character;
 using UnityEngine;
 
 namespace LevelEditor

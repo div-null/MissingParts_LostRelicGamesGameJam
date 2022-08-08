@@ -1,7 +1,4 @@
-using System;
-using UnityEngine.UIElements;
-
-namespace Level.Editor
+namespace LevelEditor.Editor
 {
     // public class CellEditor : BindableElement
     // {
