@@ -17,7 +17,6 @@ namespace Infrastructure.Scope
             builder.RegisterComponentInHierarchy<GameUI>();
             builder.RegisterComponentInHierarchy<AudioManager>();
             builder.RegisterComponentInHierarchy<Ceiling>();
-            builder.RegisterBuildCallback(resolver => { resolver.Resolve<PlayerInputs>().Enable(); });
         }
     }
 }

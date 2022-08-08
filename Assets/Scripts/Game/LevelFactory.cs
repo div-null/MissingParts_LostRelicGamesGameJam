@@ -13,18 +13,21 @@ using Object = UnityEngine.Object;
 
 namespace Game
 {
-    public class LevelFactory
+    public class LevelFactory : IDisposable
     {
-        private IObjectResolver _resolver;
-        private GameSettings _gameSettings;
-        private AudioManager _audioManager;
-        private List<CharacterPartContainer> _cachedParts = new();
+        private readonly IObjectResolver _resolver;
+        private readonly GameSettings _gameSettings;
+        private readonly List<CharacterPartContainer> _cachedParts = new();
+
+        private readonly AudioManager _audioManager;
         private Field _field;
-        private Character.CharacterController _character;
+        private CharacterController _character;
+
         private AttachmentSystem? _attachmentSystem;
         private PitSystem _pitSystem;
         private FinishSystem _finishSystem;
         private MoveSystem _moveSystem;
+        private GameObject _cellsContainer;
 
         public LevelFactory(IObjectResolver resolver, GameSettings gameSettings, AudioManager audioManager)
         {
@@ -33,7 +36,7 @@ namespace Game
             _resolver = resolver;
         }
 
-        public Character.CharacterController CreateCharacter(GameLevel level, Field field)
+        public CharacterController CreateCharacter(GameLevel level, Field field)
         {
             List<CharacterPart> parts = new List<CharacterPart>();
             var playerParts = level.PlayerParts.Where(part => part.IsActive);
@@ -56,9 +59,11 @@ namespace Game
         {
             var cells = new Cell.Cell[level.MapWidth, level.MapHeight];
             var finishCells = new List<Cell.Cell>();
+            _cellsContainer = _cellsContainer ? _cellsContainer : GameObject.Find("Cells") ?? new GameObject("Cells");
 
             DirectionType[,] bordersMap = level.GetCellsBorders();
-            _field = _resolver.Instantiate(_gameSettings.FieldPrefab);
+            _field = _resolver.Resolve<Field>();
+
             _field.SetCells(cells);
             SetupCamera(level);
 
@@ -69,7 +74,7 @@ namespace Game
                     CellContainer cellData = level.Get(i, j);
                     DirectionType borders = bordersMap[i, j];
                     Vector2Int cellPosition = new Vector2Int(i, j);
-                    Cell.Cell newCell = CreateCell(i, j, _field.transform, cellData);
+                    Cell.Cell newCell = CreateCell(i, j, _cellsContainer.transform, cellData);
 
                     if (cellData.Type == CellType.Wall || cellData.Type == CellType.Pit)
                     {
@@ -108,18 +113,10 @@ namespace Game
             return _field;
         }
 
-        public void CleanUp()
+        public void Dispose()
         {
-            _field.Destroy();
-            _character.Dispose();
-
-            foreach (CharacterPartContainer part in _cachedParts)
-                if (part != null && part.gameObject != null)
-                    Object.Destroy(part.gameObject);
-
-            _cachedParts.Clear();
+            CleanUp();
         }
-
 
         private Cell.Cell CreateCell(int x, int y, Transform parent, CellContainer cellContainer)
         {
@@ -168,6 +165,18 @@ namespace Game
         {
             Camera.main.transform.position =
                 new Vector3(level.MapWidth / 2f - 0.5f, level.MapHeight / 2f - 0.5f, -10);
+        }
+
+        private void CleanUp()
+        {
+            _field?.Dispose();
+            _character?.Dispose();
+
+            foreach (CharacterPartContainer part in _cachedParts)
+                if (part != null && part.gameObject != null)
+                    Object.Destroy(part.gameObject);
+
+            _cachedParts.Clear();
         }
 
         private static DirectionType DirectionFromAngle(int partRotation)
