@@ -18,7 +18,7 @@ public class GameSettings : ScriptableObject
     public Field FieldPrefab;
     public CharacterController CharacterPrefab;
     public GameLifetimeScope GameLifetimeScope;
-    public LevelContainer LevelContainer;
+    public GameContainer LevelContainer;
     public MenuLifetime MenuLifetime;
     public HookView HookPrefab;
 }

@@ -40,7 +40,6 @@ namespace Infrastructure.Scope
             _gameUI = gameUI;
             _ceiling = ceiling;
             _levelLoader = levelLoader;
-            _factory = factory;
             _currentLevel = 0;
             _ceiling.OnFadeOut += UnlockInputs;
             _audioManager = audioManager;
