@@ -43,32 +43,24 @@ namespace Game
             _gameUI = gameUI;
             _ceiling = ceiling;
             _levelLoader = levelLoader;
-            _currentLevel = 0;
+            _currentLevel = 1;
             _audioManager = audioManager;
         }
 
         public void Start()
         {
             _gameUI.RestartClicked += OnRestart;
-            _gameUI.ChooseExtraLevel += OnSelectExtraLevel;
-            _currentLevel++;
-            NextLevel?.Invoke(_currentLevel);
-            LoadLevel();
-            _firstInput = Observable.FromEvent(h => _character.Moved += h, h => _character.Moved -= h).First();
-            _firstInput.Subscribe(_ => FirstPlayerInput());
-            _ceiling.FadeOut();
-        }
+            _gameUI.ChooseExtraLevel += OnLevelSelected;
+            NextLevel += _gameUI.ToNextLevel;
 
-        private void FirstPlayerInput()
-        {
-            _gameUI.HideMenu();
-            _playerInputs.CharacterControls.Restart.performed += _ => OnRestart();
+            StartWith(_currentLevel);
         }
 
         private void LoadLevel()
         {
             NextLevel?.Invoke(_currentLevel);
-            GameLevel? level = SelectNextLevel();
+            Debug.Log($"Loading Level {_currentLevel}");
+            GameLevel? level = SelectLevel(_currentLevel);
 
             if (level == null)
             {
@@ -83,13 +75,25 @@ namespace Game
 
             _character.Finished += OnLevelFinished;
             _character.Died += OnRestart;
-            NextLevel += _gameUI.ToNextLevel;
         }
 
 
         private void StartWith(int level)
         {
             LockInputs();
+            _ceiling.MakeTransition(
+                () =>
+                {
+                    _currentLevel = level;
+                    LoadLevel();
+
+                    _firstInput = Observable.FromEvent(
+                        h => _character.Moved += h, 
+                        h => _character.Moved -= h)
+                        .First();
+                    _firstInput.Subscribe(_ => FirstPlayerInput());
+                },
+                UnlockInputs);
         }
 
         private void OnRestart()
@@ -107,7 +111,7 @@ namespace Game
             _ceiling.MakeTransition(LoadNextLevel, UnlockInputs);
         }
 
-        private void OnSelectExtraLevel(int level)
+        private void OnLevelSelected(int level)
         {
             LockInputs();
             _ceiling.MakeTransition(
@@ -121,6 +125,7 @@ namespace Game
 
         private void ReloadLevel()
         {
+            Debug.Log("Level reloaded");
             DestroyLevel();
             LoadLevel();
         }
@@ -128,6 +133,7 @@ namespace Game
 
         private void LoadNextLevel()
         {
+            Debug.Log("Next level loaded");
             DestroyLevel();
             _currentLevel++;
             LoadLevel();
@@ -147,9 +153,17 @@ namespace Game
             return factory;
         }
 
+        private void FirstPlayerInput()
+        {
+            _gameUI.HideMenu();
+            _playerInputs.CharacterControls.Restart.performed += _ => OnRestart();
+        }
+
         private void DestroyLevel()
         {
+            Debug.Log("Level destroyed");
             _character.Finished -= OnLevelFinished;
+            _character.Died -= OnRestart;
             Object.Destroy(_childScope);
             _levelDisposable?.Dispose();
         }
@@ -168,32 +182,35 @@ namespace Game
         }
 
 
-        private GameLevel? SelectNextLevel()
+        private GameLevel? SelectLevel(int level)
         {
-            Debug.Log($"Loading Level {_currentLevel}");
-            return _currentLevel switch
+            LevelLoader.Level? lvl = level switch
             {
-                1 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl1),
-                2 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl2),
-                3 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl3),
-                4 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl4),
-                5 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl5),
-                6 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl6),
-                7 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl7),
-                8 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl8),
-                9 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl9),
-                10 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl10),
-                11 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl11),
-                12 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl12),
-                13 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl13),
-                14 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl14),
-                15 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl15),
-                16 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl16),
-                17 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl17),
-                // 18 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl18);
-                21 => _levelLoader.LoadLevel(LevelLoader.Level.Lvl21),
+                1 => LevelLoader.Level.Lvl1,
+                2 => LevelLoader.Level.Lvl2,
+                3 => LevelLoader.Level.Lvl3,
+                4 => LevelLoader.Level.Lvl4,
+                5 => LevelLoader.Level.Lvl5,
+                6 => LevelLoader.Level.Lvl6,
+                7 => LevelLoader.Level.Lvl7,
+                8 => LevelLoader.Level.Lvl8,
+                9 => LevelLoader.Level.Lvl9,
+                10 => LevelLoader.Level.Lvl10,
+                11 => LevelLoader.Level.Lvl11,
+                12 => LevelLoader.Level.Lvl12,
+                13 => LevelLoader.Level.Lvl13,
+                14 => LevelLoader.Level.Lvl14,
+                15 => LevelLoader.Level.Lvl15,
+                16 => LevelLoader.Level.Lvl16,
+                17 => LevelLoader.Level.Lvl17,
+                // 18 => LevelLoader.Level.Lvl18,
+                21 => LevelLoader.Level.Lvl21,
                 _ => null
             };
+            if (lvl != null)
+                return _levelLoader.LoadLevel(lvl.Value);
+
+            return null;
         }
     }
 }
