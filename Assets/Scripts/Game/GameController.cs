@@ -87,10 +87,15 @@ namespace Game
         }
 
 
+        private void StartWith(int level)
+        {
+            LockInputs();
+        }
+
         private void OnRestart()
         {
             LockInputs();
-            MakeTransition(
+            _ceiling.MakeTransition(
                 ReloadLevel,
                 UnlockInputs
             );
@@ -99,20 +104,19 @@ namespace Game
         private void OnLevelFinished()
         {
             LockInputs();
-            MakeTransition(LoadNextLevel, UnlockInputs);
+            _ceiling.MakeTransition(LoadNextLevel, UnlockInputs);
         }
 
         private void OnSelectExtraLevel(int level)
         {
             LockInputs();
-            MakeTransition(
+            _ceiling.MakeTransition(
                 () =>
                 {
                     _currentLevel = level;
                     LoadLevel();
                 },
                 UnlockInputs);
-            _ceiling.FadeIn();
         }
 
         private void ReloadLevel()
@@ -163,23 +167,6 @@ namespace Game
             _playerInputs.Enable();
         }
 
-        private void MakeTransition(Action onFadeIn, Action onFadeOut)
-        {
-            CompositeDisposable disposable = new CompositeDisposable();
-
-            _ceiling.OnFadeIn.Subscribe(_ =>
-            {
-                onFadeIn.Invoke();
-                _ceiling.FadeOut();
-            }).AddTo(disposable);
-
-            _ceiling.OnFadeOut.Subscribe(_ =>
-            {
-                onFadeOut.Invoke();
-                disposable.Dispose();
-            }).AddTo(disposable);
-            _ceiling.FadeIn();
-        }
 
         private GameLevel? SelectNextLevel()
         {
