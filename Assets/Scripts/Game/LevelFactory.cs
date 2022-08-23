@@ -169,7 +169,6 @@ namespace Game
 
         private void CleanUp()
         {
-            _field?.Dispose();
             _character?.Dispose();
 
             foreach (CharacterPartContainer part in _cachedParts)
