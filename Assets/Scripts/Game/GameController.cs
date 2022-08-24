@@ -68,10 +68,12 @@ namespace Game
                 return;
             }
 
-            LevelFactory factory = CreateScopedFactory();
+            var resolver = CreateScope();
+            var levelFactory = resolver.Resolve<LevelFactory>();
+            var characterFactory = resolver.Resolve<CharacterFactory>();
 
-            _field = factory.CreateField(level);
-            _character = factory.CreateCharacter(level, _field);
+            _field = levelFactory.CreateField(level);
+            _character = characterFactory.CreateCharacter(level);
 
             _character.Finished += OnLevelFinished;
             _character.Died += OnRestart;
@@ -88,8 +90,8 @@ namespace Game
                     LoadLevel();
 
                     _firstInput = Observable.FromEvent(
-                        h => _character.Moved += h, 
-                        h => _character.Moved -= h)
+                            h => _character.Moved += h,
+                            h => _character.Moved -= h)
                         .First();
                     _firstInput.Subscribe(_ => FirstPlayerInput());
                 },
@@ -144,13 +146,10 @@ namespace Game
             _gameUI.ShowCredits();
         }
 
-        private LevelFactory CreateScopedFactory()
+        private IObjectResolver CreateScope()
         {
-            _levelDisposable = new CompositeDisposable();
             _childScope = _gameContainer.CreateChild(new LevelInstaller());
-            var factory = _childScope.Container.Resolve<LevelFactory>();
-            _levelDisposable.Add(factory);
-            return factory;
+            return _childScope.Container;
         }
 
         private void FirstPlayerInput()
