@@ -56,7 +56,8 @@ namespace Game
         {
             for (int j = 0; j < _cells.GetLength(1); j++)
             for (int i = 0; i < _cells.GetLength(0); i++)
-                Object.Destroy(_cells[i, j].gameObject);
+                if (_cells[i, j] != null)
+                    Object.Destroy(_cells[i, j].gameObject);
         }
     }
 }

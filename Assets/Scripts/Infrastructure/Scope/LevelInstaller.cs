@@ -1,4 +1,5 @@
 ﻿using Game;
+using Game.Character;
 using Game.Systems;
 using VContainer;
 using VContainer.Unity;
@@ -9,15 +10,17 @@ namespace Infrastructure.Scope
     {
         public void Install(IContainerBuilder builder)
         {
-            builder.Register<AttachmentSystem>(Lifetime.Transient);
-            builder.Register<FinishSystem>(Lifetime.Transient);
-            builder.Register<MoveSystem>(Lifetime.Transient);
-            builder.Register<RotationSystem>(Lifetime.Transient);
-            builder.Register<PullSystem>(Lifetime.Transient);
-            builder.Register<PitSystem>(Lifetime.Transient);
+            builder.Register<AttachmentSystem>(Lifetime.Scoped);
+            builder.Register<MoveSystem>(Lifetime.Scoped);
+            builder.Register<RotationSystem>(Lifetime.Scoped);
+            builder.Register<PullSystem>(Lifetime.Scoped);
+            builder.Register<PitSystem>(Lifetime.Scoped);
+            builder.Register<FinishSystem>(Lifetime.Scoped);
 
             builder.Register<Field>(Lifetime.Scoped);
             builder.Register<LevelFactory>(Lifetime.Scoped);
+            builder.Register<CharacterController>(Lifetime.Scoped);
+
             builder.RegisterBuildCallback(resolver => { resolver.Resolve<PlayerInputs>().Enable(); });
         }
     }

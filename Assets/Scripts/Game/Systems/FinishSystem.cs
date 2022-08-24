@@ -7,13 +7,17 @@ namespace Game.Systems
 {
     public class FinishSystem
     {
-        private readonly List<Cell.Cell> _finishCells;
-        private readonly ColorType _finishColor;
         private readonly Field _field;
+        private List<Cell.Cell> _finishCells;
+        private ColorType _finishColor;
 
-        public FinishSystem(Field field, List<Cell.Cell> finishCells, ColorType finishColor)
+        public FinishSystem(Field field)
         {
             _field = field;
+        }
+
+        public void Initialize(List<Cell.Cell> finishCells, ColorType finishColor)
+        {
             _finishCells = finishCells;
             _finishColor = finishColor;
         }
@@ -30,7 +34,7 @@ namespace Game.Systems
 
                 if (characterPart.Color != _finishColor)
                     return false;
-                
+
                 if (!visitedParts.Contains(characterPart) && !HasRightShape(characterPart, visitedParts))
                     return false;
             }
