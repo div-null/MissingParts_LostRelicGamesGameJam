@@ -8,23 +8,23 @@ namespace Game.Systems
     public class PullSystem
     {
         private readonly Field _field;
-        private readonly int _range;
+        private int _range;
         private readonly MoveSystem _moveSystem;
         private readonly AttachmentSystem _attachmentSystem;
         private readonly PitSystem _pitSystem;
 
-        public PullSystem(Field field, int pullRange, MoveSystem moveSystem, AttachmentSystem attachmentSystem, PitSystem pitSystem)
+        public PullSystem(Field field, MoveSystem moveSystem, AttachmentSystem attachmentSystem, PitSystem pitSystem)
         {
             _field = field;
-            _range = pullRange;
             _moveSystem = moveSystem;
             _attachmentSystem = attachmentSystem;
             _pitSystem = pitSystem;
         }
 
-        public bool ActivateHook(HookView hookView)
+        public bool ActivateHook(HookView hookView, int pullRange)
         {
             CharacterPart characterPart = hookView.Part;
+            _range = pullRange;
             var lookDirection = characterPart.Look;
 
             if (!characterPart.HasPartInDirection(lookDirection))
@@ -168,7 +168,7 @@ namespace Game.Systems
 
             // check pits for detached parts
             _pitSystem.PreserveMaxPart(detachedGraph);
-            
+
             _attachmentSystem.UpdateLinks(sourceGraph);
             sourceGraph.SetActiveToAllParts(true);
         }

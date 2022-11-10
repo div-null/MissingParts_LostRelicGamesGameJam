@@ -627,6 +627,10 @@ PrefabInstance:
       propertyPath: parentReference.TypeName
       value: Infrastructure.Scope.GameLifetimeScope
       objectReference: {fileID: 0}
+    - target: {fileID: 5839896536939984903, guid: e34b45a6a08a1814b8a67dae1f4930aa, type: 3}
+      propertyPath: parentReference.TypeName
+      value: Infrastructure.Scope.GameLifetimeScope
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e34b45a6a08a1814b8a67dae1f4930aa, type: 3}
 --- !u!1 &106228950

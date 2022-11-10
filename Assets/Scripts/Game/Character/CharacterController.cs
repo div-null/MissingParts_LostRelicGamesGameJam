@@ -27,22 +27,23 @@ namespace Game.Character
         private FinishSystem _finishSystem;
         private IObservable<Unit> _characterUpdated;
         private readonly CompositeDisposable _disposable;
+        private int _pullRange;
 
-        public CharacterController(CharacterPart mainPart,
-            PlayerInputs playerInputs,
-            Field field,
+        public CharacterController(PlayerInputs playerInputs,
+            MoveSystem moveSystem,
+            RotationSystem rotationSystem,
+            AttachmentSystem attachmentSystem,
+            PullSystem pullSystem,
             PitSystem pitSystem,
             FinishSystem finishSystem)
         {
-            _mainPart = mainPart;
             _playerInputs = playerInputs;
-
             _pitSystem = pitSystem;
             _finishSystem = finishSystem;
-            _moveSystem = new MoveSystem(field);
-            _attachmentSystem = new AttachmentSystem(field);
-            _pullSystem = new PullSystem(field, 4, _moveSystem, _attachmentSystem, pitSystem);
-            _rotationSystem = new RotationSystem(field, _moveSystem, _attachmentSystem);
+            _moveSystem = moveSystem;
+            _attachmentSystem = attachmentSystem;
+            _pullSystem = pullSystem;
+            _rotationSystem = rotationSystem;
 
             _playerInputs.CharacterControls.Movement.performed += Move_performed;
             _playerInputs.CharacterControls.Select.performed += Select_performed;
@@ -59,6 +60,12 @@ namespace Game.Character
 
             /*_playerInputs.CharacterControls.PrimaryContact.started += StartTouchPrimary;
         _playerInputs.CharacterControls.PrimaryContact.canceled += EndTouchPrimary;*/
+        }
+
+        public void Initialize(CharacterPart mainPart, int pullRange)
+        {
+            _pullRange = pullRange;
+            _mainPart = mainPart;
         }
 
 
@@ -185,7 +192,7 @@ namespace Game.Character
                     return true;
 
                 case AbilityType.Hook:
-                    if (_pullSystem.ActivateHook(partContainer.HookView))
+                    if (_pullSystem.ActivateHook(partContainer.HookView, _pullRange))
                         AppliedPullAbility?.Invoke();
 
                     return true;
