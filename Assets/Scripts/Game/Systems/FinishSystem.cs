@@ -8,31 +8,23 @@ namespace Game.Systems
     public class FinishSystem
     {
         private readonly Field _field;
-        private List<Cell.Cell> _finishCells;
-        private ColorType _finishColor;
 
         public FinishSystem(Field field)
         {
             _field = field;
         }
 
-        public void Initialize(List<Cell.Cell> finishCells, ColorType finishColor)
-        {
-            _finishCells = finishCells;
-            _finishColor = finishColor;
-        }
-
         public bool CheckFinished()
         {
-            HashSet<CharacterPart> visitedParts = new HashSet<CharacterPart>();
-            foreach (var finishCell in _finishCells)
+            var visitedParts = new HashSet<CharacterPart>();
+            foreach (var finishCell in _field.FinishCells)
             {
                 if (finishCell.Container == null)
                     return false;
 
                 CharacterPart characterPart = finishCell.Container.Part;
 
-                if (characterPart.Color != _finishColor)
+                if (characterPart.Color != _field.FinishColor)
                     return false;
 
                 if (!visitedParts.Contains(characterPart) && !HasRightShape(characterPart, visitedParts))

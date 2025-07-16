@@ -17,8 +17,8 @@ MonoBehaviour:
   PitCellPrefab: {fileID: 8721043678490087218, guid: 04ad11954ccba7a46b159ee75f570e16, type: 3}
   FinishCellPrefab: {fileID: 9013644365590413842, guid: 6760ae857b27284499d20398d54a0064, type: 3}
   CharacterPartPrefab: {fileID: 5625092201923744685, guid: 3711261312c37dc4b8857b74df91c42a, type: 3}
-  FieldPrefab: {fileID: 3314515156681114963, guid: fd242e29e5b372f408951d4be7fefa1e, type: 3}
   GameLifetimeScope: {fileID: 487408232513001636, guid: a6365ae12e8ed7b4585696e044c0dfd8, type: 3}
   LevelContainer: {fileID: 1494113176949575659, guid: e34b45a6a08a1814b8a67dae1f4930aa, type: 3}
   MenuLifetime: {fileID: 2527288589954984380, guid: d31db10401901c748890b232ec889cf0, type: 3}
   HookPrefab: {fileID: 7740769031523078657, guid: 7631cd0955a14384cb349f130973fd67, type: 3}
+  HookRange: 4

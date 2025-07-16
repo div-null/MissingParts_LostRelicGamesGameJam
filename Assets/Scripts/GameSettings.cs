@@ -6,6 +6,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "GameSettings", menuName = "Create settings", order = 0)]
 public class GameSettings : ScriptableObject
 {
+    [Header("Prefabs")]
     public Cell WallCellPrefab;
     public Cell EmptyCellPrefab;
     public Cell PitCellPrefab;
@@ -15,4 +16,7 @@ public class GameSettings : ScriptableObject
     public GameContainer LevelContainer;
     public MenuLifetime MenuLifetime;
     public HookView HookPrefab;
+
+    [Header("Prefabs")]
+    public int HookRange = 4;
 }

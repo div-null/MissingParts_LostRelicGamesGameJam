@@ -10,10 +10,14 @@ namespace Game
     {
         private Cell.Cell[,] _cells;
         private Dictionary<CharacterPart, CharacterPartContainer> _containers = new();
+        public Cell.Cell[] FinishCells { get; private set; }
+        public ColorType FinishColor { get; private set; }
 
-        public void SetCells(Cell.Cell[,] cells)
+        public void Initialize(Cell.Cell[,] cells, Cell.Cell[] finishCells, ColorType finishColor)
         {
             _cells = cells;
+            FinishCells = finishCells;
+            FinishColor = finishColor;
         }
 
         public Cell.Cell Get(Vector2Int coordinates) =>
@@ -40,10 +44,15 @@ namespace Game
 
         public void Attach(CharacterPartContainer container, Vector2Int position)
         {
-            if (!_containers.ContainsKey(container.Part))
-                _containers.Add(container.Part, container);
-
-            Get(position).AssignCharacterPart(container);
+            if (!_containers.TryAdd(container.Part, container))
+            {
+                Debug.LogWarning("Attempted to register part multiple times", container);
+            }
+            else
+            {
+                Cell.Cell cell = Get(position);
+                cell.AssignCharacterPart(container);
+            }
         }
 
         public void Replace(CharacterPart part, Vector2Int newPosition)

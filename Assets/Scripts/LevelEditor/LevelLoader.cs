@@ -13,6 +13,7 @@ namespace LevelEditor
 
         public enum Level
         {
+            Unknown,
             Lvl1,
             Lvl2,
             Lvl3,
@@ -31,7 +32,7 @@ namespace LevelEditor
             Lvl16,
             Lvl17,
             Lvl18,
-            Lvl21
+            Lvl21,
         }
 
         // Assets/Resources/Level/Level1.json

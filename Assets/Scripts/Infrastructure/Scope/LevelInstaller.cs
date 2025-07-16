@@ -19,6 +19,7 @@ namespace Infrastructure.Scope
 
             builder.Register<Field>(Lifetime.Scoped);
             builder.Register<LevelFactory>(Lifetime.Scoped);
+            builder.Register<FieldFactory>(Lifetime.Scoped);
             builder.Register<CharacterFactory>(Lifetime.Scoped);
             builder.Register<CharacterController>(Lifetime.Scoped);
 

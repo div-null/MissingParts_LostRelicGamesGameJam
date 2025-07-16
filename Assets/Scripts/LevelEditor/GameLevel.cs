@@ -1,5 +1,6 @@
 using System;
 using Game;
+using Game.Cell;
 using Game.Character;
 using UnityEngine;
 
@@ -8,11 +9,13 @@ namespace LevelEditor
     [Serializable]
     public class GameLevel
     {
+        public int MapHeight;
+        public int MapWidth;
+
         public CellContainer[][] Cells;
-        public int MapHeight = 2;
-        public int MapWidth = 2;
         public ColorType FinishColor;
         public CharacterPartData[] PlayerParts;
+
         public Misc[] Misc;
 
         public CellContainer Get(Vector2Int coords) =>
@@ -22,6 +25,7 @@ namespace LevelEditor
         {
             if (x < 0 || y < 0 || x >= MapWidth || y >= MapHeight)
                 return null;
+
             return Cells[y][x];
         }
 
@@ -52,6 +56,23 @@ namespace LevelEditor
             }
 
             return borders;
+        }
+
+        public int CountFinishCells()
+        {
+            int count = 0;
+            for (int y = 0; y < MapHeight; y++)
+            {
+                for (int x = 0; x < MapWidth; x++)
+                {
+                    var newCell = Get(x, y);
+
+                    if (newCell.Type == CellType.Finish)
+                        count++;
+                }
+            }
+
+            return count;
         }
     }
 

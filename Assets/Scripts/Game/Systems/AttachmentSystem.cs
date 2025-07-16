@@ -12,6 +12,10 @@ namespace Game.Systems
             _field = field;
         }
 
+        /// <summary>
+        /// Establishes links for whole body
+        /// </summary>
+        /// <param name="graph"></param>
         public void UpdateLinks(CharacterPart graph)
         {
             foreach (CharacterPart part in graph)
@@ -22,6 +26,10 @@ namespace Game.Systems
         }
 
 
+        /// <summary>
+        /// Establishes links for one body part
+        /// </summary>
+        /// <param name="part"></param>
         public void UpdatePartLinks(CharacterPart part)
         {
             void UpdateLink(CharacterPart p, DirectionType direction)

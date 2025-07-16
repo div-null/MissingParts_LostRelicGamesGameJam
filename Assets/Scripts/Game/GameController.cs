@@ -60,9 +60,11 @@ namespace Game
         {
             NextLevel?.Invoke(_currentLevel);
             Debug.Log($"Loading Level {_currentLevel}");
-            GameLevel? level = SelectLevel(_currentLevel);
 
-            if (level == null)
+            GameLevel level;
+            if (TrySelectLevel(_currentLevel, out var result))
+                level = _levelLoader.LoadLevel(result);
+            else
             {
                 EndOfTheGame();
                 return;
@@ -70,10 +72,9 @@ namespace Game
 
             var resolver = CreateScope();
             var levelFactory = resolver.Resolve<LevelFactory>();
-            var characterFactory = resolver.Resolve<CharacterFactory>();
 
             _field = levelFactory.CreateField(level);
-            _character = characterFactory.CreateCharacter(level);
+            _character = levelFactory.CreateCharacter(level);
 
             _character.Finished += OnLevelFinished;
             _character.Died += OnRestart;
@@ -181,9 +182,9 @@ namespace Game
         }
 
 
-        private GameLevel? SelectLevel(int level)
+        private static bool TrySelectLevel(int level, out LevelLoader.Level result)
         {
-            LevelLoader.Level? lvl = level switch
+            result = level switch
             {
                 1 => LevelLoader.Level.Lvl1,
                 2 => LevelLoader.Level.Lvl2,
@@ -204,12 +205,10 @@ namespace Game
                 17 => LevelLoader.Level.Lvl17,
                 // 18 => LevelLoader.Level.Lvl18,
                 21 => LevelLoader.Level.Lvl21,
-                _ => null
+                _ => LevelLoader.Level.Unknown
             };
-            if (lvl != null)
-                return _levelLoader.LoadLevel(lvl.Value);
 
-            return null;
+            return result != LevelLoader.Level.Unknown;
         }
     }
 }

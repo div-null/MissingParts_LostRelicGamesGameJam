@@ -101,15 +101,19 @@ namespace Game
             }
         }
 
-        [Obsolete]
-        public static DirectionType ToDirection(this int degrees)
+        public static DirectionType FromAngle(int angle)
         {
-            return degrees switch
+            return angle switch
             {
                 0 => DirectionType.Up,
-                90 => DirectionType.Right,
+                360 => DirectionType.Up,
+                -90 => DirectionType.Left,
+                270 => DirectionType.Left,
                 180 => DirectionType.Down,
-                270 => DirectionType.Left
+                -180 => DirectionType.Down,
+                90 => DirectionType.Right,
+                -270 => DirectionType.Right,
+                _ => throw new ArgumentOutOfRangeException(nameof(angle), angle, "Wrong rotation angle")
             };
         }
 
