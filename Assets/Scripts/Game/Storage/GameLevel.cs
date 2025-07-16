@@ -1,9 +1,9 @@
-using Game;
-using Game.Cell;
 using Game.Character;
+using Game.Level;
+using Game.Storage.Level;
 using UnityEngine;
 
-namespace LevelEditor
+namespace Game.Storage
 {
     public class GameLevel
     {

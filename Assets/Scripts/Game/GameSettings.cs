@@ -1,5 +1,5 @@
-using Game.Cell;
 using Game.Character;
+using Game.Level;
 using Infrastructure.Scope;
 using UnityEngine;
 

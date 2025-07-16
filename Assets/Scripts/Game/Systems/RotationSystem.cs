@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Game.Character;
+using Game.Level;
 using UnityEngine;
 
 namespace Game.Systems
@@ -42,7 +43,7 @@ namespace Game.Systems
 
         private bool CellBlocked(Vector2Int newPosition)
         {
-            if (!_field.TryGet(newPosition, out Cell.Cell cell))
+            if (!_field.TryGet(newPosition, out Cell cell))
                 return true;
 
             if (cell.IsWall() || cell.Container is {Part: {IsActive: false}})

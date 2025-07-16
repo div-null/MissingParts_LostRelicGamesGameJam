@@ -1,5 +1,4 @@
 ﻿using Infrastructure.Scope;
-using LevelEditor;
 using UnityEngine;
 using VContainer.Unity;
 
@@ -10,11 +9,9 @@ namespace Infrastructure.States
         private SceneLoader _loader;
         private GameSettings _settings;
         private LifetimeScope _gameScope;
-        private LevelLoader _levelLoader;
 
-        public GameplayState(SceneLoader loader, GameSettings settings, LevelLoader levelLoader)
+        public GameplayState(SceneLoader loader, GameSettings settings)
         {
-            _levelLoader = levelLoader;
             _settings = settings;
             _loader = loader;
         }

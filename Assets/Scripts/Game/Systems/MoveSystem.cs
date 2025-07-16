@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Game.Character;
+using Game.Level;
 using UnityEngine;
 
 namespace Game.Systems
@@ -58,7 +59,7 @@ namespace Game.Systems
 
         private bool HasWallIn(Vector2Int position)
         {
-            if (_field.TryGet(position, out Cell.Cell cell))
+            if (_field.TryGet(position, out Cell cell))
                 return cell.IsWall();
 
             return false;

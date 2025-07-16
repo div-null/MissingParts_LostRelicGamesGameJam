@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Game.Cell
+namespace Game.Level
 {
     [Serializable]
     public enum CellType

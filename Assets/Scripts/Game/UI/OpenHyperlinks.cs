@@ -2,9 +2,8 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.Controls;
 
-namespace UI
+namespace Game.UI
 {
     [RequireComponent(typeof(TextMeshProUGUI))]
     public class OpenHyperlinks : MonoBehaviour, IPointerClickHandler {

@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Game.Character;
-using LevelEditor;
+using Game.Level;
+using Game.Storage.Level;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;

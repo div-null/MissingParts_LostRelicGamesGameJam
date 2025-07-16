@@ -1,9 +1,9 @@
 using System;
-using Game.Cell;
 using Game.Character;
+using Game.Level;
 using JetBrains.Annotations;
 
-namespace LevelEditor
+namespace Game.Storage.Level
 {
     [Serializable]
     public class LevelData

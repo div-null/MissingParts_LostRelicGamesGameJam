@@ -1,6 +1,7 @@
 ﻿using System;
-using Game.Cell;
-using LevelEditor;
+using Game.Level;
+using Game.Storage;
+using Game.Views;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
@@ -25,8 +26,8 @@ namespace Game
 
         public Field CreateField(GameLevel level)
         {
-            var cells = new Cell.Cell[level.MapWidth, level.MapHeight];
-            var finishCells = new Cell.Cell[level.FinishCells];
+            var cells = new Cell[level.MapWidth, level.MapHeight];
+            var finishCells = new Cell[level.FinishCells];
 
             _cellsContainer ??= GetOrSpawn("Cells");
 
@@ -54,10 +55,10 @@ namespace Game
             return _field;
         }
 
-        private Cell.Cell CreateCell(GameLevel level, Vector2Int position, Cell.Cell[,] cells)
+        private Cell CreateCell(GameLevel level, Vector2Int position, Cell[,] cells)
         {
             CellData current = level.Get(position).GetValueOrDefault();
-            Cell.Cell newCell = SpawnCell(position.x, position.y, _cellsContainer.transform, current.Type);
+            Cell newCell = SpawnCell(position.x, position.y, _cellsContainer.transform, current.Type);
 
             if (current.Type == CellType.Wall || current.Type == CellType.Pit)
             {
@@ -76,10 +77,10 @@ namespace Game
             return newCell;
         }
 
-        private Cell.Cell SpawnCell(int x, int y, Transform parent, CellType type)
+        private Cell SpawnCell(int x, int y, Transform parent, CellType type)
         {
             Vector3 cellPosition = new Vector3(x, y, CellsLayer);
-            Cell.Cell cell = type switch
+            Cell cell = type switch
             {
                     CellType.Wall => _resolver.Instantiate(_gameSettings.WallCellPrefab, cellPosition, Quaternion.identity, parent),
                     CellType.Empty => _resolver.Instantiate(_gameSettings.EmptyCellPrefab, cellPosition, Quaternion.identity, parent),

@@ -1,7 +1,7 @@
 using Game.Character;
 using UnityEngine;
 
-namespace Game.Cell
+namespace Game.Views
 {
     public class FinishView : MonoBehaviour
     {

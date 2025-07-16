@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
+using Game.Level;
+using Game.Storage.Level;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using UnityEngine;
 
-namespace LevelEditor
+namespace Game.Storage
 {
     public class LevelLoader
     {

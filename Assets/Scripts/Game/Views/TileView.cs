@@ -1,9 +1,9 @@
 using System;
 using System.Linq;
-using LevelEditor;
+using Game.Level;
 using UnityEngine;
 
-namespace Game.Cell
+namespace Game.Views
 {
     public class TileView : MonoBehaviour
     {

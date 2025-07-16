@@ -1,6 +1,5 @@
 using Game;
-using LevelEditor;
-using UI;
+using Game.UI;
 using VContainer;
 using VContainer.Unity;
 

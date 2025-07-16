@@ -1,9 +1,9 @@
 using Game.Character;
 using UnityEngine;
 
-namespace Game.Cell
+namespace Game.Level
 {
-    public class Cell : MonoBehaviour
+    public class Cell : MonoBehaviour // TODO: extract view
     {
         public const float CellSize = 1f;
         

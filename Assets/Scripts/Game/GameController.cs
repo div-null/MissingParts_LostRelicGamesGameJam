@@ -1,7 +1,8 @@
 ﻿using System;
+using Game.Level;
+using Game.Storage;
+using Game.UI;
 using Infrastructure.Scope;
-using LevelEditor;
-using UI;
 using UniRx;
 using UnityEngine;
 using VContainer;

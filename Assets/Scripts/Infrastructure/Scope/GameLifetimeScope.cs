@@ -1,7 +1,7 @@
 using System.Collections.Generic;
+using Game.Storage;
 using Infrastructure.States;
 using UnityEngine.SceneManagement;
-using LevelEditor;
 using VContainer;
 using VContainer.Unity;
 

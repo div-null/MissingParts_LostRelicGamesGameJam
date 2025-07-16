@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Game.Character;
+using Game.Level;
 using Unity.VisualScripting;
 
 namespace Game.Systems
@@ -123,7 +124,7 @@ namespace Game.Systems
 
             foreach (CharacterPart part in activeParts)
             {
-                Cell.Cell cell = _field.Get(part.Position);
+                Cell cell = _field.Get(part.Position);
                 if (cell.IsPit())
                 {
                     deletingParts.Add(part);

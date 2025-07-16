@@ -4,39 +4,39 @@ using Game.Character;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Game
+namespace Game.Level
 {
     public class Field : IDisposable
     {
-        private Cell.Cell[,] _cells;
+        private Cell[,] _cells;
         private Dictionary<CharacterPart, CharacterPartContainer> _containers = new();
-        public Cell.Cell[] FinishCells { get; private set; }
+        public Cell[] FinishCells { get; private set; }
         public ColorType FinishColor { get; private set; }
 
-        public void Initialize(Cell.Cell[,] cells, Cell.Cell[] finishCells, ColorType finishColor)
+        public void Initialize(Cell[,] cells, Cell[] finishCells, ColorType finishColor)
         {
             _cells = cells;
             FinishCells = finishCells;
             FinishColor = finishColor;
         }
 
-        public Cell.Cell Get(Vector2Int coordinates) =>
+        public Cell Get(Vector2Int coordinates) =>
             Get(coordinates.x, coordinates.y);
 
-        public Cell.Cell Get(int x, int y)
+        public Cell Get(int x, int y)
         {
             if (x < 0 || y < 0 || x > _cells.GetLength(0) - 1 || y > _cells.GetLength(1) - 1)
                 return null;
             return _cells[x, y];
         }
 
-        public bool TryGet(int x, int y, out Cell.Cell cell)
+        public bool TryGet(int x, int y, out Cell cell)
         {
             cell = Get(x, y);
             return cell != null;
         }
 
-        public bool TryGet(Vector2Int coordinates, out Cell.Cell cell)
+        public bool TryGet(Vector2Int coordinates, out Cell cell)
         {
             cell = Get(coordinates);
             return cell != null;
@@ -50,7 +50,7 @@ namespace Game
             }
             else
             {
-                Cell.Cell cell = Get(position);
+                Cell cell = Get(position);
                 cell.AssignCharacterPart(container);
             }
         }

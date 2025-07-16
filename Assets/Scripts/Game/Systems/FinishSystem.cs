@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Game.Character;
+using Game.Level;
 using Unity.VisualScripting;
 
 namespace Game.Systems
@@ -42,6 +43,6 @@ namespace Game.Systems
         }
 
         private bool InsideFinish(CharacterPart part) =>
-            _field.TryGet(part.Position, out Cell.Cell cell) && cell.IsFinish();
+            _field.TryGet(part.Position, out Cell cell) && cell.IsFinish();
     }
 }

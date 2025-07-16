@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Game.Character;
+using Game.Level;
 using UnityEngine;
 
 namespace Game.Systems
@@ -124,7 +125,7 @@ namespace Game.Systems
         {
             for (int numberOfSteps = 1; numberOfSteps <= _range; numberOfSteps++)
             {
-                Cell.Cell currentCell = _field.Get(startPosition + vectorDirection * numberOfSteps);
+                Cell currentCell = _field.Get(startPosition + vectorDirection * numberOfSteps);
 
                 if (currentCell == null || currentCell.IsWall())
                     return (-1, null);

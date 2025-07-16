@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Game.Cell;
 using Game.Character;
+using Game.Level;
+using Game.Storage;
+using Game.Storage.Level;
 using Game.Systems;
-using LevelEditor;
+using Game.Views;
 using UnityEngine;
 using VContainer;
 using CharacterController = Game.Character.CharacterController;
@@ -69,7 +71,7 @@ namespace Game
             return activeParts;
         }
         
-        private void PaintFinishCells(Cell.Cell[] finishCells, ColorType color)
+        private void PaintFinishCells(Cell[] finishCells, ColorType color)
         {
             foreach (var cell in finishCells)
                 cell.GetComponent<FinishView>().SetColor(color);
