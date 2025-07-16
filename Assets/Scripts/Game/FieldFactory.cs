@@ -26,11 +26,10 @@ namespace Game
         public Field CreateField(GameLevel level)
         {
             var cells = new Cell.Cell[level.MapWidth, level.MapHeight];
-            var finishCells = new Cell.Cell[level.CountFinishCells()];
+            var finishCells = new Cell.Cell[level.FinishCells];
 
             _cellsContainer ??= GetOrSpawn("Cells");
 
-            DirectionType[,] bordersMap = level.GetCellsBorders();
             _field = _resolver.Resolve<Field>();
 
             int finishCount = 0;
@@ -40,7 +39,7 @@ namespace Game
                 for (int x = 0; x < level.MapWidth; x++)
                 {
                     var cellPosition = new Vector2Int(x, y);
-                    var newCell = CreateCell(level, cellPosition, bordersMap, cells);
+                    var newCell = CreateCell(level, cellPosition, cells);
 
                     if (newCell.CellType == CellType.Finish)
                     {
@@ -55,34 +54,38 @@ namespace Game
             return _field;
         }
 
-        private Cell.Cell CreateCell(GameLevel level, Vector2Int position, DirectionType[,] bordersMap, Cell.Cell[,] cells)
+        private Cell.Cell CreateCell(GameLevel level, Vector2Int position, Cell.Cell[,] cells)
         {
-            CellContainer cellData = level.Get(position);
-            DirectionType borders = bordersMap[position.x, position.y];
-            Cell.Cell newCell = SpawnCell(position.x, position.y, _cellsContainer.transform, cellData);
+            CellData current = level.Get(position).GetValueOrDefault();
+            Cell.Cell newCell = SpawnCell(position.x, position.y, _cellsContainer.transform, current.Type);
 
-            if (cellData.Type == CellType.Wall || cellData.Type == CellType.Pit)
+            if (current.Type == CellType.Wall || current.Type == CellType.Pit)
             {
                 TileView tileView = newCell.GetComponent<TileView>();
-                tileView.DrawBorders(borders, position, bordersMap, level.Get);
+                var up = level.Get(position + Vector2Int.up);
+                var down = level.Get(position + Vector2Int.down);
+                var right = level.Get(position + Vector2Int.right);
+                var left = level.Get(position + Vector2Int.left);
+
+                tileView.DrawBorders(current, up, down, right, left, position);
             }
 
-            newCell.Initialize(position, cellData.Type, borders);
+            newCell.Initialize(position, current.Type, current.Borders);
 
             cells[position.x, position.y] = newCell;
             return newCell;
         }
 
-        private Cell.Cell SpawnCell(int x, int y, Transform parent, CellContainer cellContainer)
+        private Cell.Cell SpawnCell(int x, int y, Transform parent, CellType type)
         {
             Vector3 cellPosition = new Vector3(x, y, CellsLayer);
-            Cell.Cell cell = cellContainer.Type switch
+            Cell.Cell cell = type switch
             {
                     CellType.Wall => _resolver.Instantiate(_gameSettings.WallCellPrefab, cellPosition, Quaternion.identity, parent),
                     CellType.Empty => _resolver.Instantiate(_gameSettings.EmptyCellPrefab, cellPosition, Quaternion.identity, parent),
                     CellType.Pit => _resolver.Instantiate(_gameSettings.PitCellPrefab, cellPosition, Quaternion.identity, parent),
                     CellType.Finish => _resolver.Instantiate(_gameSettings.FinishCellPrefab, cellPosition, Quaternion.identity, parent),
-                    _ => throw new ArgumentOutOfRangeException(nameof(cellContainer.Type), "Unknown cell type")
+                    _ => throw new ArgumentOutOfRangeException(nameof(type), "Unknown cell type")
             };
             return cell;
         }

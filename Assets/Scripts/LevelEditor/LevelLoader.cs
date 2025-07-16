@@ -111,8 +111,8 @@ namespace LevelEditor
 
         public GameLevel DeserializeLevel(string json)
         {
-            var gameLevel = JsonConvert.DeserializeObject<GameLevel>(json, _settings);
-            return gameLevel;
+            var level = JsonConvert.DeserializeObject<LevelData>(json, _settings);
+            return new GameLevel(level);
         }
 
         // public void SaveLevel(Level level, GameLevel data)

@@ -19,10 +19,11 @@ namespace Game.Cell
         [SerializeField] private Vector2Int _position;
 
 
-        public void DrawBorders(DirectionType borders, Vector2Int position, DirectionType[,] bordersMap, Func<int, int, CellContainer> getCell)
+        public void DrawBorders(CellData current, CellData? up, CellData? down, CellData? right, CellData? left, Vector2Int currentPosition)
         {
-            _position = position;
-            switch (borders)
+            _position = currentPosition;
+
+            switch (current.Borders)
             {
                 case DirectionType.All:
                     MakeSquared();
@@ -31,7 +32,7 @@ namespace Game.Cell
                 case DirectionType.Up:
                 case DirectionType.Right:
                 case DirectionType.Down:
-                    MakePlain(borders);
+                    MakePlain(current.Borders);
                     break;
                 case DirectionType.Down | DirectionType.Up:
                     MakePlain(DirectionType.Down);
@@ -45,7 +46,7 @@ namespace Game.Cell
                 case DirectionType.Up | DirectionType.Left:
                 case DirectionType.Down | DirectionType.Left:
                 case DirectionType.Down | DirectionType.Right:
-                    MakeCornered(borders);
+                    MakeCornered(current.Borders);
                     break;
                 case DirectionType.Left | DirectionType.Up | DirectionType.Right:
                     MakeInpass(DirectionType.Down);
@@ -61,25 +62,34 @@ namespace Game.Cell
                     break;
             }
 
-            this.FillCorners(position, bordersMap, getCell);
+            FillCorners(current, up, down, right, left);
         }
 
-        private void FillCorners(Vector2Int cellPosition, DirectionType[,] bordersMap, Func<int, int, CellContainer> getCell)
+        private void FillCorners(CellData currentTile, CellData? top, CellData? down, CellData? right, CellData? left)
         {
-            void CheckCorner(DirectionType currentTile, DirectionType firstTile, DirectionType secondTile, DirectionType firstDirection, DirectionType secondDirection)
+            void TryPlaceCorners(CellData source, CellData? neighbour1, CellData? neighbour2, DirectionType firstDirection, DirectionType secondDirection)
             {
+                if (source.Type != neighbour1?.Type || source.Type != neighbour2?.Type)
+                {
+                    return;
+                }
+
+                DirectionType current = source.Borders;
+                DirectionType borders1 = neighbour1?.Borders ?? DirectionType.None;
+                DirectionType borders2 = neighbour2?.Borders ?? DirectionType.None;
                 DirectionType cornerDirection = firstDirection | secondDirection;
-                if (!currentTile.HasFlag(firstDirection) && !currentTile.HasFlag(secondDirection) && firstTile != secondTile.Negate() )
+
+                if (!current.HasFlag(firstDirection) && !current.HasFlag(secondDirection) && borders1 != borders2.Negate() )
                 {
                     // rich shape
-                    if (firstTile.HasFlagEq(secondDirection) && secondTile.HasFlagEq(firstDirection))
+                    if (borders1.HasFlagEq(secondDirection) && borders2.HasFlagEq(firstDirection))
                     {
                         SpriteRenderer tile = SelectTiles(cornerDirection).Single();
                         tile.sprite = OuterCorner;
                         SetupOuterCorner(cornerDirection, tile);
                     }
                     // outside of map corners
-                    else if (firstTile.HasFlagEq(firstDirection) && secondTile.HasFlagEq(secondDirection))
+                    else if (borders1.HasFlagEq(firstDirection) && borders2.HasFlagEq(secondDirection))
                     {
                         SpriteRenderer tile = SelectTiles(cornerDirection).Single();
                         tile.sprite = OuterCorner;
@@ -88,42 +98,10 @@ namespace Game.Cell
                 }
             }
 
-            DirectionType GerBorders(Vector2Int coords)
-            {
-                if (coords.x < 0 || coords.y < 0 || coords.x >= bordersMap.GetLength(0) || coords.y >= bordersMap.GetLength(1))
-                    return DirectionType.None;
-                return bordersMap[coords.x, coords.y];
-            }
-
-            CellType? GerType(Vector2Int coords)
-            {
-                if (coords.x < 0 || coords.y < 0 || coords.x >= bordersMap.GetLength(0) || coords.y >= bordersMap.GetLength(1))
-                    return null;
-                return getCell(coords.x, coords.y)?.Type;
-            }
-
-
-            DirectionType current = GerBorders(cellPosition);
-            CellType? currentType = GerType(cellPosition);
-
-            var top = GerBorders(cellPosition + Vector2Int.up);
-            var down = GerBorders(cellPosition + Vector2Int.down);
-            var right = GerBorders(cellPosition + Vector2Int.right);
-            var left = GerBorders(cellPosition + Vector2Int.left);
-
-            var topType = GerType(cellPosition + Vector2Int.up);
-            var downType = GerType(cellPosition + Vector2Int.down);
-            var rightType = GerType(cellPosition + Vector2Int.right);
-            var leftType = GerType(cellPosition + Vector2Int.left);
-
-            if (currentType == topType && currentType == rightType)
-                CheckCorner(current, top, right, DirectionType.Right, DirectionType.Up);
-            if (currentType == rightType && currentType == downType)
-                CheckCorner(current, right, down, DirectionType.Down, DirectionType.Right);
-            if (currentType == downType && currentType == leftType)
-                CheckCorner(current, down, left, DirectionType.Left, DirectionType.Down);
-            if (currentType == topType && currentType == leftType)
-                CheckCorner(current, left, top, DirectionType.Up, DirectionType.Left);
+            TryPlaceCorners(currentTile, top, right, DirectionType.Right, DirectionType.Up);
+            TryPlaceCorners(currentTile, right, down, DirectionType.Down, DirectionType.Right);
+            TryPlaceCorners(currentTile, down, left, DirectionType.Left, DirectionType.Down);
+            TryPlaceCorners(currentTile, left, top, DirectionType.Up, DirectionType.Left);
         }
 
         private SpriteRenderer[] SelectTiles(DirectionType borders)
